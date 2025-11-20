@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue_primary">#0066FF</color> <!-- Màu chủ đạo của App -->
+    <color name="gray_text">#808080</color>
+    <color name="background_light">#F5F7FA</color>
+
+    <!-- Màu Priority (Quan trọng cho 4 Quadrant) -->
+    <color name="prio_1_urgent_important">#FF3B30</color> <!-- Đỏ -->
+    <color name="prio_2_important">#FFCC00</color>       <!-- Vàng -->
+    <color name="prio_3_urgent">#007AFF</color>          <!-- Xanh dương -->
+    <color name="prio_4_none">#34C759</color>            <!-- Lục -->
 </resources>

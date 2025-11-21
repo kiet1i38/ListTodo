@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="<http://schemas.android.com/apk/res/android>"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background_light">
+
+    <TextView
+        android:text="Thêm công việc mới"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="20dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên công việc">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <EditText
+        android:id="@+id/edt_desc"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="Mô tả chi tiết..."
+        android:gravity="top"
+        android:background="@android:color/white"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"/>
+
+    <!-- Chọn ngày giờ -->
+    <Button
+        android:id="@+id/btn_pick_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chọn ngày giờ hết hạn"
+        android:layout_marginTop="10dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    <TextView
+        android:id="@+id/tv_selected_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chưa chọn ngày"
+        android:layout_gravity="center"/>
+
+    <!-- Chọn độ ưu tiên (RadioGroup) -->
+    <TextView android:text="Mức độ ưu tiên:" android:layout_marginTop="20dp"/>
+    <RadioGroup
+        android:id="@+id/rg_priority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton android:id="@+id/rb_prio_1" android:text="1. Khẩn cấp &amp; Quan trọng" android:textColor="@color/prio_1_urgent_important"/>
+        <RadioButton android:id="@+id/rb_prio_2" android:text="2. Quan trọng" android:textColor="@color/prio_2_important"/>
+        <RadioButton android:id="@+id/rb_prio_3" android:text="3. Khẩn cấp" android:textColor="@color/prio_3_urgent"/>
+        <RadioButton android:id="@+id/rb_prio_4" android:text="4. Bình thường" android:checked="true"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lưu Công Việc"
+        android:backgroundTint="@color/blue_primary"
+        android:layout_marginTop="30dp"/>
+
+</LinearLayout>

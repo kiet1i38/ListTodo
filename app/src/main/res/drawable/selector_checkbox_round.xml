@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Trạng thái đã check (Hình tròn xanh có dấu tích) -->
+    <item android:state_checked="true">
+        <layer-list>
+            <item>
+                <shape android:shape="oval">
+                    <solid android:color="@color/blue_primary"/>
+                    <stroke android:width="1dp" android:color="@color/blue_primary"/>
+                    <size android:width="24dp" android:height="24dp"/>
+                </shape>
+            </item>
+            <item android:drawable="@drawable/ic_check_circle" android:top="4dp" android:bottom="4dp" android:left="4dp" android:right="4dp">
+                <!-- Em có thể thay ic_check_circle bằng icon dấu tích trắng -->
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Trạng thái chưa check (Hình tròn rỗng viền xám) -->
+    <item>
+        <shape android:shape="oval">
+            <stroke android:width="2dp" android:color="#E0E0E0"/>
+            <solid android:color="@android:color/transparent"/>
+            <size android:width="24dp" android:height="24dp"/>
+        </shape>
+    </item>
+</selector>

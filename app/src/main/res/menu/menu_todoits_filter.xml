@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Group này cho phép check nhiều cái cùng lúc -->
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/action_show_completed"
+            android:title="Hiển thị đã hoàn thành"
+            android:checked="false" />
+
+        <item
+            android:id="@+id/action_show_future"
+            android:title="Hiển thị công việc tương lai"
+            android:checked="true" />
+
+        <item
+            android:id="@+id/action_show_overdue"
+            android:title="Hiển thị đã hết hạn"
+            android:checked="true" />
+    </group>
+</menu>

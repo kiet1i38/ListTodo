@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ListTodo</string>
+
+    <string-array name="calc_modes">
+        <item>Sau (Cộng)</item>
+        <item>Trước (Trừ)</item>
+    </string-array>
 </resources>

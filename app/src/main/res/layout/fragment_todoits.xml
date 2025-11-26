@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/background_gray">
+
+    <!-- 1. KHUNG HEADER (Tiêu đề + Nút 3 chấm + Tìm kiếm) -->
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <!-- Tiêu đề App (Neo bên trái) -->
+        <TextView
+            android:id="@+id/tv_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TodoTick"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"/>
+
+        <!-- Nút 3 chấm (Neo bên phải trước) -->
+        <ImageButton
+            android:id="@+id/btn_more_options"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_menu"
+            android:background="@drawable/bg_circle_blue"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:tint="@color/blue_primary"/>
+
+        <!-- Thanh tìm kiếm (Nằm kẹp giữa Tiêu đề và Nút 3 chấm) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_toStartOf="@id/btn_more_options"
+            android:layout_toEndOf="@id/tv_app_name"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_bottom_sheet_rounded"
+            android:backgroundTint="#F5F5F5"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:src="@drawable/ic_search"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/text_gray"/>
+
+            <TextView
+                android:text="Tìm kiếm"
+                android:textColor="@color/text_gray"
+                android:textSize="14sp"
+                android:layout_marginStart="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 2. BỘ LỌC (Nằm dưới Header Layout) -->
+    <HorizontalScrollView
+        android:id="@+id/scroll_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_layout"
+        android:layout_marginBottom="12dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Button Tất cả (Active) -->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Tất cả"
+                android:backgroundTint="@color/blue_primary"
+                android:textColor="@color/white"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- Button Inactive -->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Công Việc"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/text_gray"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Cá Nhân"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/text_gray"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- 3. DANH SÁCH CÔNG VIỆC (Nằm dưới Bộ lọc) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/scroll_filter"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp"/>
+    <!-- paddingBottom để item cuối không bị nút + che mất -->
+
+    <!-- 4. TRẠNG THÁI TRỐNG (Hiện khi không có task) -->
+    <LinearLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"> <!-- Mặc định ẩn đi -->
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_dashboard"
+            android:alpha="0.5"
+            android:contentDescription="Empty Box"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chưa có công việc nào"
+            android:textColor="@color/text_gray"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+    <!-- 5. NÚT THÊM (FAB) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_add"
+        android:backgroundTint="@color/blue_primary"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Add Task"/>
+
+</RelativeLayout>

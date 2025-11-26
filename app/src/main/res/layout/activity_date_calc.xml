@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_gray">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_menu"
+            android:rotation="90"
+            android:layout_centerVertical="true"
+            app:tint="@color/black"/>
+
+        <TextView
+            android:text="Máy Tính Ngày Tháng"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- PHẦN 1: TÍNH NGÀY (Cộng/Trừ) -->
+            <TextView
+                android:text="Tính Ngày"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                android:layout_marginBottom="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+                        <TextView android:text="Từ" android:textStyle="bold" android:layout_width="50dp" android:layout_height="wrap_content"/>
+                        <Button
+                            android:id="@+id/btn_calc_start_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="2025-11-20"
+                            android:textColor="@color/blue_primary"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:textSize="18sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+                        <EditText
+                            android:id="@+id/edt_days_to_add"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:hint="Nhập số ngày"
+                            android:gravity="center"
+                            android:text="0"/>
+
+                        <Spinner
+                            android:id="@+id/spinner_calc_mode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/calc_modes"
+                            android:layout_marginStart="8dp"/>
+                        <!-- Cần tạo array calc_modes trong strings.xml hoặc code cứng -->
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_calc_result_date"
+                        android:text="Kết quả: ..."
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:layout_marginTop="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- PHẦN 2: TÍNH KHOẢNG CÁCH -->
+            <TextView
+                android:text="Tính Khoảng Cách Ngày"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+                        <TextView android:text="Từ" android:textStyle="bold" android:layout_width="50dp" android:layout_height="wrap_content"/>
+                        <Button
+                            android:id="@+id/btn_diff_start"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="2025-11-20"
+                            android:textColor="@color/blue_primary"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:textSize="18sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+                        <TextView android:text="Đến" android:textStyle="bold" android:layout_width="50dp" android:layout_height="wrap_content"/>
+                        <Button
+                            android:id="@+id/btn_diff_end"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="2025-12-20"
+                            android:textColor="@color/blue_primary"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:textSize="18sp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#F5F5F5"
+                        android:padding="16dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:layout_gravity="center">
+
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="Tổng Cộng" android:textSize="14sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_diff_result"
+                            android:text="30"
+                            android:textSize="40sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/blue_primary"/>
+                        <TextView android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:text="Ngày" android:textSize="14sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

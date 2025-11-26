@@ -61,10 +61,14 @@
         android:id="@+id/rg_priority"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <RadioButton android:id="@+id/rb_prio_1" android:text="1. Khẩn cấp &amp; Quan trọng" android:textColor="@color/prio_1_urgent_important"/>
-        <RadioButton android:id="@+id/rb_prio_2" android:text="2. Quan trọng" android:textColor="@color/prio_2_important"/>
-        <RadioButton android:id="@+id/rb_prio_3" android:text="3. Khẩn cấp" android:textColor="@color/prio_3_urgent"/>
-        <RadioButton android:id="@+id/rb_prio_4" android:text="4. Bình thường" android:checked="true"/>
+        <RadioButton android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/rb_prio_1" android:text="1. Khẩn cấp &amp; Quan trọng" android:textColor="@color/prio_1_urgent_important"/>
+        <RadioButton android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/rb_prio_2" android:text="2. Quan trọng" android:textColor="@color/prio_2_important"/>
+        <RadioButton android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/rb_prio_3" android:text="3. Khẩn cấp" android:textColor="@color/prio_3_urgent"/>
+        <RadioButton android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/rb_prio_4" android:text="4. Bình thường" android:checked="true"/>
     </RadioGroup>
 
     <Button

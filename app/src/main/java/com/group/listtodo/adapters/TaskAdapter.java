@@ -21,10 +21,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private List<Task> taskList = new ArrayList<>();
     private final OnTaskClickListener listener;
 
-    // Interface để Activity xử lý sự kiện click (Best Practice)
     public interface OnTaskClickListener {
-        void onTaskClick(Task task);      // Click vào item để sửa
-        void onTaskCheck(Task task);      // Click vào checkbox để hoàn thành
+        void onTaskClick(Task task);
+        void onTaskCheck(Task task);
     }
 
     public TaskAdapter(OnTaskClickListener listener) {
@@ -35,6 +34,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         this.taskList = list;
         notifyDataSetChanged();
     }
+
+    // --- ĐÂY LÀ HÀM CÒN THIẾU GÂY RA LỖI ---
+    public List<Task> getTaskList() {
+        return taskList;
+    }
+    // ---------------------------------------
 
     @NonNull
     @Override
@@ -55,55 +60,62 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvDesc, tvDate;
+        TextView tvTitle, tvDate;
         CheckBox cbCompleted;
         View viewPriority;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tv_task_title);
-            tvDesc = itemView.findViewById(R.id.tv_task_desc);
             tvDate = itemView.findViewById(R.id.tv_task_date);
             cbCompleted = itemView.findViewById(R.id.cb_completed);
             viewPriority = itemView.findViewById(R.id.view_priority_indicator);
 
-            // Click vào cả dòng -> Sửa
-            itemView.setOnClickListener(v -> listener.onTaskClick(taskList.get(getAdapterPosition())));
+            // Sự kiện Click vào Item (để Sửa)
+            itemView.setOnClickListener(v -> {
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    listener.onTaskClick(taskList.get(getAdapterPosition()));
+                }
+            });
 
-            // Click vào checkbox -> Done
+            // Sự kiện Click vào Checkbox (để Hoàn thành)
             cbCompleted.setOnClickListener(v -> {
-                Task t = taskList.get(getAdapterPosition());
-                t.isCompleted = cbCompleted.isChecked();
-                listener.onTaskCheck(t);
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    Task t = taskList.get(getAdapterPosition());
+                    t.isCompleted = cbCompleted.isChecked();
+                    listener.onTaskCheck(t);
+                }
             });
         }
 
         void bind(Task task) {
             tvTitle.setText(task.title);
-            tvDesc.setText(task.description);
 
-            // Format ngày tháng (Novelty: hiển thị đẹp)
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM HH:mm", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("MM.dd HH:mm", Locale.getDefault());
             tvDate.setText(sdf.format(new Date(task.dueDate)));
 
+            // Tránh trigger listener khi đang bind view
+            cbCompleted.setOnCheckedChangeListener(null);
             cbCompleted.setChecked(task.isCompleted);
 
-            // Hiệu ứng gạch ngang chữ nếu đã hoàn thành
             if (task.isCompleted) {
                 tvTitle.setPaintFlags(tvTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                tvTitle.setTextColor(itemView.getContext().getResources().getColor(R.color.text_gray));
             } else {
                 tvTitle.setPaintFlags(tvTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                tvTitle.setTextColor(itemView.getContext().getResources().getColor(R.color.black));
             }
 
-            // Set màu theo mức độ ưu tiên
-            int colorRes;
-            switch (task.priority) {
-                case 1: colorRes = R.color.prio_1_urgent_important; break;
-                case 2: colorRes = R.color.prio_2_important; break;
-                case 3: colorRes = R.color.prio_3_urgent; break;
-                default: colorRes = R.color.prio_4_none;
+            if (viewPriority != null) {
+                int colorRes;
+                switch (task.priority) {
+                    case 1: colorRes = R.color.quadrant_1_red; break;
+                    case 2: colorRes = R.color.quadrant_2_orange; break;
+                    case 3: colorRes = R.color.quadrant_3_blue; break;
+                    default: colorRes = R.color.quadrant_4_green;
+                }
+                viewPriority.setBackgroundResource(colorRes);
             }
-            viewPriority.setBackgroundResource(colorRes);
         }
     }
 }

@@ -5,69 +5,86 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Vạch màu đánh dấu mức độ ưu tiên -->
+        <!-- 1. Nội dung bên trái (Tiêu đề + Ngày) -->
+        <LinearLayout
+            android:id="@+id/layout_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cb_completed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="16dp">
+
+            <!-- Tên công việc (Đậm, To) -->
+            <TextView
+                android:id="@+id/tv_task_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên công việc"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <!-- Icon đồng hồ + Ngày giờ (Màu xám, nhỏ hơn) -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp">
+
+                <ImageView
+                    android:src="@drawable/ic_calendar"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    app:tint="@color/text_gray"
+                    android:layout_marginEnd="4dp"/>
+
+                <TextView
+                    android:id="@+id/tv_task_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11.20 13:48"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_gray"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 2. Checkbox Hình tròn (Bên phải) -->
+        <CheckBox
+            android:id="@+id/cb_completed"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:button="@null"
+            android:background="@drawable/selector_checkbox_round"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!-- 3. Vạch màu Priority (Tùy chọn, thầy làm nhỏ lại cho tinh tế) -->
         <View
             android:id="@+id/view_priority_indicator"
             android:layout_width="4dp"
             android:layout_height="0dp"
-            android:background="@color/prio_1_urgent_important"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <CheckBox
-            android:id="@+id/cb_completed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/view_priority_indicator"
+            android:background="@color/blue_primary"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginStart="8dp"/>
-
-        <TextView
-            android:id="@+id/tv_task_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="Tên công việc"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="@+id/tv_task_date"
-            app:layout_constraintStart_toEndOf="@id/cb_completed"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_task_desc"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Mô tả ngắn..."
-            android:textSize="12sp"
-            android:textColor="@color/gray_text"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintEnd_toEndOf="@id/tv_task_title"
-            app:layout_constraintStart_toStartOf="@id/tv_task_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_task_title" />
-
-        <TextView
-            android:id="@+id/tv_task_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="20/11"
-            android:textSize="12sp"
-            android:textColor="@color/blue_primary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <!-- Thầy tạm ẩn (gone) để giống screenshot của em, nếu thích hiện thì đổi thành visible -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

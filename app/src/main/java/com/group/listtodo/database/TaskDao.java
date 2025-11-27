@@ -20,8 +20,8 @@ public interface TaskDao {
     void deleteTask(Task task);
 
     // Lấy tất cả task, sắp xếp theo ngày gần nhất
-    @Query("SELECT * FROM tasks ORDER BY dueDate ASC")
-    List<Task> getAllTasks();
+    @Query("SELECT * FROM tasks WHERE userId = :uid ORDER BY dueDate ASC")
+    List<Task> getAllTasks(String uid); // <--- Thêm tham số uid
 
     // Tìm kiếm task theo tên (Cho chức năng Search)
     @Query("SELECT * FROM tasks WHERE title LIKE '%' || :keyword || '%'")

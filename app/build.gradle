@@ -1,4 +1,5 @@
 plugins {
+    id 'com.google.gms.google-services'
     alias(libs.plugins.android.application)
 }
 
@@ -36,6 +37,15 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    // Import cái BOM này để nó tự quản lý version, không lo xung đột
+    implementation platform('com.google.firebase:firebase-bom:33.1.0')
+
+    // Thư viện Authentication (để Login)
+    implementation 'com.google.firebase:firebase-auth'
+
+    // Thư viện Analytics (Thường đi kèm, nên thêm)
+    implementation 'com.google.firebase:firebase-analytics'
 
     implementation 'androidx.room:room-runtime:2.6.1'
     annotationProcessor 'androidx.room:room-compiler:2.6.1'

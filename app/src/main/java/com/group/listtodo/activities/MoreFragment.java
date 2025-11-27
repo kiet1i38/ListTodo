@@ -15,6 +15,7 @@ import com.group.listtodo.R;
 import com.group.listtodo.api.RetrofitClient;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
+import com.group.listtodo.utils.SessionManager; // <--- Import SessionManager
 import java.util.List;
 import java.util.concurrent.Executors;
 import retrofit2.Call;
@@ -59,7 +60,6 @@ public class MoreFragment extends Fragment {
         });
 
         // 6. Đồng Bộ Server (Backend Flask)
-        // Lưu ý: Đảm bảo em đã thêm CardView có id menu_sync trong file fragment_more.xml
         View menuSync = view.findViewById(R.id.menu_sync);
         if (menuSync != null) {
             setupItem(menuSync, "Đồng Bộ Đám Mây (Backup)", R.drawable.ic_check_circle, v -> {
@@ -72,10 +72,21 @@ public class MoreFragment extends Fragment {
     private void syncDataToServer() {
         Toast.makeText(getContext(), "Đang kết nối Server...", Toast.LENGTH_SHORT).show();
 
+        // 1. Lấy User ID hiện tại
+        SessionManager session = new SessionManager(getContext());
+        String userId = session.getUserId();
+
+        if (userId == null) {
+            Toast.makeText(getContext(), "Vui lòng đăng nhập lại!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Chạy luồng phụ để lấy dữ liệu từ DB
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(getContext());
-            List<Task> localTasks = db.taskDao().getAllTasks();
+
+            // 2. SỬA LỖI TẠI ĐÂY: Truyền userId vào hàm getAllTasks
+            List<Task> localTasks = db.taskDao().getAllTasks(userId);
 
             if (localTasks.isEmpty()) {
                 if (getActivity() != null) {
@@ -99,14 +110,12 @@ public class MoreFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<Void> call, Throwable t) {
-                    // Lỗi mạng hoặc Server chưa bật
                     Toast.makeText(getContext(), "Lỗi kết nối: Hãy bật Server Python!", Toast.LENGTH_LONG).show();
                 }
             });
         });
     }
 
-    // Hàm hỗ trợ setup nhanh gọn
     private void setupItem(View itemView, String title, int iconRes, View.OnClickListener listener) {
         ImageView imgIcon = itemView.findViewById(R.id.img_icon);
         TextView tvTitle = itemView.findViewById(R.id.tv_title);

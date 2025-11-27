@@ -11,6 +11,7 @@ public class Task implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
+    public String userId;
 
     public String title;         // Tên công việc
     public String description;   // Ghi chú thêm

@@ -19,6 +19,6 @@ public interface CountdownDao {
     @Delete
     void delete(CountdownEvent event);
 
-    @Query("SELECT * FROM countdowns ORDER BY targetDate ASC")
-    List<CountdownEvent> getAllEvents();
+    @Query("SELECT * FROM countdowns WHERE userId = :uid ORDER BY targetDate ASC")
+    List<CountdownEvent> getAllEvents(String uid);
 }

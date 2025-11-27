@@ -15,6 +15,8 @@ import com.group.listtodo.R;
 import com.group.listtodo.adapters.TaskAdapter;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
+import com.group.listtodo.utils.SessionManager; // <--- Đừng quên Import cái này
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,6 +30,7 @@ public class CalendarFragment extends Fragment {
     private TaskAdapter adapter;
     private AppDatabase db;
     private long selectedDateStart, selectedDateEnd;
+    private String userId; // <--- Biến lưu ID người dùng hiện tại
 
     @Nullable
     @Override
@@ -40,25 +43,26 @@ public class CalendarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = AppDatabase.getInstance(getContext());
 
+        // 1. Lấy User ID từ Session (Đã đăng nhập)
+        SessionManager session = new SessionManager(getContext());
+        userId = session.getUserId();
+
         calendarView = view.findViewById(R.id.calendar_view);
         recyclerView = view.findViewById(R.id.rv_calendar_tasks);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // --- SỬA LỖI TẠI ĐÂY: Thêm Listener để xử lý tick chọn ---
         adapter = new TaskAdapter(new TaskAdapter.OnTaskClickListener() {
             @Override
             public void onTaskClick(Task task) {
-                // Xử lý khi bấm vào task (Sửa) nếu cần
+                // Xử lý khi bấm vào task (Sửa)
             }
 
             @Override
             public void onTaskCheck(Task task) {
-                // Khi tick vào checkbox -> Cập nhật DB -> Load lại list
                 updateTaskStatus(task);
             }
         });
-        // ----------------------------------------------------------
 
         recyclerView.setAdapter(adapter);
 
@@ -97,7 +101,8 @@ public class CalendarFragment extends Fragment {
     private void loadTasksForDate() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            List<Task> allTasks = db.taskDao().getAllTasks();
+            // SỬA LỖI TẠI ĐÂY: Truyền userId vào hàm query
+            List<Task> allTasks = db.taskDao().getAllTasks(userId);
             List<Task> tasksForDate = new ArrayList<>();
 
             for (Task t : allTasks) {
@@ -115,12 +120,10 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    // Hàm cập nhật trạng thái hoàn thành vào Database
     private void updateTaskStatus(Task task) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             db.taskDao().updateTask(task);
-            // Sau khi update xong thì load lại list của ngày hôm đó để cập nhật giao diện (gạch ngang chữ)
             loadTasksForDate();
         });
     }

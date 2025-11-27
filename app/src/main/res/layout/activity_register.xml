@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:gravity="center_horizontal">
+
+    <!-- Header cong cong (Giống Login) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:background="@drawable/bg_gradient_purple">
+
+        <ImageView
+            android:id="@+id/img_logo"
+            android:src="@drawable/hinh"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"/>
+        <!-- Nếu chưa có app_logo thì dùng @drawable/ic_check_circle -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TodoTick"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_below="@id/img_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"/>
+    </RelativeLayout>
+
+    <!-- Form Đăng Ký -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/bg_bottom_sheet_rounded">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tạo Tài Khoản"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"/>
+
+        <EditText
+            android:id="@+id/edt_email"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/bg_input_white"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="16dp"/>
+
+        <EditText
+            android:id="@+id/edt_password"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:background="@drawable/bg_input_white"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Đăng Ký Ngay"
+            android:backgroundTint="#6200EE"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_login_link"
+            android:text="Đã có tài khoản? Đăng nhập"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/blue_primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</LinearLayout>

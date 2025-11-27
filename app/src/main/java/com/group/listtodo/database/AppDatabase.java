@@ -4,19 +4,16 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import com.group.listtodo.models.CountdownEvent; // <--- Phải có dòng này
+import com.group.listtodo.models.CountdownEvent;
 import com.group.listtodo.models.Task;
 
-// 1. Phải có đủ 2 entities: Task.class VÀ CountdownEvent.class
-// 2. Version nên tăng lên 2
-@Database(entities = {Task.class, CountdownEvent.class}, version = 2, exportSchema = false)
+// Lưu ý: Tăng version lên mỗi khi em sửa Model (thêm cột, thêm bảng)
+@Database(entities = {Task.class, CountdownEvent.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
 
     public abstract TaskDao taskDao();
-
-    // 3. Phải có dòng này để code gọi được CountdownDao
     public abstract CountdownDao countdownDao();
 
     public static synchronized AppDatabase getInstance(Context context) {
@@ -24,7 +21,8 @@ public abstract class AppDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "list_todo_db")
                     .allowMainThreadQueries()
-                    .fallbackToDestructiveMigration() // Dòng này giúp tự xóa DB cũ nếu lệch version
+                    // DÒNG NÀY QUAN TRỌNG ĐỂ KHÔNG BỊ CRASH KHI SỬA DB:
+                    .fallbackToDestructiveMigration()
                     .build();
         }
         return instance;

@@ -20,6 +20,8 @@ import com.group.listtodo.R;
 import com.group.listtodo.adapters.TaskAdapter;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
+import com.group.listtodo.utils.SessionManager; // <--- Import quan trọng
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -33,8 +35,11 @@ public class TodoitsFragment extends Fragment {
     private LinearLayout layoutEmpty;
     private ImageButton btnMoreOptions;
 
+    // Biến lưu User ID hiện tại
+    private String userId;
+
     // Trạng thái bộ lọc mặc định
-    private boolean showCompleted = false; // Mặc định ẩn việc đã xong cho gọn
+    private boolean showCompleted = false;
     private boolean showFuture = true;
     private boolean showOverdue = true;
 
@@ -50,6 +55,10 @@ public class TodoitsFragment extends Fragment {
 
         db = AppDatabase.getInstance(getContext());
 
+        // 1. Lấy User ID từ Session (SỬA LỖI TẠI ĐÂY)
+        SessionManager session = new SessionManager(getContext());
+        userId = session.getUserId();
+
         // Ánh xạ View
         recyclerView = view.findViewById(R.id.recycler_tasks);
         layoutEmpty = view.findViewById(R.id.layout_empty);
@@ -57,18 +66,15 @@ public class TodoitsFragment extends Fragment {
         btnMoreOptions = view.findViewById(R.id.btn_more_options);
 
         setupRecyclerView();
-        setupSwipeToDelete(); // Tính năng Tuần 5: Vuốt để xóa
+        setupSwipeToDelete();
 
-        // Xử lý sự kiện click nút FAB
         fab.setOnClickListener(v -> {
             AddNewTaskSheet bottomSheet = new AddNewTaskSheet(() -> loadTasks());
             bottomSheet.show(getParentFragmentManager(), "AddTask");
         });
 
-        // Mở Menu 3 chấm Filter
         btnMoreOptions.setOnClickListener(v -> showFilterMenu());
 
-        // Load dữ liệu lần đầu
         loadTasks();
     }
 
@@ -77,9 +83,8 @@ public class TodoitsFragment extends Fragment {
         adapter = new TaskAdapter(new TaskAdapter.OnTaskClickListener() {
             @Override
             public void onTaskClick(Task task) {
-                // Mở màn hình sửa (EditTaskActivity)
                 Intent intent = new Intent(getContext(), EditTaskActivity.class);
-                intent.putExtra("task", task); // Truyền object task sang
+                intent.putExtra("task", task);
                 startActivity(intent);
             }
 
@@ -91,22 +96,18 @@ public class TodoitsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    // TÍNH NĂNG NOVELTY/ADVANCED GUI: Vuốt sang trái để xóa
     private void setupSwipeToDelete() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false; // Không hỗ trợ kéo thả di chuyển vị trí
+                return false;
             }
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-
-                // Lấy task cần xóa từ Adapter (Cần đảm bảo Adapter có hàm getTaskList)
-                // Nếu chưa có hàm getTaskList trong adapter, em xem lưu ý bên dưới
+                // Đảm bảo TaskAdapter đã có hàm getTaskList()
                 Task taskToDelete = adapter.getTaskList().get(position);
-
                 deleteTask(taskToDelete);
             }
         }).attachToRecyclerView(recyclerView);
@@ -116,12 +117,10 @@ public class TodoitsFragment extends Fragment {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             db.taskDao().deleteTask(task);
-
-            // Cập nhật UI
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "Đã xóa: " + task.title, Toast.LENGTH_SHORT).show();
-                    loadTasks(); // Reload lại list
+                    loadTasks();
                 });
             }
         });
@@ -131,35 +130,27 @@ public class TodoitsFragment extends Fragment {
         PopupMenu popup = new PopupMenu(getContext(), btnMoreOptions);
         popup.getMenuInflater().inflate(R.menu.menu_todoits_filter, popup.getMenu());
 
-        // Đánh dấu (Check) vào các mục đang được chọn
         popup.getMenu().findItem(R.id.action_show_completed).setChecked(showCompleted);
         popup.getMenu().findItem(R.id.action_show_future).setChecked(showFuture);
         popup.getMenu().findItem(R.id.action_show_overdue).setChecked(showOverdue);
 
-        // Xử lý khi chọn item trong menu
         popup.setOnMenuItemClickListener(item -> {
             item.setChecked(!item.isChecked());
-
             int id = item.getItemId();
-            if (id == R.id.action_show_completed) {
-                showCompleted = item.isChecked();
-            } else if (id == R.id.action_show_future) {
-                showFuture = item.isChecked();
-            } else if (id == R.id.action_show_overdue) {
-                showOverdue = item.isChecked();
-            }
-
+            if (id == R.id.action_show_completed) showCompleted = item.isChecked();
+            else if (id == R.id.action_show_future) showFuture = item.isChecked();
+            else if (id == R.id.action_show_overdue) showOverdue = item.isChecked();
             loadTasks();
             return true;
         });
-
         popup.show();
     }
 
     private void loadTasks() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            List<Task> allTasks = db.taskDao().getAllTasks();
+            // 2. Truyền userId vào hàm query (ĐÃ SỬA LỖI)
+            List<Task> allTasks = db.taskDao().getAllTasks(userId);
             List<Task> filteredList = new ArrayList<>();
 
             long now = System.currentTimeMillis();
@@ -202,6 +193,6 @@ public class TodoitsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadTasks(); // Load lại khi quay lại từ màn hình Edit hoặc Add
+        loadTasks();
     }
 }

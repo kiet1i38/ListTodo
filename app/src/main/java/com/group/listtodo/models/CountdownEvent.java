@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class CountdownEvent implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int id;
+    public String userId;
 
     public String title;
     public long targetDate; // Ngày mục tiêu

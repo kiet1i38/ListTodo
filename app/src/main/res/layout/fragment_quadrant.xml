@@ -6,7 +6,7 @@
     android:padding="16dp"
     android:weightSum="2">
 
-    <TextView android:text="Bốn Quadrant" android:textSize="24sp" android:textStyle="bold" android:layout_marginBottom="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    <TextView android:text="Độ quan trọng" android:textSize="24sp" android:textStyle="bold" android:layout_marginBottom="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 
     <!-- Hàng 1 -->
     <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal" android:weightSum="2">

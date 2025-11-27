@@ -42,11 +42,15 @@
         android:paddingBottom="80dp">
 
         <LinearLayout
+            android:id="@+id/container_events"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
             android:paddingTop="16dp">
+
+            <!-- (Các phần Banner cũ giữ nguyên ở đây hoặc xóa đi tùy em) -->
+            <!-- Code Java sẽ thêm item_countdown vào dưới cùng của cái LinearLayout này -->
 
             <!-- BANNER LỚN (Năm Mới) -->
             <androidx.cardview.widget.CardView
@@ -64,7 +68,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@color/blue_primary"
+                        android:background="@color/blue_primary"
                         android:scaleType="centerCrop"
                         android:alpha="0.2"/>
 

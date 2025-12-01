@@ -1,96 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    android:gravity="center_horizontal">
+    android:fillViewport="true">
 
-    <!-- Header cong cong (Giống Login) -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:background="@drawable/bg_gradient_purple">
-
-        <ImageView
-            android:id="@+id/img_logo"
-            android:src="@drawable/hinh"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:scaleType="fitCenter"/>
-        <!-- Nếu chưa có app_logo thì dùng @drawable/ic_check_circle -->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TodoTick"
-            android:textColor="@color/white"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_below="@id/img_logo"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"/>
-    </RelativeLayout>
-
-    <!-- Form Đăng Ký -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="30dp"
-        android:layout_marginTop="-50dp"
-        android:background="@drawable/bg_bottom_sheet_rounded">
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
+        <!-- Header -->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tạo Tài Khoản"
-            android:textSize="26sp"
+            android:text="Create Account"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Sign Up"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#246BFD"
+            android:layout_gravity="start"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- 1. Full Name (Thêm vào cho đủ bộ) -->
+        <TextView
+            android:text="Your Full Name"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/edt_fullname"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_edittext_outline"
+            android:hint="John Smith"
+            android:paddingHorizontal="16dp"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- 2. Email -->
+        <TextView
+            android:text="Your Email"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/edt_email"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:hint="Email"
+            android:background="@drawable/bg_edittext_outline"
+            android:hint="johnsmith99@gmail.com"
+            android:paddingHorizontal="16dp"
             android:inputType="textEmailAddress"
-            android:background="@drawable/bg_input_white"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="20dp"/>
 
-        <EditText
-            android:id="@+id/edt_password"
+        <!-- 3. Password -->
+        <TextView
+            android:text="Password"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:background="@drawable/bg_input_white"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_height="wrap_content"
+            app:passwordToggleEnabled="true"
+            app:hintEnabled="false"
+            app:boxBackgroundMode="none"
+            android:layout_marginBottom="30dp">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_edittext_outline"
+                android:hint="••••••••"
+                android:paddingHorizontal="16dp"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Button Register -->
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Đăng Ký Ngay"
-            android:backgroundTint="#6200EE"
+            android:layout_height="56dp"
+            android:text="Sign Up"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_button_blue"
             android:textAllCaps="false"
             android:textSize="18sp"
             android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/tv_login_link"
-            android:text="Đã có tài khoản? Đăng nhập"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textColor="@color/blue_primary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <!-- Footer Link -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp">
+            <TextView
+                android:text="Already a User? "
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_login_link"
+                android:text="Login"
+                android:textStyle="bold"
+                android:textColor="#246BFD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
 
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

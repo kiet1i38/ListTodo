@@ -54,6 +54,7 @@
         <activity android:name=".activities.LocationActivity"/>
         <activity android:name=".activities.StatsActivity"/>
         <activity android:name=".activities.DateCalcActivity"/>
+        <activity android:name=".activities.ForgotPasswordActivity"/>
 
         <!-- 5. SERVICES & RECEIVERS -->
         <service android:name=".services.TimerService" android:foregroundServiceType="shortService" />

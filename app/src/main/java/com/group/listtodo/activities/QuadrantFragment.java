@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.group.listtodo.R;
-import com.group.listtodo.adapters.TaskAdapter;
+import com.group.listtodo.adapters.QuadrantAdapter;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
+import com.group.listtodo.utils.SessionManager;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,6 +22,7 @@ public class QuadrantFragment extends Fragment {
 
     private RecyclerView rv1, rv2, rv3, rv4;
     private AppDatabase db;
+    private String userId;
 
     @Nullable
     @Override
@@ -32,11 +34,13 @@ public class QuadrantFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         db = AppDatabase.getInstance(getContext());
+        SessionManager session = new SessionManager(getContext());
+        userId = session.getUserId();
 
         rv1 = view.findViewById(R.id.rv_q1);
         rv2 = view.findViewById(R.id.rv_q2);
-        rv3 = view.findViewById(R.id.rv_q3); // Nhớ thêm ID này vào XML nếu chưa có
-        rv4 = view.findViewById(R.id.rv_q4); // Nhớ thêm ID này vào XML nếu chưa có
+        rv3 = view.findViewById(R.id.rv_q3);
+        rv4 = view.findViewById(R.id.rv_q4);
 
         setupRecycler(rv1);
         setupRecycler(rv2);
@@ -53,16 +57,14 @@ public class QuadrantFragment extends Fragment {
     private void loadQuadrantData() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // Lấy task theo từng Priority
-            List<Task> list1 = db.taskDao().getTasksByPriority(1);
-            List<Task> list2 = db.taskDao().getTasksByPriority(2);
-            List<Task> list3 = db.taskDao().getTasksByPriority(3);
-            List<Task> list4 = db.taskDao().getTasksByPriority(4);
+            // Lấy cả task đã xong và chưa xong
+            List<Task> list1 = db.taskDao().getTasksByPriority(userId, 1);
+            List<Task> list2 = db.taskDao().getTasksByPriority(userId, 2);
+            List<Task> list3 = db.taskDao().getTasksByPriority(userId, 3);
+            List<Task> list4 = db.taskDao().getTasksByPriority(userId, 4);
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    // Cần tạo adapter riêng cho mỗi list
-                    // Lưu ý: TaskAdapter cần constructor phù hợp hoặc set listener null nếu chỉ để view
                     rv1.setAdapter(createAdapter(list1));
                     rv2.setAdapter(createAdapter(list2));
                     rv3.setAdapter(createAdapter(list3));
@@ -72,20 +74,11 @@ public class QuadrantFragment extends Fragment {
         });
     }
 
-    private TaskAdapter createAdapter(List<Task> list) {
-        TaskAdapter adapter = new TaskAdapter(new TaskAdapter.OnTaskClickListener() {
-            @Override
-            public void onTaskClick(Task task) {}
-            @Override
-            public void onTaskCheck(Task task) {
-                // Logic check done trong Quadrant
-                task.isCompleted = true;
-                ExecutorService ex = Executors.newSingleThreadExecutor();
-                ex.execute(() -> {
-                    db.taskDao().updateTask(task);
-                    loadQuadrantData();
-                });
-            }
+    private QuadrantAdapter createAdapter(List<Task> list) {
+        QuadrantAdapter adapter = new QuadrantAdapter(task -> {
+            // Khi check -> Update DB nhưng KHÔNG reload lại list (để giữ task ở đó)
+            ExecutorService ex = Executors.newSingleThreadExecutor();
+            ex.execute(() -> db.taskDao().updateTask(task));
         });
         adapter.setData(list);
         return adapter;

@@ -10,8 +10,7 @@ import androidx.cardview.widget.CardView;
 import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.CountdownEvent;
-import com.group.listtodo.utils.SessionManager; // <--- Import SessionManager
-
+import com.group.listtodo.utils.SessionManager; // Import
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +23,7 @@ public class CountdownActivity extends AppCompatActivity {
 
     private LinearLayout containerLayout;
     private AppDatabase db;
-    private String userId; // <--- Biến lưu ID người dùng
+    private String userId; // Biến UserID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +32,13 @@ public class CountdownActivity extends AppCompatActivity {
 
         db = AppDatabase.getInstance(this);
 
-        // 1. Lấy User ID hiện tại
+        // Lấy UserID
         SessionManager session = new SessionManager(this);
         userId = session.getUserId();
 
-        // Ánh xạ Container
         containerLayout = findViewById(R.id.container_events);
-
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
-        // Nút FAB thêm mới
         findViewById(R.id.fab_add_event).setOnClickListener(v -> {
             startActivity(new Intent(this, AddCountdownActivity.class));
         });
@@ -57,14 +53,13 @@ public class CountdownActivity extends AppCompatActivity {
     private void loadEvents() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // 2. SỬA LỖI TẠI ĐÂY: Truyền userId vào hàm getAllEvents
+            // Lọc theo UserID
             List<CountdownEvent> events = db.countdownDao().getAllEvents(userId);
 
             runOnUiThread(() -> {
                 if (containerLayout.getChildCount() > 0) {
                     containerLayout.removeAllViews();
                 }
-
                 for (CountdownEvent event : events) {
                     addEventView(event);
                 }

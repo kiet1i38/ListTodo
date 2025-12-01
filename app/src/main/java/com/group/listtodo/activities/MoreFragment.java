@@ -11,11 +11,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.firebase.auth.FirebaseAuth; // <--- Import Firebase Auth
 import com.group.listtodo.R;
 import com.group.listtodo.api.RetrofitClient;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
-import com.group.listtodo.utils.SessionManager; // <--- Import SessionManager
+import com.group.listtodo.utils.SessionManager;
 import java.util.List;
 import java.util.concurrent.Executors;
 import retrofit2.Call;
@@ -66,6 +67,24 @@ public class MoreFragment extends Fragment {
                 syncDataToServer();
             });
         }
+
+        // 7. ĐĂNG XUẤT (Logout)
+        View menuLogout = view.findViewById(R.id.menu_logout);
+        if (menuLogout != null) {
+            // Xử lý sự kiện click Đăng xuất
+            menuLogout.setOnClickListener(v -> {
+                // A. Đăng xuất khỏi Firebase
+                FirebaseAuth.getInstance().signOut();
+
+                // B. Xóa Session lưu trong máy
+                new SessionManager(getContext()).logout();
+
+                // C. Quay về màn hình Đăng nhập & Xóa lịch sử Back
+                Intent intent = new Intent(getContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            });
+        }
     }
 
     // Hàm xử lý Logic Sync lên Server
@@ -85,7 +104,7 @@ public class MoreFragment extends Fragment {
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(getContext());
 
-            // 2. SỬA LỖI TẠI ĐÂY: Truyền userId vào hàm getAllTasks
+            // 2. Lấy toàn bộ task của User hiện tại
             List<Task> localTasks = db.taskDao().getAllTasks(userId);
 
             if (localTasks.isEmpty()) {

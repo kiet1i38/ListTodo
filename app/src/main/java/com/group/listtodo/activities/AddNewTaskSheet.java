@@ -21,6 +21,7 @@ import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
 import com.group.listtodo.receivers.AlarmReceiver;
+import com.group.listtodo.utils.SessionManager; // <--- Import quan trọng
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,9 +34,9 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
     private EditText edtTaskName;
     private Button btnTime, btnPriority, btnSubmit;
     private Calendar calendar = Calendar.getInstance();
-    private int selectedPriority = 4; // Mặc định là P4 (Màu xanh lá)
+    private int selectedPriority = 4;
     private AppDatabase db;
-    private Runnable onDismissListener; // Callback để reload list khi đóng
+    private Runnable onDismissListener;
 
     public AddNewTaskSheet(Runnable onDismissListener) {
         this.onDismissListener = onDismissListener;
@@ -57,13 +58,8 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
         btnPriority = view.findViewById(R.id.btn_priority);
         btnSubmit = view.findViewById(R.id.btn_submit);
 
-        // 1. Chọn ngày giờ
         btnTime.setOnClickListener(v -> showDateTimePicker());
-
-        // 2. Chọn Priority (Dùng PopupMenu - Advanced GUI)
         btnPriority.setOnClickListener(v -> showPriorityMenu());
-
-        // 3. Lưu
         btnSubmit.setOnClickListener(v -> saveTask());
     }
 
@@ -76,7 +72,7 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
             new TimePickerDialog(getContext(), (timeView, hourOfDay, minute) -> {
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
-                calendar.set(Calendar.SECOND, 0); // Reset giây về 0
+                calendar.set(Calendar.SECOND, 0);
 
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM HH:mm", Locale.getDefault());
                 btnTime.setText(sdf.format(calendar.getTime()));
@@ -107,20 +103,28 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
             return;
         }
 
+        // Tạo Task mới
         Task newTask = new Task(title, calendar.getTimeInMillis(), selectedPriority, "Work");
 
-        // Threading
+        // --- SỬA LỖI QUAN TRỌNG: GÁN USER ID ---
+        SessionManager session = new SessionManager(getContext());
+        String uid = session.getUserId();
+        if (uid != null) {
+            newTask.userId = uid; // Gán ID người dùng vào task
+        } else {
+            Toast.makeText(getContext(), "Lỗi: Chưa đăng nhập!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // ---------------------------------------
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // 1. Lưu vào DB
             db.taskDao().insertTask(newTask);
 
-            // 2. Đặt báo thức (Alarm)
             if (getActivity() != null) {
-                scheduleAlarm(newTask); // Gọi hàm đặt báo thức
-
+                scheduleAlarm(newTask);
                 getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Đã thêm & Đặt nhắc nhở!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Đã thêm!", Toast.LENGTH_SHORT).show();
                     if (onDismissListener != null) onDismissListener.run();
                     dismiss();
                 });
@@ -128,21 +132,12 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
         });
     }
 
-    // Hàm đặt báo thức (AlarmManager)
     private void scheduleAlarm(Task task) {
-        // Chỉ đặt báo thức nếu task có ngày giờ tương lai
         if (task.dueDate > System.currentTimeMillis()) {
             AlarmManager am = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-
-            // Intent trỏ tới AlarmReceiver
             Intent i = new Intent(getContext(), AlarmReceiver.class);
             i.putExtra("TITLE", task.title);
-
-            // PendingIntent để AlarmManager gọi sau này
-            // Dùng FLAG_IMMUTABLE cho Android 12+
             PendingIntent pi = PendingIntent.getBroadcast(getContext(), task.id, i, PendingIntent.FLAG_IMMUTABLE);
-
-            // Đặt lịch chính xác (RTC_WAKEUP: đánh thức máy nếu đang ngủ)
             if (am != null) {
                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.dueDate, pi);
             }

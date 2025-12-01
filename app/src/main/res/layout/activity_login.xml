@@ -1,97 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
-    android:gravity="center_horizontal">
+    android:fillViewport="true">
 
-    <!-- Header cong cong -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:background="@drawable/bg_gradient_purple">
-
-        <!-- ĐÃ SỬA: Thêm ID và thay hình logo của em -->
-        <ImageView
-            android:id="@+id/img_logo"
-            android:src="@drawable/hinh"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:scaleType="fitCenter"/>
-        <!-- Lưu ý: Nếu em chưa chép hình vào thì đổi lại thành @drawable/ic_check_circle tạm nhé -->
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TodoTick"
-            android:textColor="@color/white"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:layout_below="@id/img_logo"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"/>
-    </RelativeLayout>
-
-    <!-- Form -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="30dp"
-        android:layout_marginTop="-50dp"
-        android:background="@drawable/bg_bottom_sheet_rounded">
+        android:padding="24dp"
+        android:gravity="center_horizontal">
 
+        <!-- Header -->
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome Back!"
-            android:textSize="26sp"
+            android:text="Welcome Back"
+            android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Subtitle -->
+        <TextView
+            android:text="Login"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#246BFD"
+            android:layout_gravity="start"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- Email -->
+        <TextView
+            android:text="Your Email"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp"
+            android:drawablePadding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <EditText
             android:id="@+id/edt_email"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:hint="Email"
+            android:background="@drawable/bg_edittext_outline"
+            android:hint="Johnsmith99@gmail.com"
+            android:paddingHorizontal="16dp"
             android:inputType="textEmailAddress"
-            android:background="@drawable/bg_input_white"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="20dp"/>
 
-        <EditText
-            android:id="@+id/edt_password"
+        <!-- Password -->
+        <TextView
+            android:text="Password"
+            android:textColor="#757575"
+            android:textSize="14sp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp"
+            android:drawablePadding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- ĐÂY LÀ PHẦN THAY ĐỔI: Dùng TextInputLayout để có con mắt tự động -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:background="@drawable/bg_input_white"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="24dp"/>
+            android:layout_height="wrap_content"
+            app:passwordToggleEnabled="true"
+            app:hintEnabled="false"
+            app:boxBackgroundMode="none"
+            android:layout_marginBottom="10dp">
 
-        <Button
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_edittext_outline"
+                android:hint="••••••••"
+                android:paddingHorizontal="16dp"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_forgot_pass"
+            android:text="Forgot Password?"
+            android:textColor="#246BFD"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Đăng Nhập"
-            android:backgroundTint="#6200EE"
+            android:layout_height="56dp"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_button_blue"
             android:textAllCaps="false"
             android:textSize="18sp"
             android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/tv_register"
-            android:text="Chưa có tài khoản? Đăng ký ngay"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textColor="@color/blue_primary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp">
+            <TextView
+                android:text="Are you a new User? "
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tv_register"
+                android:text="Sign up"
+                android:textStyle="bold"
+                android:textColor="#246BFD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
 
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

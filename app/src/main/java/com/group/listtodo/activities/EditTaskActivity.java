@@ -18,6 +18,8 @@ import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
 import com.group.listtodo.receivers.AlarmReceiver;
+import com.group.listtodo.utils.SessionManager; // Import
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -39,8 +41,6 @@ public class EditTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_task);
 
         db = AppDatabase.getInstance(this);
-
-        // Lấy Task từ Intent (được truyền từ Adapter)
         currentTask = (Task) getIntent().getSerializableExtra("task");
 
         initViews();
@@ -55,7 +55,6 @@ public class EditTaskActivity extends AppCompatActivity {
         btnDelete = findViewById(R.id.btn_delete);
         btnChipDate = findViewById(R.id.btn_chip_date);
 
-        // Setup các dòng setting
         setupRow(R.id.row_time, R.drawable.ic_calendar, "Thời Gian", "Chọn >");
         setupRow(R.id.row_reminder, R.drawable.ic_check_circle, "Nhắc Nhở", "Không Nhắc Nhở >");
         setupRow(R.id.row_repeat, R.drawable.ic_dashboard, "Lặp Lại", "Không >");
@@ -93,32 +92,36 @@ public class EditTaskActivity extends AppCompatActivity {
     }
 
     private void setupEvents() {
-        // 1. Chọn ngày giờ
         btnChipDate.setOnClickListener(v -> showDateTimePicker());
 
-        // 2. Lưu thay đổi
         btnSave.setOnClickListener(v -> {
+            // Cập nhật thông tin
             currentTask.title = edtTitle.getText().toString();
             currentTask.description = edtNote.getText().toString();
             currentTask.dueDate = calendar.getTimeInMillis();
 
+            // --- ĐẢM BẢO USER ID KHÔNG BỊ MẤT ---
+            if (currentTask.userId == null) {
+                currentTask.userId = new SessionManager(this).getUserId();
+            }
+            // ------------------------------------
+
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 db.taskDao().updateTask(currentTask);
-                scheduleAlarm(currentTask); // Cập nhật báo thức
+                scheduleAlarm(currentTask);
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Đã lưu thay đổi!", Toast.LENGTH_SHORT).show();
-                    finish(); // Đóng màn hình
+                    finish();
                 });
             });
         });
 
-        // 3. Xóa Task
         btnDelete.setOnClickListener(v -> {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 db.taskDao().deleteTask(currentTask);
-                cancelAlarm(currentTask); // Hủy báo thức
+                cancelAlarm(currentTask);
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Đã xóa công việc!", Toast.LENGTH_SHORT).show();
                     finish();

@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.CountdownEvent;
+import com.group.listtodo.utils.SessionManager; // <--- Import quan trọng
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -22,12 +23,12 @@ public class AddCountdownActivity extends AppCompatActivity {
 
     private EditText edtTitle;
     private TextView tvDateValue, tvScreenTitle;
-    private Switch switchPin;
     private Button btnSaveTop, btnSaveBottom, btnDelete;
+    // Đã xóa Switch switchPin
 
     private Calendar calendar = Calendar.getInstance();
     private AppDatabase db;
-    private CountdownEvent currentEvent; // Sự kiện đang sửa (nếu có)
+    private CountdownEvent currentEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,6 @@ public class AddCountdownActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_countdown);
 
         db = AppDatabase.getInstance(this);
-
-        // Lấy dữ liệu truyền sang (nếu bấm sửa)
         currentEvent = (CountdownEvent) getIntent().getSerializableExtra("event");
 
         initViews();
@@ -48,7 +47,7 @@ public class AddCountdownActivity extends AppCompatActivity {
         edtTitle = findViewById(R.id.edt_title);
         tvDateValue = findViewById(R.id.tv_date_value);
         tvScreenTitle = findViewById(R.id.tv_screen_title);
-        switchPin = findViewById(R.id.switch_pin);
+
         btnSaveTop = findViewById(R.id.btn_save_top);
         btnSaveBottom = findViewById(R.id.btn_save_bottom);
         btnDelete = findViewById(R.id.btn_delete);
@@ -58,14 +57,11 @@ public class AddCountdownActivity extends AppCompatActivity {
 
     private void setupData() {
         if (currentEvent != null) {
-            // CHẾ ĐỘ SỬA
             tvScreenTitle.setText("Chỉnh Sửa Sự Kiện");
             edtTitle.setText(currentEvent.title);
             calendar.setTimeInMillis(currentEvent.targetDate);
-            switchPin.setChecked(currentEvent.isPinned);
-            btnDelete.setVisibility(View.VISIBLE); // Hiện nút xóa
+            btnDelete.setVisibility(View.VISIBLE);
         } else {
-            // CHẾ ĐỘ THÊM MỚI
             tvScreenTitle.setText("Thêm Sự Kiện Nhỏ");
             btnDelete.setVisibility(View.GONE);
         }
@@ -73,15 +69,12 @@ public class AddCountdownActivity extends AppCompatActivity {
     }
 
     private void setupEvents() {
-        // Chọn ngày
         findViewById(R.id.row_date).setOnClickListener(v -> showDatePicker());
 
-        // Lưu (Cả 2 nút trên và dưới đều gọi hàm save)
         View.OnClickListener saveAction = v -> saveEvent();
         btnSaveTop.setOnClickListener(saveAction);
         btnSaveBottom.setOnClickListener(saveAction);
 
-        // Xóa
         btnDelete.setOnClickListener(v -> deleteEvent());
     }
 
@@ -105,25 +98,28 @@ public class AddCountdownActivity extends AppCompatActivity {
         }
 
         if (currentEvent == null) {
-            currentEvent = new CountdownEvent(); // Tạo mới
+            currentEvent = new CountdownEvent();
         }
 
-        // Update thông tin
+        // 1. Cập nhật thông tin
         currentEvent.title = title;
         currentEvent.targetDate = calendar.getTimeInMillis();
-        currentEvent.isPinned = switchPin.isChecked();
+
+        // 2. QUAN TRỌNG: Gán UserID của người đang đăng nhập
+        SessionManager session = new SessionManager(this);
+        currentEvent.userId = session.getUserId();
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             if (currentEvent.id == 0) {
-                db.countdownDao().insert(currentEvent); // Insert nếu id = 0
+                db.countdownDao().insert(currentEvent);
             } else {
-                db.countdownDao().update(currentEvent); // Update nếu đã có id
+                db.countdownDao().update(currentEvent);
             }
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Đã lưu thành công!", Toast.LENGTH_SHORT).show();
-                finish();
+                finish(); // Đóng màn hình, quay về danh sách
             });
         });
     }

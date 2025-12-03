@@ -25,10 +25,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_API_KEY_HERE" />
-        <!-- Nhớ thay YOUR_API_KEY_HERE bằng key của em -->
 
         <!-- 3. MÀN HÌNH KHỞI ĐỘNG (LOGIN) -->
-        <!-- Đây là màn hình đầu tiên hiện ra khi mở App -->
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
@@ -38,23 +36,28 @@
             </intent-filter>
         </activity>
 
-        <!-- 4. CÁC MÀN HÌNH KHÁC (ACTIVITY) -->
-        <!-- Màn hình chính -->
+        <!-- 4. CÁC MÀN HÌNH KHÁC -->
         <activity android:name=".activities.MainActivity" android:exported="false"/>
-
-        <!-- Màn hình Đăng ký -->
         <activity android:name=".activities.RegisterActivity" android:exported="false"/>
+        <activity android:name=".activities.ForgotPasswordActivity"/>
 
         <!-- Các màn hình chức năng -->
         <activity android:name=".activities.AddTaskActivity" />
         <activity android:name=".activities.EditTaskActivity"/>
+
+        <!-- NHÓM TIMER (Đã thêm đầy đủ để không bị lỗi) -->
         <activity android:name=".activities.TimerActivity"/>
+        <activity android:name=".activities.AddTimerActivity"/> <!-- Đây là cái em thiếu -->
+        <activity android:name=".activities.TimerRunningActivity"/>
+
+        <!-- NHÓM COUNTDOWN -->
         <activity android:name=".activities.CountdownActivity"/>
-        <activity android:name=".activities.AddCountdownActivity"/> <!-- Mới thêm -->
+        <activity android:name=".activities.AddCountdownActivity"/>
+
+        <!-- NHÓM KHÁC -->
         <activity android:name=".activities.LocationActivity"/>
         <activity android:name=".activities.StatsActivity"/>
         <activity android:name=".activities.DateCalcActivity"/>
-        <activity android:name=".activities.ForgotPasswordActivity"/>
 
         <!-- 5. SERVICES & RECEIVERS -->
         <service android:name=".services.TimerService" android:foregroundServiceType="shortService" />

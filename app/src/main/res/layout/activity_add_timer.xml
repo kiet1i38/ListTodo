@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
+        <ImageView
+            android:id="@+id/btn_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_menu"
+            android:rotation="90"
+            android:layout_centerVertical="true"
+            app:tint="@color/black"/>
+        <TextView
+            android:text="Hẹn Giờ"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_check_circle"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            app:tint="@color/black"/>
+    </RelativeLayout>
+
+    <!-- Chọn giờ: Dùng 3 EditText đơn giản -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F5F5F5"
+        android:gravity="center"
+        android:padding="20dp"
+        android:layout_marginBottom="30dp">
+
+        <EditText android:id="@+id/edt_h" android:hint="00" android:inputType="number" android:textSize="40sp" android:background="@null" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <TextView android:text=" H  " android:textSize="20sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+        <EditText android:id="@+id/edt_m" android:hint="00" android:inputType="number" android:textSize="40sp" android:background="@null" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <TextView android:text=" M  " android:textSize="20sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+        <EditText android:id="@+id/edt_s" android:hint="00" android:inputType="number" android:textSize="40sp" android:background="@null" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        <TextView android:text=" S " android:textSize="20sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edt_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Vui lòng Nhập Tiêu Đề"
+        android:background="#F5F5F5"
+        android:padding="16dp"
+        android:layout_marginBottom="40dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Hủy"
+            android:backgroundTint="#CCCCCC"
+            android:layout_marginEnd="10dp"/>
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Xác Nhận"
+            android:backgroundTint="@color/blue_primary"/>
+    </LinearLayout>
+</LinearLayout>

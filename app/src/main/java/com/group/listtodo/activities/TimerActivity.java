@@ -5,20 +5,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import com.group.listtodo.R;
+import com.group.listtodo.database.AppDatabase;
+import com.group.listtodo.models.TimerPreset;
 import com.group.listtodo.services.TimerService;
+import com.group.listtodo.utils.SessionManager;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class TimerActivity extends AppCompatActivity {
 
-    private TextView tvTimer;
-    private EditText edtMinutes;
-    private Button btnStart, btnStop;
+    private LinearLayout container;
+    private AppDatabase db;
+    private String userId;
     private BroadcastReceiver receiver;
 
     @Override
@@ -26,34 +33,92 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
 
-        // 1. Xử lý nút Back (QUAN TRỌNG: Để không bị kẹt ở màn hình này)
+        db = AppDatabase.getInstance(this);
+        userId = new SessionManager(this).getUserId();
+        container = findViewById(R.id.container_timers);
+
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
+        findViewById(R.id.fab_add_timer).setOnClickListener(v -> startActivity(new Intent(this, AddTimerActivity.class)));
+    }
 
-        // 2. Ánh xạ View
-        tvTimer = findViewById(R.id.tv_timer_display);
-        edtMinutes = findViewById(R.id.edt_minutes);
-        btnStart = findViewById(R.id.btn_start_timer);
-        btnStop = findViewById(R.id.btn_stop_timer);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadTimers(); // Load lại list mỗi khi quay lại
+        registerTimerReceiver();
+    }
 
-        // 3. Sự kiện Bắt đầu
-        btnStart.setOnClickListener(v -> {
-            String minStr = edtMinutes.getText().toString();
-            if (minStr.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập số phút!", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (receiver != null) unregisterReceiver(receiver);
+    }
 
-            long minutes = Long.parseLong(minStr);
-            if (minutes <= 0) {
-                Toast.makeText(this, "Số phút phải lớn hơn 0", Toast.LENGTH_SHORT).show();
-                return;
-            }
+    private void loadTimers() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            List<TimerPreset> list = db.timerDao().getTimers(userId);
+            runOnUiThread(() -> {
+                container.removeAllViews();
+                for (TimerPreset timer : list) {
+                    addTimerView(timer);
+                }
+            });
+        });
+    }
 
-            long duration = minutes * 60 * 1000;
+    private void addTimerView(TimerPreset timer) {
+        View view = getLayoutInflater().inflate(R.layout.item_timer_preset, container, false);
+        view.setTag(timer.id);
 
-            // Khởi động Service chạy ngầm
+        TextView tvTitle = view.findViewById(R.id.tv_title);
+        TextView tvDuration = view.findViewById(R.id.tv_duration);
+        CardView cardIcon = view.findViewById(R.id.card_icon);
+        ImageView btnPlay = view.findViewById(R.id.btn_play_item);
+
+        tvTitle.setText(timer.title);
+        cardIcon.setCardBackgroundColor(getResources().getColor(timer.colorResId != 0 ? timer.colorResId : R.color.blue_primary));
+
+        // Logic hiển thị trạng thái
+        boolean isThisRunning = TimerService.isRunning && TimerService.currentTimerId == timer.id;
+        long timeToShow = isThisRunning ? TimerService.currentTimeLeft : (timer.remainingTime > 0 ? timer.remainingTime : timer.durationInMillis);
+
+        updateTimeText(tvDuration, timeToShow);
+        btnPlay.setImageResource(isThisRunning ? R.drawable.ic_menu : R.drawable.ic_check_circle);
+
+        // Click Body -> Vào chi tiết
+        view.setOnClickListener(v -> {
+            Intent intent = new Intent(this, TimerRunningActivity.class);
+            intent.putExtra("timer", timer);
+            startActivity(intent);
+        });
+
+        // Click Play -> Chạy ngay
+        btnPlay.setOnClickListener(v -> handlePlayPause(timer, btnPlay, tvDuration));
+
+        container.addView(view);
+    }
+
+    private void handlePlayPause(TimerPreset timer, ImageView btnPlay, TextView tvDuration) {
+        if (TimerService.isRunning && TimerService.currentTimerId == timer.id) {
+            // PAUSE
             Intent intent = new Intent(this, TimerService.class);
-            intent.putExtra("DURATION", duration);
+            intent.setAction("STOP");
+            startService(intent);
+
+            timer.remainingTime = TimerService.currentTimeLeft;
+            Executors.newSingleThreadExecutor().execute(() -> db.timerDao().update(timer));
+
+            btnPlay.setImageResource(R.drawable.ic_check_circle);
+            updateTimeText(tvDuration, TimerService.currentTimeLeft);
+        } else {
+            // RESUME
+            long timeToRun = (timer.remainingTime > 0) ? timer.remainingTime : timer.durationInMillis;
+
+            Intent intent = new Intent(this, TimerService.class);
+            intent.putExtra("DURATION", timeToRun);
+            intent.putExtra("TIMER_ID", timer.id);
+            intent.putExtra("TITLE", timer.title);
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 startForegroundService(intent);
@@ -61,43 +126,36 @@ public class TimerActivity extends AppCompatActivity {
                 startService(intent);
             }
 
-            Toast.makeText(this, "Đã bắt đầu hẹn giờ!", Toast.LENGTH_SHORT).show();
-        });
-
-        // 4. Sự kiện Dừng lại
-        btnStop.setOnClickListener(v -> {
-            stopService(new Intent(this, TimerService.class));
-            tvTimer.setText("00:00");
-            Toast.makeText(this, "Đã hủy hẹn giờ", Toast.LENGTH_SHORT).show();
-        });
+            // Reload lại toàn bộ để các nút play khác (nếu có) chuyển về pause
+            loadTimers();
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Đăng ký nhận thông tin từ Service để cập nhật giao diện
+    private void registerTimerReceiver() {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction() != null) {
-                    if (intent.getAction().equals(TimerService.ACTION_UPDATE)) {
-                        long timeLeft = intent.getLongExtra("TIME_LEFT", 0);
-                        int minutes = (int) (timeLeft / 1000) / 60;
-                        int seconds = (int) (timeLeft / 1000) % 60;
-                        tvTimer.setText(String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds));
-                    } else if (intent.getAction().equals(TimerService.ACTION_FINISH)) {
-                        tvTimer.setText("Hết giờ!");
-                        Toast.makeText(context, "Đã hết giờ!", Toast.LENGTH_LONG).show();
+                if (TimerService.ACTION_UPDATE.equals(intent.getAction())) {
+                    int runningId = intent.getIntExtra("TIMER_ID", -1);
+                    long timeLeft = intent.getLongExtra("TIME_LEFT", 0);
+
+                    View itemView = container.findViewWithTag(runningId);
+                    if (itemView != null) {
+                        TextView tvDuration = itemView.findViewById(R.id.tv_duration);
+                        updateTimeText(tvDuration, timeLeft);
+
+                        ImageView btnPlay = itemView.findViewById(R.id.btn_play_item);
+                        btnPlay.setImageResource(R.drawable.ic_menu);
                     }
+                } else if (TimerService.ACTION_FINISH.equals(intent.getAction())) {
+                    loadTimers(); // Hết giờ thì load lại để hiện 00:00 hoặc reset
                 }
             }
         };
-
         IntentFilter filter = new IntentFilter();
         filter.addAction(TimerService.ACTION_UPDATE);
         filter.addAction(TimerService.ACTION_FINISH);
 
-        // Android 13+ yêu cầu cờ RECEIVER_EXPORTED hoặc NOT_EXPORTED
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED);
         } else {
@@ -105,16 +163,10 @@ public class TimerActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        // Hủy đăng ký để tránh lỗi rò rỉ bộ nhớ (Memory Leak)
-        if (receiver != null) {
-            try {
-                unregisterReceiver(receiver);
-            } catch (IllegalArgumentException e) {
-                // Bỏ qua lỗi nếu chưa đăng ký
-            }
-        }
+    private void updateTimeText(TextView tv, long millis) {
+        long h = (millis / 1000) / 3600;
+        long m = ((millis / 1000) % 3600) / 60;
+        long s = (millis / 1000) % 60;
+        tv.setText(String.format(Locale.getDefault(), "%02d:%02d:%02d", h, m, s));
     }
 }

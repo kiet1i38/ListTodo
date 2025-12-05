@@ -19,40 +19,48 @@ import java.util.Locale;
 
 public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    // Định nghĩa loại view
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_TASK = 1;
 
-    // Class wrapper để chứa hoặc là Header hoặc là Task
     public static class TaskItemWrapper {
         public int type;
         public String headerTitle;
         public Task task;
-        public boolean isExpanded = true; // Trạng thái đóng mở của header
+        public boolean isExpanded; // Trạng thái đóng mở
 
-        // Constructor cho Header
-        public TaskItemWrapper(String headerTitle) {
+        // Header
+        public TaskItemWrapper(String headerTitle, boolean isExpanded) {
             this.type = TYPE_HEADER;
             this.headerTitle = headerTitle;
+            this.isExpanded = isExpanded;
         }
 
-        // Constructor cho Task
+        // Task
         public TaskItemWrapper(Task task) {
             this.type = TYPE_TASK;
             this.task = task;
         }
     }
 
-    private List<TaskItemWrapper> displayList = new ArrayList<>(); // List đang hiển thị
+    private List<TaskItemWrapper> displayList = new ArrayList<>();
     private final OnTaskClickListener listener;
+    private final OnHeaderClickListener headerListener; // Listener mới cho Header
 
+    // Interface cho Task (Sửa, Check)
     public interface OnTaskClickListener {
         void onTaskClick(Task task);
         void onTaskCheck(Task task);
     }
 
-    public TaskAdapter(OnTaskClickListener listener) {
+    // Interface cho Header (Đóng, Mở)
+    public interface OnHeaderClickListener {
+        void onHeaderClick(String headerTitle);
+    }
+
+    // Constructor cập nhật thêm headerListener
+    public TaskAdapter(OnTaskClickListener listener, OnHeaderClickListener headerListener) {
         this.listener = listener;
+        this.headerListener = headerListener;
     }
 
     public void setData(List<TaskItemWrapper> list) {
@@ -60,7 +68,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    // Hàm hỗ trợ lấy Task thật để vuốt xóa
     public List<Task> getTaskList() {
         List<Task> tasks = new ArrayList<>();
         for (TaskItemWrapper item : displayList) {
@@ -69,7 +76,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return tasks;
     }
 
-    // Hàm lấy item tại vị trí cụ thể (dùng cho vuốt xóa)
     public TaskItemWrapper getItem(int position) {
         return displayList.get(position);
     }
@@ -94,7 +100,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         TaskItemWrapper item = displayList.get(position);
-
         if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).bind(item);
         } else if (holder instanceof TaskViewHolder) {
@@ -107,7 +112,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return displayList.size();
     }
 
-    // --- VIEWHOLDER CHO HEADER ---
+    // --- HEADER VIEW HOLDER ---
     class HeaderViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvCount;
         ImageView imgArrow;
@@ -118,33 +123,25 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             tvCount = itemView.findViewById(R.id.tv_header_count);
             imgArrow = itemView.findViewById(R.id.img_arrow);
 
-            // Xử lý đóng mở
+            // Sự kiện click vào Header
             itemView.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
-                TaskItemWrapper header = displayList.get(pos);
-                header.isExpanded = !header.isExpanded; // Đảo trạng thái
-
-                // Logic ẩn/hiện các item con sẽ được xử lý ở Fragment khi reload lại list
-                // Hoặc xử lý tại chỗ (phức tạp hơn). Ở đây ta dùng cách reload đơn giản:
-                // Thông báo cho Fragment biết để tính toán lại list hiển thị (Cần Interface callback nếu làm chuẩn)
-                // Tuy nhiên, để đơn giản cho em, ta sẽ chỉ đổi icon xoay, còn logic ẩn hiện
-                // ta sẽ làm ở Fragment khi build list.
-
-                imgArrow.setRotation(header.isExpanded ? 0 : -90);
-                // Lưu ý: Logic đóng mở thực sự cần code phức tạp hơn ở Adapter.
-                // Để kịp tiến độ, thầy làm icon xoay thôi, còn mặc định cứ để mở hết nhé.
-                // Nếu muốn đóng mở thật sự, em cần lọc displayList.
+                if (pos != RecyclerView.NO_POSITION && headerListener != null) {
+                    // Gửi title về Fragment để xử lý logic
+                    headerListener.onHeaderClick(displayList.get(pos).headerTitle);
+                }
             });
         }
 
         void bind(TaskItemWrapper item) {
             tvTitle.setText(item.headerTitle);
+            // Xoay mũi tên dựa theo trạng thái isExpanded được truyền vào
             imgArrow.setRotation(item.isExpanded ? 0 : -90);
-            tvCount.setVisibility(View.GONE); // Tạm ẩn số lượng
+            tvCount.setVisibility(View.GONE);
         }
     }
 
-    // --- VIEWHOLDER CHO TASK (Giữ nguyên code cũ) ---
+    // --- TASK VIEW HOLDER ---
     class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDate;
         CheckBox cbCompleted;

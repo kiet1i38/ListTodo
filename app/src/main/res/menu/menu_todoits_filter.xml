@@ -7,7 +7,7 @@
         <item
             android:id="@+id/action_show_completed"
             android:title="Hiển thị đã hoàn thành"
-            android:checked="false" />
+            android:checked="true" />
 
         <item
             android:id="@+id/action_show_future"

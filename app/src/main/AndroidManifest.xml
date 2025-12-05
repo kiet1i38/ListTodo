@@ -44,6 +44,7 @@
         <!-- Các màn hình chức năng -->
         <activity android:name=".activities.AddTaskActivity" />
         <activity android:name=".activities.EditTaskActivity"/>
+        <activity android:name=".activities.EditSubtaskActivity" />
 
         <!-- NHÓM TIMER (Đã thêm đầy đủ để không bị lỗi) -->
         <activity android:name=".activities.TimerActivity"/>

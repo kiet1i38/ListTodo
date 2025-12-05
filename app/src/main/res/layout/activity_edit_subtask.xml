@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray">
 
-    <!-- 1. HEADER -->
+    <!-- HEADER -->
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             app:tint="@color/black"/>
 
         <TextView
-            android:text="Chi Tiết Công Việc"
+            android:text="Chi Tiết Công Việc Con"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <!-- 2. NỘI DUNG -->
+    <!-- NỘI DUNG -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -46,7 +46,7 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <!-- KHỐI 1: TÊN & CHIP -->
+            <!-- TÊN & CHIP -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,16 +60,15 @@
                     android:padding="16dp">
 
                     <EditText
-                        android:id="@+id/edt_task_title"
+                        android:id="@+id/edt_subtask_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:hint="Tên công việc"/>
+                        android:hint="Tên công việc con"/>
 
-                    <!-- CHIPS -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -97,24 +96,12 @@
                             android:textSize="11sp"
                             android:drawableStart="@drawable/ic_dashboard"
                             android:paddingHorizontal="4dp"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_marginEnd="4dp"/>
-
-                        <Button
-                            android:id="@+id/btn_chip_category"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="40dp"
-                            android:text="Danh Mục"
-                            android:textSize="11sp"
-                            android:drawableStart="@drawable/ic_check_circle"
-                            android:paddingHorizontal="4dp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 2: CÔNG VIỆC CON -->
+            <!-- CÀI ĐẶT -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,84 +114,13 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Nút Thêm Subtask -->
-                    <LinearLayout
-                        android:id="@+id/btn_add_subtask"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:background="?attr/selectableItemBackground">
-
-                        <ImageView
-                            android:src="@drawable/ic_add"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            app:tint="@color/black"/>
-
-                        <!-- ĐÃ SỬA LỖI TẠI ĐÂY: Thêm width/height -->
-                        <TextView
-                            android:text="Thêm công việc con"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:layout_marginStart="12dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-
-                    <View android:background="#E0E0E0" android:layout_height="1dp" android:layout_width="match_parent" android:layout_marginVertical="12dp"/>
-
-                    <!-- Container chứa các dòng subtask -->
-                    <LinearLayout
-                        android:id="@+id/layout_subtasks_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
-
+                    <include android:id="@+id/row_time" layout="@layout/item_setting_row" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                    <include android:id="@+id/row_reminder" layout="@layout/item_setting_row" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                    <include android:id="@+id/row_sound" layout="@layout/item_setting_row" android:layout_width="match_parent" android:layout_height="wrap_content"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 3: CÀI ĐẶT (Settings) -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                android:layout_marginBottom="16dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <!-- Include các dòng setting (Có layout_width/height đầy đủ) -->
-                    <include
-                        android:id="@+id/row_time"
-                        layout="@layout/item_setting_row"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <include
-                        android:id="@+id/row_reminder"
-                        layout="@layout/item_setting_row"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <include
-                        android:id="@+id/row_repeat"
-                        layout="@layout/item_setting_row"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <include
-                        android:id="@+id/row_sound"
-                        layout="@layout/item_setting_row"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- KHỐI 4: GHI CHÚ -->
+            <!-- GHI CHÚ -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -221,7 +137,7 @@
                         android:id="@+id/edt_note"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Ghi chú thêm..."
+                        android:hint="Ghi chú..."
                         android:background="@null"
                         android:layout_marginStart="12dp"/>
                 </LinearLayout>
@@ -230,7 +146,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 3. BUTTONS -->
+    <!-- BUTTONS -->
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"
@@ -259,5 +175,4 @@
             android:backgroundTint="@color/blue_primary"
             app:cornerRadius="28dp"/>
     </LinearLayout>
-
 </RelativeLayout>

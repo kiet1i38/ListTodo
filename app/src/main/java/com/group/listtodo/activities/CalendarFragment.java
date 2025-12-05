@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -44,7 +43,6 @@ public class CalendarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = AppDatabase.getInstance(getContext());
 
-        // Lấy User ID
         SessionManager session = new SessionManager(getContext());
         userId = session.getUserId();
 
@@ -57,7 +55,7 @@ public class CalendarFragment extends Fragment {
         updateSelectedDateRange(System.currentTimeMillis());
         loadTasksForDate();
 
-        // Sự kiện chọn ngày
+        // Sự kiện chọn ngày trên lịch
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             Calendar c = Calendar.getInstance();
             c.set(year, month, dayOfMonth);
@@ -68,20 +66,33 @@ public class CalendarFragment extends Fragment {
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new TaskAdapter(new TaskAdapter.OnTaskClickListener() {
-            @Override
-            public void onTaskClick(Task task) {
-                // Mở màn hình sửa khi bấm vào task ở lịch
-                Intent intent = new Intent(getContext(), EditTaskActivity.class);
-                intent.putExtra("task", task);
-                startActivity(intent);
-            }
 
-            @Override
-            public void onTaskCheck(Task task) {
-                updateTaskStatus(task);
-            }
-        });
+        // --- SỬA LỖI TẠI ĐÂY: CUNG CẤP ĐỦ 2 THAM SỐ ---
+        adapter = new TaskAdapter(
+                // Tham số 1: Xử lý Task (Sửa/Check)
+                new TaskAdapter.OnTaskClickListener() {
+                    @Override
+                    public void onTaskClick(Task task) {
+                        Intent intent = new Intent(getContext(), EditTaskActivity.class);
+                        intent.putExtra("task", task);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onTaskCheck(Task task) {
+                        updateTaskStatus(task);
+                    }
+                },
+                // Tham số 2: Xử lý Header (Ở Lịch không dùng header đóng mở nên để trống)
+                new TaskAdapter.OnHeaderClickListener() {
+                    @Override
+                    public void onHeaderClick(String headerTitle) {
+                        // Không làm gì cả
+                    }
+                }
+        );
+        // -----------------------------------------------
+
         recyclerView.setAdapter(adapter);
     }
 
@@ -107,7 +118,6 @@ public class CalendarFragment extends Fragment {
         executor.execute(() -> {
             List<Task> allTasks = db.taskDao().getAllTasks(userId);
 
-            // 1. Lọc task theo ngày
             List<Task> tasksForDate = new ArrayList<>();
             for (Task t : allTasks) {
                 if (t.dueDate >= selectedDateStart && t.dueDate <= selectedDateEnd) {
@@ -115,8 +125,7 @@ public class CalendarFragment extends Fragment {
                 }
             }
 
-            // 2. Chuyển đổi sang List<TaskItemWrapper> cho Adapter mới
-            // (Đây là phần sửa lỗi: Gói từng Task vào Wrapper)
+            // Chuyển đổi sang Wrapper cho Adapter mới
             List<TaskAdapter.TaskItemWrapper> displayList = new ArrayList<>();
             for (Task t : tasksForDate) {
                 displayList.add(new TaskAdapter.TaskItemWrapper(t));
@@ -124,7 +133,6 @@ public class CalendarFragment extends Fragment {
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    // Truyền list wrapper vào adapter
                     adapter.setData(displayList);
                 });
             }

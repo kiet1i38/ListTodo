@@ -17,8 +17,7 @@
             android:id="@+id/btn_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_menu"
-            android:rotation="90"
+            android:src="@drawable/ic_back"
             android:layout_centerVertical="true"
             app:tint="@color/black"
             android:contentDescription="Back"/>

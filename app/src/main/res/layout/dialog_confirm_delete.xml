@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/transparent"> <!-- Nền trong suốt để thấy khoảng hở -->
+
+    <!-- Nút Xóa -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_confirm_delete"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Xóa Mục Hiện Tại"
+        android:textColor="#FF3B30"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:background="@drawable/bg_white_rounded_16dp"
+        android:stateListAnimator="@null"/>
+
+    <!-- Khoảng cách giữa 2 nút -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="12dp"/>
+
+    <!-- Nút Hủy -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_cancel_delete"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Hủy"
+        android:textColor="#007AFF"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textAllCaps="false"
+        android:background="@drawable/bg_white_rounded_16dp"
+        android:stateListAnimator="@null"/>
+
+</LinearLayout>

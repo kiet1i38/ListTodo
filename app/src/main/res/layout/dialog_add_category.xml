@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_white_rounded"
+    android:paddingTop="20dp">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:text="Danh Mục Tùy Chỉnh"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Ô nhập liệu -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
+
+        <EditText
+            android:id="@+id/edt_category_name"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_input_gray_rounded"
+            android:hint="Nhập tên danh mục"
+            android:textSize="14sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="40dp"
+            android:inputType="textCapSentences"
+            android:maxLines="1"/>
+        <!-- bg_input_gray_rounded là file đã tạo ở bài Máy tính ngày tháng -->
+
+        <!-- Nút xóa text (X) -->
+        <ImageView
+            android:id="@+id/btn_clear_text"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@android:drawable/ic_delete"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="12dp"
+            android:alpha="0.3"/>
+    </FrameLayout>
+
+    <!-- Đường kẻ ngang -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0"/>
+
+    <!-- Nút bấm -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Hủy"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"/>
+
+        <!-- Đường kẻ dọc -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#E0E0E0"/>
+
+        <TextView
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="Xác Nhận"
+            android:textColor="@color/blue_primary"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -23,7 +23,7 @@
             app:tint="@color/black"/>
 
         <TextView
-            android:text="Danh Sách Công Việc"
+            android:text="Chi Tiết Công Việc"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <!-- 2. NỘI DUNG SCROLL -->
+    <!-- 2. NỘI DUNG -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -65,13 +65,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:text="Ăn cứt"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:hint="Tên công việc"/>
 
-                    <!-- Các nút chip (Thời gian, Cấp bậc...) -->
+                    <!-- CHIPS -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -83,12 +82,12 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="40dp"
-                            android:text="Thời Gian"
-                            android:textSize="12sp"
+                            android:text="Hôm nay"
+                            android:textSize="11sp"
                             android:drawableStart="@drawable/ic_calendar"
-                            android:paddingHorizontal="8dp"
+                            android:paddingHorizontal="4dp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_marginEnd="8dp"/>
+                            android:layout_marginEnd="4dp"/>
 
                         <Button
                             android:id="@+id/btn_chip_priority"
@@ -96,26 +95,27 @@
                             android:layout_weight="1"
                             android:layout_height="40dp"
                             android:text="Cấp Bậc"
-                            android:textSize="12sp"
+                            android:textSize="11sp"
                             android:drawableStart="@drawable/ic_dashboard"
-                            android:paddingHorizontal="8dp"
+                            android:paddingHorizontal="4dp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                            android:layout_marginEnd="8dp"/>
+                            android:layout_marginEnd="4dp"/>
 
                         <Button
+                            android:id="@+id/btn_chip_category"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="40dp"
-                            android:text="Công Việc"
-                            android:textSize="12sp"
+                            android:text="Danh Mục"
+                            android:textSize="11sp"
                             android:drawableStart="@drawable/ic_check_circle"
-                            android:paddingHorizontal="8dp"
+                            android:paddingHorizontal="4dp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 2: CÔNG VIỆC CON (SUB-TASK) -->
+            <!-- KHỐI 2: CÔNG VIỆC CON -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,18 +128,40 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
+                    <!-- Nút Thêm Subtask -->
                     <LinearLayout
+                        android:id="@+id/btn_add_subtask"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <ImageView android:src="@drawable/ic_add" android:layout_width="24dp" android:layout_height="24dp" app:tint="@color/black"/>
-                        <TextView         android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Thêm công việc con" android:textSize="16sp" android:textColor="@color/black" android:layout_marginStart="12dp"/>
+                        android:gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:src="@drawable/ic_add"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            app:tint="@color/black"/>
+
+                        <!-- ĐÃ SỬA LỖI TẠI ĐÂY: Thêm width/height -->
+                        <TextView
+                            android:text="Thêm công việc con"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:layout_marginStart="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <View android:background="#E0E0E0" android:layout_height="1dp" android:layout_width="match_parent" android:layout_marginVertical="12dp"/>
+
+                    <!-- Container chứa các dòng subtask -->
+                    <LinearLayout
+                        android:id="@+id/layout_subtasks_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -156,17 +178,30 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Item 1: Thời gian -->
-                    <include layout="@layout/item_setting_row" android:id="@+id/row_time"/>
+                    <!-- Include các dòng setting (Có layout_width/height đầy đủ) -->
+                    <include
+                        android:id="@+id/row_time"
+                        layout="@layout/item_setting_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                    <!-- Item 2: Nhắc nhở -->
-                    <include layout="@layout/item_setting_row" android:id="@+id/row_reminder"/>
+                    <include
+                        android:id="@+id/row_reminder"
+                        layout="@layout/item_setting_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                    <!-- Item 3: Lặp lại -->
-                    <include layout="@layout/item_setting_row" android:id="@+id/row_repeat"/>
+                    <include
+                        android:id="@+id/row_repeat"
+                        layout="@layout/item_setting_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
 
-                    <!-- Item 4: Âm thanh -->
-                    <include layout="@layout/item_setting_row" android:id="@+id/row_sound"/>
+                    <include
+                        android:id="@+id/row_sound"
+                        layout="@layout/item_setting_row"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -187,7 +222,7 @@
                         android:id="@+id/edt_note"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Ghi chú"
+                        android:hint="Ghi chú thêm..."
                         android:background="@null"
                         android:layout_marginStart="12dp"/>
                 </LinearLayout>
@@ -196,7 +231,7 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 3. BUTTONS BOTTOM -->
+    <!-- 3. BUTTONS -->
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"

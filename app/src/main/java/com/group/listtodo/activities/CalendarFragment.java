@@ -1,5 +1,6 @@
 package com.group.listtodo.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.group.listtodo.R;
 import com.group.listtodo.adapters.TaskAdapter;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
-import com.group.listtodo.utils.SessionManager; // <--- Đừng quên Import cái này
+import com.group.listtodo.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +31,7 @@ public class CalendarFragment extends Fragment {
     private TaskAdapter adapter;
     private AppDatabase db;
     private long selectedDateStart, selectedDateEnd;
-    private String userId; // <--- Biến lưu ID người dùng hiện tại
+    private String userId;
 
     @Nullable
     @Override
@@ -43,28 +44,14 @@ public class CalendarFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = AppDatabase.getInstance(getContext());
 
-        // 1. Lấy User ID từ Session (Đã đăng nhập)
+        // Lấy User ID
         SessionManager session = new SessionManager(getContext());
         userId = session.getUserId();
 
         calendarView = view.findViewById(R.id.calendar_view);
         recyclerView = view.findViewById(R.id.rv_calendar_tasks);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new TaskAdapter(new TaskAdapter.OnTaskClickListener() {
-            @Override
-            public void onTaskClick(Task task) {
-                // Xử lý khi bấm vào task (Sửa)
-            }
-
-            @Override
-            public void onTaskCheck(Task task) {
-                updateTaskStatus(task);
-            }
-        });
-
-        recyclerView.setAdapter(adapter);
+        setupRecyclerView();
 
         // Mặc định chọn hôm nay
         updateSelectedDateRange(System.currentTimeMillis());
@@ -79,18 +66,35 @@ public class CalendarFragment extends Fragment {
         });
     }
 
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new TaskAdapter(new TaskAdapter.OnTaskClickListener() {
+            @Override
+            public void onTaskClick(Task task) {
+                // Mở màn hình sửa khi bấm vào task ở lịch
+                Intent intent = new Intent(getContext(), EditTaskActivity.class);
+                intent.putExtra("task", task);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onTaskCheck(Task task) {
+                updateTaskStatus(task);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
     private void updateSelectedDateRange(long timeInMillis) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(timeInMillis);
 
-        // Reset về đầu ngày (00:00:00)
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
         selectedDateStart = c.getTimeInMillis();
 
-        // Reset về cuối ngày (23:59:59)
         c.set(Calendar.HOUR_OF_DAY, 23);
         c.set(Calendar.MINUTE, 59);
         c.set(Calendar.SECOND, 59);
@@ -101,20 +105,27 @@ public class CalendarFragment extends Fragment {
     private void loadTasksForDate() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // SỬA LỖI TẠI ĐÂY: Truyền userId vào hàm query
             List<Task> allTasks = db.taskDao().getAllTasks(userId);
-            List<Task> tasksForDate = new ArrayList<>();
 
+            // 1. Lọc task theo ngày
+            List<Task> tasksForDate = new ArrayList<>();
             for (Task t : allTasks) {
-                // Kiểm tra xem task có nằm trong khoảng ngày đã chọn không
                 if (t.dueDate >= selectedDateStart && t.dueDate <= selectedDateEnd) {
                     tasksForDate.add(t);
                 }
             }
 
+            // 2. Chuyển đổi sang List<TaskItemWrapper> cho Adapter mới
+            // (Đây là phần sửa lỗi: Gói từng Task vào Wrapper)
+            List<TaskAdapter.TaskItemWrapper> displayList = new ArrayList<>();
+            for (Task t : tasksForDate) {
+                displayList.add(new TaskAdapter.TaskItemWrapper(t));
+            }
+
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    adapter.setData(tasksForDate);
+                    // Truyền list wrapper vào adapter
+                    adapter.setData(displayList);
                 });
             }
         });

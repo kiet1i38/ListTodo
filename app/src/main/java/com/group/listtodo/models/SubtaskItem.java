@@ -5,16 +5,17 @@ import java.io.Serializable;
 public class SubtaskItem implements Serializable {
     public String title;
     public boolean isCompleted;
-    public long dueDate;      // Thêm: Ngày giờ
-    public int priority;      // Thêm: Cấp bậc
-    public String note;       // Thêm: Ghi chú
-    // Em có thể thêm location, remind... tùy ý
+    public long dueDate;
+    public int priority;
+    public String note;
+    public String location; // <--- THÊM MỚI
 
     public SubtaskItem(String title, boolean isCompleted) {
         this.title = title;
         this.isCompleted = isCompleted;
-        this.priority = 4; // Mặc định bình thường
+        this.priority = 4;
         this.dueDate = System.currentTimeMillis();
         this.note = "";
+        this.location = "";
     }
 }

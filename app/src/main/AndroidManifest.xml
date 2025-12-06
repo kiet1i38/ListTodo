@@ -24,7 +24,7 @@
         <!-- 2. CẤU HÌNH GOOGLE MAPS -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyDLklT-3sObA8pGfU5Oy0409_iT6JaktDo" />
 
         <!-- 3. MÀN HÌNH KHỞI ĐỘNG (LOGIN) -->
         <activity

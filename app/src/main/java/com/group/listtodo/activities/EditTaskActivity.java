@@ -25,8 +25,10 @@ import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.SubtaskItem;
 import com.group.listtodo.models.Task;
-import com.group.listtodo.receivers.AlarmReceiver; // <--- Nhớ import Receiver
+import com.group.listtodo.receivers.AlarmReceiver;
 import com.group.listtodo.utils.SessionManager;
+import com.group.listtodo.utils.SyncHelper; // Import Auto Backup
+
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.group.listtodo.utils.SyncHelper;
 
 public class EditTaskActivity extends AppCompatActivity {
 
@@ -49,9 +50,12 @@ public class EditTaskActivity extends AppCompatActivity {
     private AppDatabase db;
     private Calendar calendar = Calendar.getInstance();
 
+    // Các biến dữ liệu tạm thời
     private int selectedPriority = 4;
     private String selectedCategory = "Công Việc";
     private String selectedLocation = "";
+    private double selectedLat = 0;
+    private double selectedLng = 0;
 
     private List<SubtaskItem> subtaskList = new ArrayList<>();
     private ActivityResultLauncher<Intent> subtaskLauncher;
@@ -65,6 +69,7 @@ public class EditTaskActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
         currentTask = (Task) getIntent().getSerializableExtra("task");
 
+        // 1. LAUNCHER NHẬN KẾT QUẢ TỪ SUBTASK (Sửa/Xóa)
         subtaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 SubtaskItem updatedItem = (SubtaskItem) result.getData().getSerializableExtra("updated_subtask");
@@ -82,9 +87,14 @@ public class EditTaskActivity extends AppCompatActivity {
             }
         });
 
+        // 2. LAUNCHER NHẬN KẾT QUẢ TỪ BẢN ĐỒ (Địa điểm)
         locationLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 selectedLocation = result.getData().getStringExtra("location_name");
+                selectedLat = result.getData().getDoubleExtra("lat", 0);
+                selectedLng = result.getData().getDoubleExtra("lng", 0);
+
+                // Cập nhật nút bấm ngay lập tức
                 btnChipLocation.setText(selectedLocation);
             }
         });
@@ -107,6 +117,7 @@ public class EditTaskActivity extends AppCompatActivity {
 
         layoutSubtasksContainer = findViewById(R.id.layout_subtasks_container);
 
+        // Nút thêm Subtask mới
         findViewById(R.id.btn_add_subtask).setOnClickListener(v -> {
             SubtaskItem newItem = new SubtaskItem("", false);
             subtaskList.add(newItem);
@@ -116,6 +127,7 @@ public class EditTaskActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
+        // Setup các dòng cài đặt (Fix lỗi hiển thị "Label")
         setupRow(R.id.row_time, R.drawable.ic_clock, "Thời Gian", "Chọn >");
         setupRow(R.id.row_reminder, R.drawable.ic_alarm, "Nhắc Nhở", "Không Nhắc >");
         setupRow(R.id.row_repeat, R.drawable.ic_repeat, "Lặp Lại", "Không >");
@@ -128,6 +140,8 @@ public class EditTaskActivity extends AppCompatActivity {
             ((ImageView) view.findViewById(R.id.img_icon)).setImageResource(iconRes);
             ((TextView) view.findViewById(R.id.tv_label)).setText(label);
             ((TextView) view.findViewById(R.id.tv_value)).setText(value);
+
+            // Nếu là dòng Thời Gian thì gán sự kiện click để chọn giờ
             if (label.equals("Thời Gian")) {
                 tvTimeValue = view.findViewById(R.id.tv_value);
                 view.setOnClickListener(v -> showDateTimePicker());
@@ -142,7 +156,11 @@ public class EditTaskActivity extends AppCompatActivity {
             calendar.setTimeInMillis(currentTask.dueDate);
             selectedPriority = currentTask.priority;
             selectedCategory = currentTask.category != null ? currentTask.category : "Công Việc";
+
+            // Load địa điểm và tọa độ từ DB
             selectedLocation = currentTask.location != null ? currentTask.location : "";
+            selectedLat = currentTask.locationLat;
+            selectedLng = currentTask.locationLng;
 
             updateChipTexts();
             loadSubtasks();
@@ -162,6 +180,8 @@ public class EditTaskActivity extends AppCompatActivity {
         btnChipPriority.setText(prioText);
 
         btnChipCategory.setText(selectedCategory);
+
+        // Hiển thị tên địa điểm hoặc mặc định
         btnChipLocation.setText(selectedLocation.isEmpty() ? "Địa Điểm" : selectedLocation);
     }
 
@@ -193,6 +213,8 @@ public class EditTaskActivity extends AppCompatActivity {
 
         cb.setChecked(item.isCompleted);
         edt.setText(item.title);
+
+        // Không cho nhập trực tiếp, bấm vào để mở màn hình EditSubtask
         edt.setFocusable(false);
         edt.setClickable(true);
         edt.setOnClickListener(v -> openEditSubtask(item, position));
@@ -244,19 +266,31 @@ public class EditTaskActivity extends AppCompatActivity {
             popup.show();
         });
 
+        // --- SỰ KIỆN MỞ BẢN ĐỒ ---
         btnChipLocation.setOnClickListener(v -> {
             Intent intent = new Intent(this, LocationActivity.class);
+            // Gửi tọa độ cũ sang để bản đồ hiển thị đúng marker
+            if (selectedLat != 0 && selectedLng != 0) {
+                intent.putExtra("old_lat", selectedLat);
+                intent.putExtra("old_lng", selectedLng);
+                intent.putExtra("old_name", selectedLocation);
+            }
             locationLauncher.launch(intent);
         });
 
-        // NÚT LƯU
+        // --- SỰ KIỆN LƯU ---
         btnSave.setOnClickListener(v -> {
             currentTask.title = edtTitle.getText().toString();
             currentTask.description = edtNote.getText().toString();
             currentTask.dueDate = calendar.getTimeInMillis();
             currentTask.priority = selectedPriority;
             currentTask.category = selectedCategory;
+
+            // Lưu địa điểm và tọa độ
             currentTask.location = selectedLocation;
+            currentTask.locationLat = selectedLat;
+            currentTask.locationLng = selectedLng;
+
             currentTask.subtasks = new Gson().toJson(subtaskList);
 
             if (currentTask.userId == null) {
@@ -267,29 +301,33 @@ public class EditTaskActivity extends AppCompatActivity {
             executor.execute(() -> {
                 db.taskDao().updateTask(currentTask);
 
-                // GỌI HÀM ĐẶT BÁO THỨC KHI SỬA
+                // Đặt lại báo thức
                 scheduleAlarm(currentTask);
+
+                // Tự động sao lưu lên Cloud
+                SyncHelper.autoBackup(this);
 
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Đã lưu thay đổi!", Toast.LENGTH_SHORT).show();
-                    SyncHelper.autoBackup(this);
                     finish();
                 });
             });
         });
 
-        // NÚT XÓA
+        // --- SỰ KIỆN XÓA ---
         btnDelete.setOnClickListener(v -> {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 db.taskDao().deleteTask(currentTask);
 
-                // GỌI HÀM HỦY BÁO THỨC KHI XÓA
+                // Hủy báo thức
                 cancelAlarm(currentTask);
 
+                // Tự động sao lưu
+                SyncHelper.autoBackup(this);
+
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "Đã xóa!", Toast.LENGTH_SHORT).show();
-                    SyncHelper.autoBackup(this);
+                    Toast.makeText(this, "Đã xóa công việc!", Toast.LENGTH_SHORT).show();
                     finish();
                 });
             });
@@ -309,27 +347,32 @@ public class EditTaskActivity extends AppCompatActivity {
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    // --- HÀM ĐẶT BÁO THỨC ---
     private void scheduleAlarm(Task task) {
-        if (task.dueDate > System.currentTimeMillis()) {
+        // Tính toán thời gian nhắc: Hạn chót - 1 ngày (24h * 60p * 60s * 1000ms)
+        long oneDayInMillis = 24 * 60 * 60 * 1000;
+        long triggerTime = task.dueDate - oneDayInMillis;
+
+
+        if (triggerTime > System.currentTimeMillis()) {
             AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(this, AlarmReceiver.class);
-            i.putExtra("TITLE", task.title);
+
+            // Sửa tiêu đề thông báo chút cho hợp lý
+            i.putExtra("TITLE", "Sắp đến hạn (còn 1 ngày): " + task.title);
+
             PendingIntent pi = PendingIntent.getBroadcast(this, task.id, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
             if (am != null) {
-                long triggerTime = task.dueDate - (24 * 60 * 60 * 1000);
+                // Đặt lịch vào đúng thời điểm triggerTime đã tính
                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
             }
         }
     }
 
-    // --- HÀM HỦY BÁO THỨC ---
     private void cancelAlarm(Task task) {
         AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(this, AlarmReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, task.id, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
-
         if (pi != null && am != null) {
             am.cancel(pi);
             pi.cancel();

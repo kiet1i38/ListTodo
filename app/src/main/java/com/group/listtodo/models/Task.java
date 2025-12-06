@@ -14,13 +14,14 @@ public class Task implements Serializable {
     public long dueDate;
     public int priority;
     public boolean isCompleted;
-    public String category; // "Công Việc", "Cá Nhân"...
+    public String category;
     public String userId;
-
-    // THÊM MỚI: Lưu danh sách việc con (JSON hoặc String)
-    // Format đơn giản: "Tên việc con 1,false;Tên việc con 2,true"
     public String subtasks;
-    public String location; // Lưu tên địa điểm
+
+    // --- CÁC TRƯỜNG ĐỊA ĐIỂM ---
+    public String location;    // Tên địa điểm (VD: 19 Nguyễn Hữu Thọ)
+    public double locationLat; // Vĩ độ (VD: 10.7324)
+    public double locationLng; // Kinh độ (VD: 106.6992)
 
     public Task() {}
 

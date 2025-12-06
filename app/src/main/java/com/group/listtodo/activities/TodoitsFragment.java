@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.group.listtodo.utils.SyncHelper;
 
 public class TodoitsFragment extends Fragment {
 
@@ -305,6 +306,7 @@ public class TodoitsFragment extends Fragment {
         executor.execute(() -> {
             db.taskDao().updateTask(task);
             loadTasks();
+            SyncHelper.autoBackup(getContext());
         });
     }
 
@@ -370,6 +372,7 @@ public class TodoitsFragment extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "Đã xóa!", Toast.LENGTH_SHORT).show();
                     loadTasks();
+                    SyncHelper.autoBackup(getContext());
                 });
             }
         });

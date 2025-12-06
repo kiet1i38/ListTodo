@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.group.listtodo.utils.SyncHelper;
 
 public class AddNewTaskSheet extends BottomSheetDialogFragment {
 
@@ -136,6 +137,7 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), "Đã thêm & Đặt nhắc nhở!", Toast.LENGTH_SHORT).show();
+                    SyncHelper.autoBackup(getContext());
                     if (onDismissListener != null) onDismissListener.run();
                     dismiss();
                 });

@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -60,6 +61,7 @@
         <activity android:name=".activities.LocationActivity"/>
         <activity android:name=".activities.StatsActivity"/>
         <activity android:name=".activities.DateCalcActivity"/>
+        <service android:name=".services.AlarmSoundService" />
 
         <!-- 5. SERVICES & RECEIVERS -->
         <service android:name=".services.TimerService" android:foregroundServiceType="shortService" />

@@ -46,12 +46,12 @@ public class MoreFragment extends Fragment {
         });
 
         // 3. Đồng Hồ Hẹn Giờ
-        setupItem(view.findViewById(R.id.menu_timer), "Đồng Hồ Hẹn Giờ", R.drawable.ic_check_circle, v -> {
+        setupItem(view.findViewById(R.id.menu_timer), "Đồng Hồ Hẹn Giờ", R.drawable.ic_clock, v -> {
             startActivity(new Intent(getContext(), TimerActivity.class));
         });
 
         // 4. Máy Tính Ngày Tháng
-        setupItem(view.findViewById(R.id.menu_date_calc), "Máy Tính Ngày Tháng", R.drawable.ic_calendar, v -> {
+        setupItem(view.findViewById(R.id.menu_date_calc), "Máy Tính Ngày Tháng", R.drawable.ic_calculate, v -> {
             startActivity(new Intent(getContext(), DateCalcActivity.class));
         });
 

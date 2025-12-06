@@ -31,7 +31,7 @@
         android:id="@+id/img_arrow"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/ic_menu"
+        android:src="@drawable/ic_arrow_down"
         app:tint="@color/text_gray"/>
     <!-- Dùng tạm ic_menu nếu chưa có ic_arrow_down -->
 </LinearLayout>

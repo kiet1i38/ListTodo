@@ -56,13 +56,19 @@
                 android:layout_height="20dp"
                 app:tint="@color/text_gray"/>
 
-            <TextView
-                android:text="Tìm kiếm"
-                android:textColor="@color/text_gray"
+            <EditText
+                android:id="@+id/edt_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:hint="Tìm kiếm"
+                android:textColorHint="@color/text_gray"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 android:layout_marginStart="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:maxLines="1"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"/>
         </LinearLayout>
     </RelativeLayout>
 

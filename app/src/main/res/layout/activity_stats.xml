@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_gray">
+    android:background="#F5F7FA">
 
-    <!-- Header -->
+    <!-- 1. HEADER -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,50 +43,50 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <!-- PHẦN 1: TỔNG QUAN (Chia 2 cột) -->
+            <!-- 2. KHỐI TRÊN: HÔM NAY & TỔNG QUAN -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:baselineAligned="false">
 
-                <!-- Cột Trái: Biểu đồ tròn Hôm nay -->
+                <!-- Cột Trái: Chart Hôm nay -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="180dp"
+                    android:layout_height="220dp"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/white"
                     android:layout_marginEnd="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:padding="12dp"
+                        android:padding="16dp"
                         android:gravity="center">
 
                         <TextView
                             android:text="Hoàn Thành Hôm Nay"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
-                            android:layout_marginBottom="8dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                        <!-- Chart Tròn (PieChart) -->
+                        <!-- Chart Tròn Nhỏ -->
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/pieChart_today"
                             android:layout_width="100dp"
-                            android:layout_height="100dp"/>
+                            android:layout_height="100dp"
+                            android:layout_marginVertical="12dp"/>
 
                         <TextView
                             android:id="@+id/tv_today_summary"
-                            android:text="0/0 công việc"
-                            android:textSize="10sp"
+                            android:text="0/0 mục"
+                            android:textSize="12sp"
                             android:textColor="@color/text_gray"
-                            android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
@@ -103,49 +103,53 @@
                     <!-- Card 1: Chờ -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
+                        android:layout_height="66dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        android:layout_marginBottom="8dp">
+                        app:cardBackgroundColor="@color/white"
+                        android:layout_marginBottom="10dp">
                         <RelativeLayout android:padding="12dp" android:layout_width="match_parent" android:layout_height="match_parent">
-                            <TextView android:text="Danh Sách Chờ" android:textStyle="bold" android:textColor="@color/black" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                            <TextView android:id="@+id/tv_stat_pending" android:text="0" android:textStyle="bold" android:textColor="@color/blue_primary" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Danh Sách\nChờ" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/black" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:id="@+id/tv_stat_pending" android:text="0 >" android:textStyle="bold" android:textColor="@color/blue_primary" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         </RelativeLayout>
                     </androidx.cardview.widget.CardView>
 
                     <!-- Card 2: Đã xong -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
+                        android:layout_height="66dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        android:layout_marginBottom="8dp">
+                        app:cardBackgroundColor="@color/white"
+                        android:layout_marginBottom="10dp">
                         <RelativeLayout android:padding="12dp" android:layout_width="match_parent" android:layout_height="match_parent">
-                            <TextView android:text="Đã Hoàn Thành" android:textStyle="bold" android:textColor="@color/black" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                            <TextView android:id="@+id/tv_stat_done" android:text="0" android:textStyle="bold" android:textColor="@color/quadrant_4_green" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Đã Hoàn\nThành" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/black" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:id="@+id/tv_stat_done" android:text="0 >" android:textStyle="bold" android:textColor="@color/black" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         </RelativeLayout>
                     </androidx.cardview.widget.CardView>
 
                     <!-- Card 3: Hết hạn -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="54dp"
+                        android:layout_height="66dp"
                         app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp">
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="@color/white">
                         <RelativeLayout android:padding="12dp" android:layout_width="match_parent" android:layout_height="match_parent">
-                            <TextView android:text="Đã Hết Hạn" android:textStyle="bold" android:textColor="@color/black" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-                            <TextView android:id="@+id/tv_stat_overdue" android:text="0" android:textStyle="bold" android:textColor="@color/quadrant_1_red" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Đã Hết Hạn" android:textSize="12sp" android:textStyle="bold" android:textColor="@color/black" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:id="@+id/tv_stat_overdue" android:text="0 >" android:textStyle="bold" android:textColor="#FF3B30" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         </RelativeLayout>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- PHẦN 2: BIỂU ĐỒ TUẦN (LineChart) -->
+            <!-- 3. KHỐI GIỮA: CHART LỚN (TUẦN) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginTop="16dp">
 
                 <LinearLayout
@@ -154,19 +158,96 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <!-- Header Khối Giữa -->
+                    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
                         <TextView android:text="Hoàn Thành Hàng Tuần" android:textStyle="bold" android:textSize="16sp" android:textColor="@color/black" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
-                        <TextView android:text="7 Ngày Qua" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+
+                        <!-- Nút chọn thời gian -->
+                        <LinearLayout
+                            android:id="@+id/btn_filter_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView android:id="@+id/tv_filter_label" android:text="Tuần này" android:textColor="@color/text_gray" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <ImageView android:src="@drawable/ic_menu" android:layout_width="16dp" android:layout_height="16dp" app:tint="@color/text_gray" android:layout_marginStart="4dp"/>
+                        </LinearLayout>
                     </LinearLayout>
 
-                    <!-- BarChart (Biểu đồ cột) -->
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/barChart_weekly"
+                    <!-- Chart Tròn Lớn -->
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChart_main"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_marginTop="16dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_main_chart_desc"
+                        android:text="Có 0 mục trong chương trình tuần này"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_gray"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
+
+            <!-- 4. KHỐI DƯỚI: THỐNG KÊ CHI TIẾT -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginTop="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
+                        <TextView android:text="Nhiều nhất trong tuần này:" android:textStyle="bold" android:textColor="@color/black" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
+                        <TextView android:id="@+id/tv_day_name" android:text="Thursday" android:textStyle="bold" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <!-- 4 Ô thống kê -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="4">
+
+                        <!-- Ô 1 -->
+                        <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp" android:layout_marginEnd="4dp">
+                            <TextView android:id="@+id/tv_count_total" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Thiết lập" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <!-- Ô 2 -->
+                        <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp" android:layout_marginEnd="4dp">
+                            <TextView android:id="@+id/tv_count_pending" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="#246BFD" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Danh\nSách Chờ" android:gravity="center" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <!-- Ô 3 -->
+                        <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp" android:layout_marginEnd="4dp">
+                            <TextView android:id="@+id/tv_count_done" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Đã Hoàn\nThành" android:gravity="center" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+
+                        <!-- Ô 4 -->
+                        <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp">
+                            <TextView android:id="@+id/tv_count_overdue" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="#FF3B30" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                            <TextView android:text="Đã Hết Hạn" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- (ĐÃ XÓA MỤC XEM THÊM) -->
 
         </LinearLayout>
     </ScrollView>

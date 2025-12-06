@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,27 +43,34 @@ import java.util.concurrent.Executors;
 
 public class TodoitsFragment extends Fragment {
 
+    // View Components
     private RecyclerView rvTasks, rvCategories;
     private TaskAdapter taskAdapter;
     private CategoryAdapter categoryAdapter;
     private AppDatabase db;
     private LinearLayout layoutEmpty;
     private ImageButton btnMoreOptions;
-    private String userId;
+    private EditText edtSearch;
 
-    // Danh sách danh mục mặc định
+    // Data & State
+    private String userId;
     private List<String> categoryList = new ArrayList<>(Arrays.asList("Tất Cả", "Công Việc", "Cá Nhân", "Học Tập", "+"));
     private String currentCategory = "Tất Cả";
+    private String currentSearchKeyword = "";
 
-    // Trạng thái đóng mở các nhóm (Mặc định mở)
-    private boolean isOverdueExpanded = true;
-    private boolean isFutureExpanded = true;
-    private boolean isCompletedExpanded = true;
+    // Search Debounce
+    private Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
 
-    // Biến lọc 3 chấm
+    // Filter Flags (Menu 3 chấm)
     private boolean showCompleted = true;
     private boolean showFuture = true;
     private boolean showOverdue = true;
+
+    // Section Expand Flags (Đóng/Mở nhóm)
+    private boolean isOverdueExpanded = true;
+    private boolean isFutureExpanded = true;
+    private boolean isCompletedExpanded = true;
 
     @Nullable
     @Override
@@ -72,25 +82,26 @@ public class TodoitsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // 1. Init Data
         db = AppDatabase.getInstance(getContext());
         SessionManager session = new SessionManager(getContext());
         userId = session.getUserId();
 
+        // 2. Bind Views
         rvTasks = view.findViewById(R.id.recycler_tasks);
         rvCategories = view.findViewById(R.id.recycler_categories);
         layoutEmpty = view.findViewById(R.id.layout_empty);
         FloatingActionButton fab = view.findViewById(R.id.fab_add);
         btnMoreOptions = view.findViewById(R.id.btn_more_options);
+        edtSearch = view.findViewById(R.id.edt_search);
 
-        // 1. Setup Danh mục
+        // 3. Setup Components
         setupCategoryRecycler();
-
-        // 2. Setup Danh sách Task
         setupTaskRecycler();
-
-        // 3. Setup Vuốt để xóa
         setupSwipeToDelete();
+        setupSearchLogic();
 
+        // 4. Events
         fab.setOnClickListener(v -> {
             AddNewTaskSheet bottomSheet = new AddNewTaskSheet(() -> loadTasks());
             bottomSheet.show(getParentFragmentManager(), "AddTask");
@@ -98,9 +109,28 @@ public class TodoitsFragment extends Fragment {
 
         btnMoreOptions.setOnClickListener(v -> showFilterMenu());
 
+        // 5. Initial Load
         loadTasks();
     }
 
+    // --- SETUP TÌM KIẾM (DEBOUNCE) ---
+    private void setupSearchLogic() {
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
+            }
+            @Override public void afterTextChanged(Editable s) {
+                searchRunnable = () -> {
+                    currentSearchKeyword = s.toString().trim();
+                    loadTasks();
+                };
+                searchHandler.postDelayed(searchRunnable, 300); // Đợi 300ms mới tìm
+            }
+        });
+    }
+
+    // --- SETUP DANH MỤC NGANG ---
     private void setupCategoryRecycler() {
         categoryAdapter = new CategoryAdapter(categoryList, new CategoryAdapter.OnCategoryClickListener() {
             @Override
@@ -117,7 +147,7 @@ public class TodoitsFragment extends Fragment {
         rvCategories.setAdapter(categoryAdapter);
     }
 
-    // Custom Dialog thêm danh mục (Đẹp hơn AlertDialog mặc định)
+    // --- DIALOG THÊM DANH MỤC (CUSTOM) ---
     private void showAddCategoryDialog() {
         if (getContext() == null) return;
 
@@ -135,25 +165,28 @@ public class TodoitsFragment extends Fragment {
         TextView btnConfirm = dialog.findViewById(R.id.btn_confirm);
 
         btnClear.setOnClickListener(v -> edtName.setText(""));
+
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         btnConfirm.setOnClickListener(v -> {
             String newCat = edtName.getText().toString().trim();
             if (!newCat.isEmpty()) {
+                // Thêm vào trước dấu "+" (vị trí size - 1)
                 categoryList.add(categoryList.size() - 1, newCat);
                 categoryAdapter.notifyDataSetChanged();
                 dialog.dismiss();
+            } else {
+                Toast.makeText(getContext(), "Vui lòng nhập tên danh mục", Toast.LENGTH_SHORT).show();
             }
         });
 
         dialog.show();
     }
 
+    // --- SETUP DANH SÁCH CÔNG VIỆC ---
     private void setupTaskRecycler() {
         rvTasks.setLayoutManager(new LinearLayoutManager(getContext()));
-
         taskAdapter = new TaskAdapter(
-                // Listener cho Task
                 new TaskAdapter.OnTaskClickListener() {
                     @Override
                     public void onTaskClick(Task task) {
@@ -166,53 +199,55 @@ public class TodoitsFragment extends Fragment {
                         updateTaskStatus(task);
                     }
                 },
-                // Listener cho Header (Đóng/Mở)
                 new TaskAdapter.OnHeaderClickListener() {
                     @Override
                     public void onHeaderClick(String headerTitle) {
-                        if (headerTitle.startsWith("Hết hạn")) {
-                            isOverdueExpanded = !isOverdueExpanded;
-                        } else if (headerTitle.startsWith("Việc cần làm")) {
-                            isFutureExpanded = !isFutureExpanded;
-                        } else if (headerTitle.startsWith("Đã hoàn thành")) {
-                            isCompletedExpanded = !isCompletedExpanded;
-                        }
-                        loadTasks(); // Reload để ẩn/hiện item
+                        // Logic đóng mở nhóm
+                        if (headerTitle.startsWith("Hết hạn")) isOverdueExpanded = !isOverdueExpanded;
+                        else if (headerTitle.startsWith("Việc cần làm")) isFutureExpanded = !isFutureExpanded;
+                        else if (headerTitle.startsWith("Đã hoàn thành")) isCompletedExpanded = !isCompletedExpanded;
+
+                        loadTasks(); // Reload để áp dụng trạng thái mới
                     }
                 }
         );
         rvTasks.setAdapter(taskAdapter);
     }
 
+    // --- LOGIC LOAD DỮ LIỆU CHÍNH ---
     private void loadTasks() {
         if (userId == null) return;
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             List<Task> allTasks = db.taskDao().getAllTasks(userId);
-            List<Task> filteredByCategory = new ArrayList<>();
+            List<Task> filteredList = new ArrayList<>();
 
-            // 1. Lọc theo Category
+            // BƯỚC 1: LỌC (Danh mục + Tìm kiếm)
             for (Task t : allTasks) {
-                if (currentCategory.equals("Tất Cả") ||
-                        (t.category != null && t.category.equalsIgnoreCase(currentCategory))) {
-                    filteredByCategory.add(t);
+                boolean matchCategory = currentCategory.equals("Tất Cả") ||
+                        (t.category != null && t.category.equalsIgnoreCase(currentCategory));
+
+                boolean matchSearch = currentSearchKeyword.isEmpty() ||
+                        t.title.toLowerCase().contains(currentSearchKeyword.toLowerCase());
+
+                if (matchCategory && matchSearch) {
+                    filteredList.add(t);
                 }
             }
 
-            // 2. Phân loại vào 3 nhóm
+            // BƯỚC 2: PHÂN NHÓM (Overdue, Future, Completed)
             List<Task> overdueList = new ArrayList<>();
             List<Task> futureList = new ArrayList<>();
             List<Task> completedList = new ArrayList<>();
             long now = System.currentTimeMillis();
 
-            for (Task t : filteredByCategory) {
-                // Logic bộ lọc 3 chấm
+            for (Task t : filteredList) {
                 boolean isTaskCompleted = t.isCompleted;
                 boolean isTaskOverdue = !t.isCompleted && t.dueDate < now;
                 boolean isTaskFuture = !t.isCompleted && t.dueDate >= now;
 
-                // Áp dụng bộ lọc
+                // Áp dụng bộ lọc 3 chấm
                 if (isTaskCompleted) {
                     if (showCompleted) completedList.add(t);
                 } else if (isTaskOverdue) {
@@ -222,10 +257,10 @@ public class TodoitsFragment extends Fragment {
                 }
             }
 
-            // 3. Build list hiển thị (Wrapper)
+            // BƯỚC 3: BUILD DISPLAY LIST (Header + Items)
             List<TaskAdapter.TaskItemWrapper> displayList = new ArrayList<>();
 
-            // --- Nhóm Hết Hạn ---
+            // Nhóm Hết hạn
             if (!overdueList.isEmpty()) {
                 displayList.add(new TaskAdapter.TaskItemWrapper("Hết hạn (" + overdueList.size() + ")", isOverdueExpanded));
                 if (isOverdueExpanded) {
@@ -233,7 +268,7 @@ public class TodoitsFragment extends Fragment {
                 }
             }
 
-            // --- Nhóm Tương Lai ---
+            // Nhóm Tương lai
             if (!futureList.isEmpty()) {
                 displayList.add(new TaskAdapter.TaskItemWrapper("Việc cần làm (" + futureList.size() + ")", isFutureExpanded));
                 if (isFutureExpanded) {
@@ -241,7 +276,7 @@ public class TodoitsFragment extends Fragment {
                 }
             }
 
-            // --- Nhóm Đã Hoàn Thành ---
+            // Nhóm Đã xong
             if (!completedList.isEmpty()) {
                 displayList.add(new TaskAdapter.TaskItemWrapper("Đã hoàn thành (" + completedList.size() + ")", isCompletedExpanded));
                 if (isCompletedExpanded) {
@@ -249,6 +284,7 @@ public class TodoitsFragment extends Fragment {
                 }
             }
 
+            // BƯỚC 4: UPDATE UI
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     if (displayList.isEmpty()) {
@@ -272,6 +308,7 @@ public class TodoitsFragment extends Fragment {
         });
     }
 
+    // --- LOGIC VUỐT ĐỂ XÓA ---
     private void setupSwipeToDelete() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -283,16 +320,15 @@ public class TodoitsFragment extends Fragment {
                 TaskAdapter.TaskItemWrapper item = taskAdapter.getItem(pos);
 
                 if (item.type == TaskAdapter.TYPE_TASK) {
-                    // Hiện Dialog xác nhận
-                    showDeleteConfirmationDialog(item.task, pos);
+                    showDeleteConfirmationDialog(item.task, pos); // Hiện dialog xác nhận
                 } else {
-                    // Không cho xóa Header -> Trả lại vị trí cũ
-                    taskAdapter.notifyItemChanged(pos);
+                    taskAdapter.notifyItemChanged(pos); // Không cho xóa Header
                 }
             }
         }).attachToRecyclerView(rvTasks);
     }
 
+    // --- DIALOG XÁC NHẬN XÓA ---
     private void showDeleteConfirmationDialog(Task task, int position) {
         if (getContext() == null) return;
 
@@ -309,8 +345,8 @@ public class TodoitsFragment extends Fragment {
             window.setAttributes(wlp);
         }
 
-        Button btnDelete = dialog.findViewById(R.id.btn_confirm_delete);
-        Button btnCancel = dialog.findViewById(R.id.btn_cancel_delete);
+        View btnDelete = dialog.findViewById(R.id.btn_confirm_delete);
+        View btnCancel = dialog.findViewById(R.id.btn_cancel_delete);
 
         btnDelete.setOnClickListener(v -> {
             deleteTask(task);
@@ -318,7 +354,7 @@ public class TodoitsFragment extends Fragment {
         });
 
         btnCancel.setOnClickListener(v -> {
-            taskAdapter.notifyItemChanged(position); // Undo swipe
+            taskAdapter.notifyItemChanged(position); // Hoàn tác vuốt
             dialog.dismiss();
         });
 
@@ -339,6 +375,7 @@ public class TodoitsFragment extends Fragment {
         });
     }
 
+    // --- MENU LỌC 3 CHẤM ---
     private void showFilterMenu() {
         PopupMenu popup = new PopupMenu(getContext(), btnMoreOptions);
         popup.getMenuInflater().inflate(R.menu.menu_todoits_filter, popup.getMenu());

@@ -2,36 +2,39 @@ package com.group.listtodo.activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
-import com.group.listtodo.utils.SessionManager; // <--- Import quan trọng
-
+import com.group.listtodo.utils.SessionManager;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class StatsActivity extends AppCompatActivity {
 
-    private PieChart pieChart;
-    private BarChart barChart;
+    private PieChart pieChartToday, pieChartMain;
     private TextView tvPending, tvDone, tvOverdue, tvTodaySummary;
+    private TextView tvFilterLabel, tvMainChartDesc;
+    private TextView tvCountTotal, tvCountPending, tvCountDone, tvCountOverdue, tvDayName;
+    private LinearLayout btnFilterTime;
+
     private AppDatabase db;
-    private String userId; // <--- Khai báo biến userId
+    private String userId;
+    private int filterType = 1; // 1: Tuần, 2: Tháng, 3: Năm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,80 +42,182 @@ public class StatsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stats);
 
         db = AppDatabase.getInstance(this);
-
-        // 1. Lấy User ID từ Session
-        SessionManager session = new SessionManager(this);
-        userId = session.getUserId();
+        userId = new SessionManager(this).getUserId();
 
         initViews();
-        loadStatistics();
+        setupEvents();
 
-        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
+        loadStatistics();
     }
 
     private void initViews() {
-        pieChart = findViewById(R.id.pieChart_today);
-        barChart = findViewById(R.id.barChart_weekly);
+        pieChartToday = findViewById(R.id.pieChart_today);
+        pieChartMain = findViewById(R.id.pieChart_main);
+
         tvPending = findViewById(R.id.tv_stat_pending);
         tvDone = findViewById(R.id.tv_stat_done);
         tvOverdue = findViewById(R.id.tv_stat_overdue);
         tvTodaySummary = findViewById(R.id.tv_today_summary);
+
+        tvFilterLabel = findViewById(R.id.tv_filter_label);
+        tvMainChartDesc = findViewById(R.id.tv_main_chart_desc);
+        btnFilterTime = findViewById(R.id.btn_filter_time);
+
+        tvCountTotal = findViewById(R.id.tv_count_total);
+        tvCountPending = findViewById(R.id.tv_count_pending);
+        tvCountDone = findViewById(R.id.tv_count_done);
+        tvCountOverdue = findViewById(R.id.tv_count_overdue);
+        tvDayName = findViewById(R.id.tv_day_name);
+
+        // Set ngày hiện tại
+        tvDayName.setText(new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date()));
+    }
+
+    private void setupEvents() {
+        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
+
+        btnFilterTime.setOnClickListener(v -> {
+            PopupMenu popup = new PopupMenu(this, btnFilterTime);
+            popup.getMenu().add(0, 1, 0, "Tuần");
+            popup.getMenu().add(0, 2, 0, "Tháng");
+            popup.getMenu().add(0, 3, 0, "Năm");
+
+            popup.setOnMenuItemClickListener(item -> {
+                filterType = item.getItemId();
+                tvFilterLabel.setText(item.getTitle());
+                loadStatistics(); // Load lại dữ liệu theo filter
+                return true;
+            });
+            popup.show();
+        });
     }
 
     private void loadStatistics() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // 2. Truyền userId vào câu lệnh database (Sửa lỗi tại đây)
             List<Task> allTasks = db.taskDao().getAllTasks(userId);
-
-            int pending = 0;
-            int done = 0;
-            int overdue = 0;
-            int todayDone = 0;
-            int todayTotal = 0;
             long now = System.currentTimeMillis();
 
-            // Tính toán số liệu
+            // --- 1. THỐNG KÊ HÔM NAY & TỔNG QUAN ---
+            int todayDone = 0;
+            int todayTotal = 0;
+            int totalPending = 0;
+            int totalDone = 0;
+            int totalOverdue = 0;
+
             for (Task t : allTasks) {
-                if (t.isCompleted) {
-                    done++;
-                    if (isToday(t.dueDate)) todayDone++;
-                } else {
-                    if (t.dueDate < now) overdue++;
-                    else pending++;
+                if (isToday(t.dueDate)) {
+                    todayTotal++;
+                    if (t.isCompleted) todayDone++;
                 }
-                if (isToday(t.dueDate)) todayTotal++;
+
+                if (t.isCompleted) totalDone++;
+                else if (t.dueDate < now) totalOverdue++;
+                else totalPending++;
             }
 
-            // Tính toán dữ liệu cho biểu đồ cột (7 ngày qua)
-            List<BarEntry> barEntries = new ArrayList<>();
-            List<String> labels = new ArrayList<>();
-            for (int i = 6; i >= 0; i--) {
-                Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DAY_OF_YEAR, -i);
-                int tasksThatDay = countTasksForDate(allTasks, cal);
-                barEntries.add(new BarEntry(6 - i, tasksThatDay));
-                labels.add(i == 0 ? "H.Nay" : "-" + i + "d");
+            // --- 2. THỐNG KÊ THEO FILTER (Tuần/Tháng/Năm) ---
+            int filterTotal = 0;
+            int filterDone = 0;
+
+            Calendar calStart = Calendar.getInstance();
+            if (filterType == 1) calStart.add(Calendar.WEEK_OF_YEAR, -1);
+            else if (filterType == 2) calStart.add(Calendar.MONTH, -1);
+            else calStart.add(Calendar.YEAR, -1);
+
+            long startTime = calStart.getTimeInMillis();
+
+            for (Task t : allTasks) {
+                if (t.dueDate >= startTime) {
+                    filterTotal++;
+                    if (t.isCompleted) filterDone++;
+                }
             }
 
-            int finalPending = pending;
-            int finalDone = done;
-            int finalOverdue = overdue;
+            // --- 3. THỐNG KÊ CHI TIẾT TUẦN NÀY (Bottom) ---
+            // Logic: Đếm số lượng task trong 7 ngày gần nhất
+            int weekTotal = 0;
+            int weekPending = 0;
+            int weekDone = 0;
+            int weekOverdue = 0;
+
+            Calendar weekCal = Calendar.getInstance();
+            weekCal.add(Calendar.DAY_OF_YEAR, -7);
+            long weekStart = weekCal.getTimeInMillis();
+
+            for (Task t : allTasks) {
+                if (t.dueDate >= weekStart) {
+                    weekTotal++;
+                    if (t.isCompleted) weekDone++;
+                    else if (t.dueDate < now) weekOverdue++;
+                    else weekPending++;
+                }
+            }
+
+            // Final variables for UI Thread
             int finalTodayDone = todayDone;
             int finalTodayTotal = todayTotal;
+            int finalTotalPending = totalPending;
+            int finalTotalDone = totalDone;
+            int finalTotalOverdue = totalOverdue;
+
+            int finalFilterTotal = filterTotal;
+            int finalFilterDone = filterDone;
+
+            int fWeekTotal = weekTotal;
+            int fWeekPending = weekPending;
+            int fWeekDone = weekDone;
+            int fWeekOverdue = weekOverdue;
 
             runOnUiThread(() -> {
-                // Update Text
-                tvPending.setText(String.valueOf(finalPending));
-                tvDone.setText(String.valueOf(finalDone));
-                tvOverdue.setText(String.valueOf(finalOverdue));
-                tvTodaySummary.setText(finalTodayDone + "/" + finalTodayTotal + " công việc");
+                // Update Top Cards
+                tvTodaySummary.setText("Có tổng cộng " + finalTodayTotal + " mục trong\nchương trình hôm nay");
+                tvPending.setText(String.valueOf(finalTotalPending) + " >");
+                tvDone.setText(String.valueOf(finalTotalDone) + " >");
+                tvOverdue.setText(String.valueOf(finalTotalOverdue) + " >");
 
-                // Vẽ Chart
-                setupPieChart(finalDone, finalPending + finalOverdue);
-                setupBarChart(barEntries, labels);
+                // Chart Hôm nay
+                setupPieChart(pieChartToday, finalTodayDone, finalTodayTotal - finalTodayDone, finalTodayDone, 14f);
+
+                // Chart Lớn (Giữa)
+                setupPieChart(pieChartMain, finalFilterDone, finalFilterTotal - finalFilterDone, finalFilterTotal, 40f);
+                String timeText = (filterType == 1) ? "tuần" : (filterType == 2 ? "tháng" : "năm");
+                tvMainChartDesc.setText("Có " + finalFilterTotal + " mục trong chương trình " + timeText + " này");
+
+                // Update Bottom Stats
+                tvCountTotal.setText(String.valueOf(fWeekTotal));
+                tvCountPending.setText(String.valueOf(fWeekPending));
+                tvCountDone.setText(String.valueOf(fWeekDone));
+                tvCountOverdue.setText(String.valueOf(fWeekOverdue));
             });
         });
+    }
+
+    private void setupPieChart(PieChart chart, int val1, int val2, int centerVal, float centerTextSize) {
+        List<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(val1, "")); // Phần màu xanh (Đã xong)
+        entries.add(new PieEntry(val2, "")); // Phần màu xám (Chưa xong)
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        // Màu: Xanh đậm (#246BFD) và Xám nhạt (#F0F2F5)
+        dataSet.setColors(Color.parseColor("#246BFD"), Color.parseColor("#F0F2F5"));
+        dataSet.setDrawValues(false);
+        dataSet.setSliceSpace(0f); // Khoảng cách giữa các miếng
+
+        PieData data = new PieData(dataSet);
+        chart.setData(data);
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setEnabled(false);
+        chart.setHoleRadius(85f); // Lỗ tròn to (để tạo thành vòng Ring mỏng)
+        chart.setTransparentCircleRadius(0f);
+
+        chart.setCenterText(String.valueOf(centerVal));
+        chart.setCenterTextSize(centerTextSize);
+        chart.setCenterTextTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        chart.setCenterTextColor(Color.parseColor("#246BFD"));
+
+        chart.setTouchEnabled(false); // Không cho xoay/bấm
+        chart.invalidate();
     }
 
     private boolean isToday(long timeInMillis) {
@@ -121,59 +226,5 @@ public class StatsActivity extends AppCompatActivity {
         Calendar now = Calendar.getInstance();
         return t.get(Calendar.YEAR) == now.get(Calendar.YEAR) &&
                 t.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR);
-    }
-
-    private int countTasksForDate(List<Task> tasks, Calendar date) {
-        int count = 0;
-        for (Task t : tasks) {
-            Calendar tCal = Calendar.getInstance();
-            tCal.setTimeInMillis(t.dueDate);
-            if (tCal.get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
-                    tCal.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR) &&
-                    t.isCompleted) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    private void setupPieChart(int done, int notDone) {
-        List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(done, "Xong"));
-        entries.add(new PieEntry(notDone, "Chưa"));
-
-        PieDataSet dataSet = new PieDataSet(entries, "");
-        dataSet.setColors(Color.parseColor("#34C759"), Color.parseColor("#E0E0E0"));
-        dataSet.setDrawValues(false);
-
-        PieData data = new PieData(dataSet);
-        pieChart.setData(data);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.getLegend().setEnabled(false);
-        pieChart.setHoleRadius(60f);
-        pieChart.setCenterText(done + "");
-        pieChart.setCenterTextSize(20f);
-        pieChart.setCenterTextTypeface(android.graphics.Typeface.DEFAULT_BOLD);
-        pieChart.animateY(1000);
-        pieChart.invalidate();
-    }
-
-    private void setupBarChart(List<BarEntry> entries, List<String> labels) {
-        BarDataSet dataSet = new BarDataSet(entries, "Đã hoàn thành");
-        dataSet.setColor(Color.parseColor("#246BFD"));
-        dataSet.setDrawValues(true);
-
-        BarData data = new BarData(dataSet);
-        barChart.setData(data);
-        barChart.getDescription().setEnabled(false);
-        barChart.getAxisRight().setEnabled(false);
-        barChart.animateY(1000);
-
-        XAxis xAxis = barChart.getXAxis();
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1f);
-
-        barChart.invalidate();
     }
 }

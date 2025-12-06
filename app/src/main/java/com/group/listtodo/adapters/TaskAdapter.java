@@ -136,7 +136,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void bind(TaskItemWrapper item) {
             tvTitle.setText(item.headerTitle);
             // Xoay mũi tên dựa theo trạng thái isExpanded được truyền vào
-            imgArrow.setRotation(item.isExpanded ? 0 : -90);
+            imgArrow.setRotation(item.isExpanded ? 0 : 90);
             tvCount.setVisibility(View.GONE);
         }
     }

@@ -12,6 +12,7 @@ import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.CountdownEvent;
 import com.group.listtodo.utils.SessionManager; // <--- Import quan trọng
+import com.group.listtodo.utils.SyncHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -119,6 +120,7 @@ public class AddCountdownActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Đã lưu thành công!", Toast.LENGTH_SHORT).show();
+                SyncHelper.autoBackup(this);
                 finish(); // Đóng màn hình, quay về danh sách
             });
         });
@@ -132,6 +134,7 @@ public class AddCountdownActivity extends AppCompatActivity {
             db.countdownDao().delete(currentEvent);
             runOnUiThread(() -> {
                 Toast.makeText(this, "Đã xóa sự kiện!", Toast.LENGTH_SHORT).show();
+                SyncHelper.autoBackup(this);
                 finish();
             });
         });

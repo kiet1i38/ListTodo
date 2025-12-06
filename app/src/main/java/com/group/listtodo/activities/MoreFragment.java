@@ -1,5 +1,6 @@
 package com.group.listtodo.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,12 +12,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.google.firebase.auth.FirebaseAuth; // <--- Import Firebase Auth
 import com.group.listtodo.R;
 import com.group.listtodo.api.RetrofitClient;
 import com.group.listtodo.database.AppDatabase;
+import com.group.listtodo.models.BackupData; // <--- Import mới
+import com.group.listtodo.models.CountdownEvent; // <--- Import mới
 import com.group.listtodo.models.Task;
+import com.group.listtodo.models.TimerPreset; // <--- Import mới
 import com.group.listtodo.utils.SessionManager;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 import java.util.concurrent.Executors;
 import retrofit2.Call;
@@ -60,26 +65,22 @@ public class MoreFragment extends Fragment {
             startActivity(new Intent(getContext(), StatsActivity.class));
         });
 
-        // 6. Đồng Bộ Server (Backend Flask)
-        View menuSync = view.findViewById(R.id.menu_sync);
-        if (menuSync != null) {
-            setupItem(menuSync, "Đồng Bộ Đám Mây (Backup)", R.drawable.ic_check_circle, v -> {
-                syncDataToServer();
-            });
-        }
+        // 6. Đồng Bộ Server (Upload)
+        setupItem(view.findViewById(R.id.menu_sync_upload), "Sao Lưu Lên Cloud (Upload)", R.drawable.ic_check_circle, v -> {
+            syncDataToServer();
+        });
 
-        // 7. ĐĂNG XUẤT (Logout)
-        View menuLogout = view.findViewById(R.id.menu_logout);
-        if (menuLogout != null) {
-            // Xử lý sự kiện click Đăng xuất
-            menuLogout.setOnClickListener(v -> {
-                // A. Đăng xuất khỏi Firebase
+        // 7. Khôi Phục Dữ Liệu (Download)
+        setupItem(view.findViewById(R.id.menu_sync_download), "Khôi Phục Dữ Liệu (Download)", R.drawable.ic_menu, v -> {
+            showRestoreConfirmation();
+        });
+
+        // 8. Đăng Xuất
+        View btnLogout = view.findViewById(R.id.menu_logout);
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> {
                 FirebaseAuth.getInstance().signOut();
-
-                // B. Xóa Session lưu trong máy
                 new SessionManager(getContext()).logout();
-
-                // C. Quay về màn hình Đăng nhập & Xóa lịch sử Back
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -87,41 +88,34 @@ public class MoreFragment extends Fragment {
         }
     }
 
-    // Hàm xử lý Logic Sync lên Server
+    // --- LOGIC SAO LƯU (UPLOAD) ---
     private void syncDataToServer() {
-        Toast.makeText(getContext(), "Đang kết nối Server...", Toast.LENGTH_SHORT).show();
-
-        // 1. Lấy User ID hiện tại
+        Toast.makeText(getContext(), "Đang sao lưu...", Toast.LENGTH_SHORT).show();
         SessionManager session = new SessionManager(getContext());
         String userId = session.getUserId();
 
         if (userId == null) {
-            Toast.makeText(getContext(), "Vui lòng đăng nhập lại!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Chưa đăng nhập!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Chạy luồng phụ để lấy dữ liệu từ DB
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(getContext());
 
-            // 2. Lấy toàn bộ task của User hiện tại
-            List<Task> localTasks = db.taskDao().getAllTasks(userId);
+            // 1. Lấy TOÀN BỘ dữ liệu (Task, Timer, Countdown)
+            List<Task> tasks = db.taskDao().getAllTasks(userId);
+            List<TimerPreset> timers = db.timerDao().getTimers(userId);
+            List<CountdownEvent> countdowns = db.countdownDao().getAllEvents(userId);
 
-            if (localTasks.isEmpty()) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() ->
-                            Toast.makeText(getContext(), "Không có dữ liệu để backup!", Toast.LENGTH_SHORT).show()
-                    );
-                }
-                return;
-            }
+            // 2. Gói lại vào BackupData
+            BackupData data = new BackupData(userId, tasks, timers, countdowns);
 
-            // Gọi API qua Retrofit
-            RetrofitClient.getService().syncTasks(localTasks).enqueue(new Callback<Void>() {
+            // 3. Gửi lên Server (Dùng hàm syncData mới)
+            RetrofitClient.getService().syncData(data).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     if (response.isSuccessful()) {
-                        Toast.makeText(getContext(), "Backup thành công: " + localTasks.size() + " tasks", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Sao lưu thành công!", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getContext(), "Lỗi Server: " + response.code(), Toast.LENGTH_SHORT).show();
                     }
@@ -135,7 +129,81 @@ public class MoreFragment extends Fragment {
         });
     }
 
+    // --- LOGIC KHÔI PHỤC (DOWNLOAD) ---
+    private void showRestoreConfirmation() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Khôi Phục Dữ Liệu")
+                .setMessage("Hành động này sẽ tải dữ liệu từ Server về và thay thế dữ liệu hiện tại. Bạn có chắc chắn?")
+                .setPositiveButton("Khôi Phục", (dialog, which) -> restoreDataFromServer())
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void restoreDataFromServer() {
+        Toast.makeText(getContext(), "Đang tải dữ liệu...", Toast.LENGTH_SHORT).show();
+        SessionManager session = new SessionManager(getContext());
+        String currentUserId = session.getUserId();
+
+        if (currentUserId == null) return;
+
+        // Gọi API lấy dữ liệu về
+        RetrofitClient.getService().getData(currentUserId).enqueue(new Callback<BackupData>() {
+            @Override
+            public void onResponse(Call<BackupData> call, Response<BackupData> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    BackupData data = response.body();
+
+                    Executors.newSingleThreadExecutor().execute(() -> {
+                        AppDatabase db = AppDatabase.getInstance(getContext());
+
+                        // 1. Xóa sạch dữ liệu cũ của user này
+                        db.taskDao().deleteAllByUser(currentUserId);
+                        db.timerDao().deleteAllByUser(currentUserId);
+                        db.countdownDao().deleteAllByUser(currentUserId);
+
+                        // 2. Nạp dữ liệu mới
+                        int count = 0;
+                        if (data.tasks != null) {
+                            for (Task t : data.tasks) {
+                                t.id = 0; // Reset ID để tạo mới
+                                db.taskDao().insertTask(t);
+                                count++;
+                            }
+                        }
+                        if (data.timers != null) {
+                            for (TimerPreset t : data.timers) {
+                                t.id = 0;
+                                db.timerDao().insert(t);
+                            }
+                        }
+                        if (data.countdowns != null) {
+                            for (CountdownEvent c : data.countdowns) {
+                                c.id = 0;
+                                db.countdownDao().insert(c);
+                            }
+                        }
+
+                        int finalCount = count;
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() ->
+                                    Toast.makeText(getContext(), "Đã khôi phục " + finalCount + " công việc!", Toast.LENGTH_LONG).show()
+                            );
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "Không tìm thấy bản sao lưu nào!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BackupData> call, Throwable t) {
+                Toast.makeText(getContext(), "Lỗi kết nối Server!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void setupItem(View itemView, String title, int iconRes, View.OnClickListener listener) {
+        if (itemView == null) return;
         ImageView imgIcon = itemView.findViewById(R.id.img_icon);
         TextView tvTitle = itemView.findViewById(R.id.tv_title);
 

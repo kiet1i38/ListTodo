@@ -13,6 +13,8 @@ import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.TimerPreset;
 import com.group.listtodo.services.TimerService;
+import com.group.listtodo.utils.SyncHelper;
+
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
@@ -67,6 +69,7 @@ public class TimerRunningActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Đã xóa!", Toast.LENGTH_SHORT).show();
+                    SyncHelper.autoBackup(this);
                     finish();
                 });
             });
@@ -114,6 +117,7 @@ public class TimerRunningActivity extends AppCompatActivity {
             updateUI(false);
             updateTimerText(timer.durationInMillis);
             Toast.makeText(this, "Đã đặt lại!", Toast.LENGTH_SHORT).show();
+            SyncHelper.autoBackup(this);
         });
     }
 

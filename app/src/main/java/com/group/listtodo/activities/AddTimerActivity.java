@@ -9,6 +9,8 @@ import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.TimerPreset;
 import com.group.listtodo.utils.SessionManager;
+import com.group.listtodo.utils.SyncHelper;
+
 import java.util.concurrent.Executors;
 
 public class AddTimerActivity extends AppCompatActivity {
@@ -47,6 +49,7 @@ public class AddTimerActivity extends AppCompatActivity {
                 AppDatabase.getInstance(this).timerDao().insert(timer);
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Đã thêm!", Toast.LENGTH_SHORT).show();
+                    SyncHelper.autoBackup(this);
                     finish();
                 });
             });

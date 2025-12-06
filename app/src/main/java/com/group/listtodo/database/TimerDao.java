@@ -23,4 +23,8 @@ public interface TimerDao {
 
     @Query("SELECT * FROM timers WHERE userId = :uid")
     List<TimerPreset> getTimers(String uid);
+
+    // Thêm vào interface
+    @Query("DELETE FROM timers WHERE userId = :uid")
+    void deleteAllByUser(String uid);
 }

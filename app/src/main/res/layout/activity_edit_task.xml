@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray">
 
-    <!-- 1. HEADER -->
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -31,7 +30,6 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <!-- 2. NỘI DUNG -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -46,7 +44,6 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <!-- KHỐI 1: TÊN & CHIP SCROLL NGANG -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +66,6 @@
                         android:textColor="@color/black"
                         android:hint="Tên công việc"/>
 
-                    <!-- CHIPS TRONG SCROLLVIEW -->
                     <HorizontalScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -114,7 +110,6 @@
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_marginEnd="8dp"/>
 
-                            <!-- THÊM NÚT ĐỊA ĐIỂM -->
                             <Button
                                 android:id="@+id/btn_chip_location"
                                 android:layout_width="wrap_content"
@@ -130,7 +125,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 2: CÔNG VIỆC CON -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,7 +158,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 3: CÀI ĐẶT -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -183,7 +176,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 4: GHI CHÚ -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -209,7 +201,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- 3. BUTTONS -->
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"

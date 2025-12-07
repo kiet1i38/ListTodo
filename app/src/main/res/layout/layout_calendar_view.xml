@@ -13,13 +13,11 @@
         android:orientation="vertical"
         android:paddingBottom="10dp">
 
-        <!-- HEADER CHỨA NÚT VÀ TÊN THÁNG -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp">
 
-            <!-- Nút Trái -->
             <ImageView
                 android:id="@+id/btn_prev_month"
                 android:layout_width="40dp"
@@ -30,7 +28,6 @@
                 android:layout_alignParentStart="true"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
-            <!-- TÊN THÁNG (THÊM MỚI) -->
             <TextView
                 android:id="@+id/tv_current_month"
                 android:layout_width="wrap_content"
@@ -41,7 +38,6 @@
                 android:textColor="@color/black"
                 android:layout_centerInParent="true"/>
 
-            <!-- Nút Phải -->
             <ImageView
                 android:id="@+id/btn_next_month"
                 android:layout_width="40dp"

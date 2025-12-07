@@ -44,7 +44,6 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
 
         btnSearch.setOnClickListener(v -> searchLocation());
 
-        // KHI BẤM XÁC NHẬN -> TRẢ VỀ CẢ TÊN VÀ TỌA ĐỘ
         btnConfirm.setOnClickListener(v -> {
             if (selectedLatLng != null) {
                 Intent resultIntent = new Intent();
@@ -53,8 +52,8 @@ public class LocationActivity extends AppCompatActivity implements OnMapReadyCal
                         : selectedAddressName;
 
                 resultIntent.putExtra("location_name", resultName);
-                resultIntent.putExtra("lat", selectedLatLng.latitude);   // Trả về vĩ độ
-                resultIntent.putExtra("lng", selectedLatLng.longitude); // Trả về kinh độ
+                resultIntent.putExtra("lat", selectedLatLng.latitude);   
+                resultIntent.putExtra("lng", selectedLatLng.longitude); 
 
                 setResult(RESULT_OK, resultIntent);
                 finish();

@@ -80,10 +80,12 @@ public class AddCountdownActivity extends AppCompatActivity {
     }
 
     private void showDatePicker() {
-        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            calendar.set(year, month, dayOfMonth);
+        // Sử dụng CustomCalendarBottomSheet thay vì DatePickerDialog cũ
+        CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
+            calendar.setTimeInMillis(dateInMillis);
             updateDateText();
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+        calendarSheet.show(getSupportFragmentManager(), "CalendarSheet");
     }
 
     private void updateDateText() {

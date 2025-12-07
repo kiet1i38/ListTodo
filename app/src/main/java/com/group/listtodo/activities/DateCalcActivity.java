@@ -83,11 +83,13 @@ public class DateCalcActivity extends AppCompatActivity {
         switchIncludeStart.setOnCheckedChangeListener((buttonView, isChecked) -> updateDurationUI());
     }
 
+    // Thay thế hàm showDatePicker cũ bằng hàm này
     private void showDatePicker(Calendar calendarToSet, Runnable onDateSet) {
-        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            calendarToSet.set(year, month, dayOfMonth);
+        CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendarToSet.getTimeInMillis(), dateInMillis -> {
+            calendarToSet.setTimeInMillis(dateInMillis);
             onDateSet.run();
-        }, calendarToSet.get(Calendar.YEAR), calendarToSet.get(Calendar.MONTH), calendarToSet.get(Calendar.DAY_OF_MONTH)).show();
+        });
+        calendarSheet.show(getSupportFragmentManager(), "CalendarSheet");
     }
 
     // --- LOGIC PHẦN 1: TÍNH NGÀY TRƯỚC/SAU ---

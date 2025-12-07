@@ -19,6 +19,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public interface OnCategoryClickListener {
         void onCategoryClick(String category);
         void onAddCategoryClick();
+        void onCategoryLongClick(String category); // <--- Thêm sự kiện Long Click
     }
 
     public CategoryAdapter(List<String> categories, OnCategoryClickListener listener) {
@@ -38,29 +39,38 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         String cat = categories.get(position);
         holder.btn.setText(cat);
 
-        // Nút dấu cộng (+)
+        // Nút + không xử lý long click
         if (cat.equals("+")) {
             holder.btn.setTextColor(Color.parseColor("#246BFD"));
             holder.btn.setBackgroundColor(Color.TRANSPARENT);
-            holder.btn.setStrokeWidth(0);
             holder.btn.setOnClickListener(v -> listener.onAddCategoryClick());
+            holder.btn.setOnLongClickListener(null);
             return;
         }
 
-        // Logic đổi màu khi chọn
+        // Đổi màu khi chọn
         if (cat.equals(selectedCategory)) {
-            holder.btn.setBackgroundColor(Color.parseColor("#246BFD")); // Xanh
+            holder.btn.setBackgroundColor(Color.parseColor("#246BFD"));
             holder.btn.setTextColor(Color.WHITE);
         } else {
-            holder.btn.setBackgroundColor(Color.parseColor("#F5F5F5")); // Xám
+            holder.btn.setBackgroundColor(Color.parseColor("#F5F5F5"));
             holder.btn.setTextColor(Color.BLACK);
         }
 
+        // Click thường
         holder.btn.setOnClickListener(v -> {
             selectedCategory = cat;
             notifyDataSetChanged();
             listener.onCategoryClick(cat);
         });
+
+        // Click giữ 3s (Long Click) - Trừ mục "Tất Cả" không cho xóa
+        if (!cat.equals("Tất Cả")) {
+            holder.btn.setOnLongClickListener(v -> {
+                listener.onCategoryLongClick(cat);
+                return true;
+            });
+        }
     }
 
     @Override

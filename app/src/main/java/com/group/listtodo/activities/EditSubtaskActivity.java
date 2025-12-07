@@ -152,16 +152,23 @@ public class EditSubtaskActivity extends AppCompatActivity {
         });
     }
 
+    // Thay thế hàm showDateTimePicker cũ
     private void showDateTimePicker() {
-        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            new TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
-                updateChipTexts();
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
+            // Khi chọn ngày xong -> Hiện tiếp TimePicker (nếu muốn) hoặc chỉ lấy ngày
+            // Theo yêu cầu của em là "dùng UI đó", thầy đoán em chỉ cần chọn ngày.
+
+            // Cập nhật Calendar
+            Calendar temp = Calendar.getInstance();
+            temp.setTimeInMillis(dateInMillis);
+
+            // Giữ giờ phút hiện tại
+            int h = calendar.get(Calendar.HOUR_OF_DAY);
+            int m = calendar.get(Calendar.MINUTE);
+
+            calendar.set(temp.get(Calendar.YEAR), temp.get(Calendar.MONTH), temp.get(Calendar.DAY_OF_MONTH), h, m);
+            updateChipTexts();
+        });
+        calendarSheet.show(getSupportFragmentManager(), "CalendarSheet");
     }
 }

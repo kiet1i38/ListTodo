@@ -24,14 +24,14 @@
             android:layout_marginTop="10dp"/>
 
         <!-- 1. Tiện ích Máy Tính Để Bàn -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            android:layout_marginBottom="12dp">
-            <include layout="@layout/item_more_menu" android:id="@+id/menu_widget"/>
-        </androidx.cardview.widget.CardView>
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:cardCornerRadius="16dp"-->
+<!--            app:cardElevation="0dp"-->
+<!--            android:layout_marginBottom="12dp">-->
+<!--            <include layout="@layout/item_more_menu" android:id="@+id/menu_widget"/>-->
+<!--        </androidx.cardview.widget.CardView>-->
 
         <!-- 2. Ngày Đếm Ngược -->
         <androidx.cardview.widget.CardView

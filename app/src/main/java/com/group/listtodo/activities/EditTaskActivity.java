@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import com.group.listtodo.models.Category;
 
 public class EditTaskActivity extends AppCompatActivity {
 
@@ -374,15 +375,31 @@ public class EditTaskActivity extends AppCompatActivity {
 
         btnChipCategory.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, btnChipCategory);
-            popup.getMenu().add("Công Việc");
-            popup.getMenu().add("Cá Nhân");
-            popup.getMenu().add("Học Tập");
-            popup.setOnMenuItemClickListener(item -> {
-                selectedCategory = item.getTitle().toString();
-                updateChipTexts();
-                return true;
+
+            // --- LOAD DANH MỤC TỪ DB ---
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                String uid = new SessionManager(this).getUserId();
+                List<Category> cats = db.categoryDao().getCategories(uid);
+
+                runOnUiThread(() -> {
+                    if (cats.isEmpty()) {
+                        popup.getMenu().add("Công Việc");
+                        popup.getMenu().add("Cá Nhân");
+                    } else {
+                        for (Category c : cats) {
+                            popup.getMenu().add(c.name);
+                        }
+                    }
+
+                    popup.setOnMenuItemClickListener(item -> {
+                        selectedCategory = item.getTitle().toString();
+                        updateChipTexts();
+                        return true;
+                    });
+                    popup.show();
+                });
             });
-            popup.show();
         });
 
         // Mở Map

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <!-- Item 1: Đã hoàn thành -->
+        <LinearLayout
+            android:id="@+id/item_completed"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="?attr/selectableItemBackground">
+
+            <!-- Icon Check Xanh -->
+            <ImageView
+                android:src="@drawable/ic_info"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:tint="@color/blue_primary"/>
+
+            <TextView
+                android:text="Hiển thị đã hoàn thành"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"/>
+
+            <!-- Dấu tích bên phải (Hiện/Ẩn tùy trạng thái) -->
+            <ImageView
+                android:id="@+id/check_completed"
+                android:src="@drawable/ic_check_circle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/blue_primary"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <!-- Item 2: Tương lai -->
+        <LinearLayout
+            android:id="@+id/item_future"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:src="@drawable/ic_info"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:tint="@color/blue_primary"/>
+            <!-- Em cần có icon ic_close_circle hoặc dùng tạm cái khác -->
+
+            <TextView
+                android:text="Hiển thị công việc tương lai"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"/>
+
+            <ImageView
+                android:id="@+id/check_future"
+                android:src="@drawable/ic_check_circle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/blue_primary"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <!-- Item 3: Hết hạn -->
+        <LinearLayout
+            android:id="@+id/item_overdue"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:src="@drawable/ic_info"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:tint="@color/blue_primary"/>
+            <!-- Em cần có icon ic_info_circle -->
+
+            <TextView
+                android:text="Hiển thị đã hết hạn"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"/>
+
+            <ImageView
+                android:id="@+id/check_overdue"
+                android:src="@drawable/ic_check_circle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:tint="@color/blue_primary"
+                android:visibility="visible"/>
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

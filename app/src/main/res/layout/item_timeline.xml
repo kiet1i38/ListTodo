@@ -6,7 +6,6 @@
     android:orientation="horizontal"
     android:minHeight="60dp">
 
-    <!-- Cột giờ (Bên trái) -->
     <TextView
         android:id="@+id/tv_time_label"
         android:layout_width="50dp"
@@ -16,21 +15,17 @@
         android:textColor="@color/text_gray"
         android:gravity="center_horizontal"
         android:layout_marginTop="-8dp"/>
-    <!-- Margin âm để số nằm đúng dòng kẻ -->
 
-    <!-- Phần nội dung (Bên phải) -->
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <!-- Dòng kẻ ngang -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#E0E0E0"/>
 
-        <!-- Task Card (Chỉ hiện khi có task giờ này) -->
         <androidx.cardview.widget.CardView
             android:id="@+id/card_task_timeline"
             android:layout_width="match_parent"
@@ -41,7 +36,7 @@
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="#E3F2FD"
-            android:visibility="gone"> <!-- Mặc định ẩn -->
+            android:visibility="gone"> 
 
             <TextView
                 android:id="@+id/tv_task_timeline_title"

@@ -26,16 +26,14 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public int type;
         public String headerTitle;
         public Task task;
-        public boolean isExpanded; // Trạng thái đóng mở
+        public boolean isExpanded; 
 
-        // Header
         public TaskItemWrapper(String headerTitle, boolean isExpanded) {
             this.type = TYPE_HEADER;
             this.headerTitle = headerTitle;
             this.isExpanded = isExpanded;
         }
 
-        // Task
         public TaskItemWrapper(Task task) {
             this.type = TYPE_TASK;
             this.task = task;
@@ -44,20 +42,17 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<TaskItemWrapper> displayList = new ArrayList<>();
     private final OnTaskClickListener listener;
-    private final OnHeaderClickListener headerListener; // Listener mới cho Header
+    private final OnHeaderClickListener headerListener; 
 
-    // Interface cho Task (Sửa, Check)
     public interface OnTaskClickListener {
         void onTaskClick(Task task);
         void onTaskCheck(Task task);
     }
 
-    // Interface cho Header (Đóng, Mở)
     public interface OnHeaderClickListener {
         void onHeaderClick(String headerTitle);
     }
 
-    // Constructor cập nhật thêm headerListener
     public TaskAdapter(OnTaskClickListener listener, OnHeaderClickListener headerListener) {
         this.listener = listener;
         this.headerListener = headerListener;
@@ -112,7 +107,6 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return displayList.size();
     }
 
-    // --- HEADER VIEW HOLDER ---
     class HeaderViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvCount;
         ImageView imgArrow;
@@ -123,11 +117,9 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             tvCount = itemView.findViewById(R.id.tv_header_count);
             imgArrow = itemView.findViewById(R.id.img_arrow);
 
-            // Sự kiện click vào Header
             itemView.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION && headerListener != null) {
-                    // Gửi title về Fragment để xử lý logic
                     headerListener.onHeaderClick(displayList.get(pos).headerTitle);
                 }
             });
@@ -135,13 +127,11 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void bind(TaskItemWrapper item) {
             tvTitle.setText(item.headerTitle);
-            // Xoay mũi tên dựa theo trạng thái isExpanded được truyền vào
             imgArrow.setRotation(item.isExpanded ? 0 : 90);
             tvCount.setVisibility(View.GONE);
         }
     }
 
-    // --- TASK VIEW HOLDER ---
     class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvDate;
         CheckBox cbCompleted;

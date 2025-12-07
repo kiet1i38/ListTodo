@@ -86,7 +86,7 @@
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_marginEnd="8dp"/>
 
-                            <!-- Nút Địa Điểm (Không có Danh mục) -->
+                            <!-- Nút Địa Điểm -->
                             <Button
                                 android:id="@+id/btn_chip_location"
                                 android:layout_width="wrap_content"

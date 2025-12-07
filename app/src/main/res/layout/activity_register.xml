@@ -15,7 +15,7 @@
 
         <!-- Header -->
         <TextView
-            android:text="Create Account"
+            android:text="Tạo tài khoản"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="Sign Up"
+            android:text="Đăng Ký"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#246BFD"
@@ -36,7 +36,7 @@
 
         <!-- 1. Full Name (Thêm vào cho đủ bộ) -->
         <TextView
-            android:text="Your Full Name"
+            android:text="Tên đầy đủ"
             android:textColor="#757575"
             android:textSize="14sp"
             android:layout_gravity="start"
@@ -56,7 +56,7 @@
 
         <!-- 2. Email -->
         <TextView
-            android:text="Your Email"
+            android:text="Email"
             android:textColor="#757575"
             android:textSize="14sp"
             android:layout_gravity="start"
@@ -76,7 +76,7 @@
 
         <!-- 3. Password -->
         <TextView
-            android:text="Password"
+            android:text="Mật khẩu"
             android:textColor="#757575"
             android:textSize="14sp"
             android:layout_gravity="start"
@@ -107,7 +107,7 @@
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Sign Up"
+            android:text="Đăng Ký"
             android:textColor="@color/white"
             android:background="@drawable/bg_button_blue"
             android:textAllCaps="false"
@@ -122,13 +122,13 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp">
             <TextView
-                android:text="Already a User? "
+                android:text="Đã có tài khoản? "
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/tv_login_link"
-                android:text="Login"
+                android:text="Đăng nhập"
                 android:textStyle="bold"
                 android:textColor="#246BFD"
                 android:layout_width="wrap_content"

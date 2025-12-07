@@ -21,5 +21,19 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <!-- Style riêng cho TimePicker để giống hình -->
+    <style name="MyTimePickerTheme" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="colorPrimary">#246BFD</item> <!-- Màu xanh chủ đạo của App -->
+        <item name="colorOnPrimary">#FFFFFF</item> <!-- Màu chữ trên nền xanh -->
+        <item name="materialTimePickerTitleStyle">@style/MyTimePickerTitle</item>
+        <!-- Chỉnh màu cái kim đồng hồ và số được chọn -->
+        <item name="colorControlActivated">#246BFD</item>
+    </style>
+
+    <style name="MyTimePickerTitle" parent="TextAppearance.MaterialComponents.TimePicker.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Theme.ListTodo" parent="Base.Theme.ListTodo" />
 </resources>

@@ -40,6 +40,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import com.group.listtodo.models.Category;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 
 public class EditTaskActivity extends AppCompatActivity {
 
@@ -467,23 +469,32 @@ public class EditTaskActivity extends AppCompatActivity {
     }
 
     private void showDateTimePicker() {
-        // Thay vì DatePickerDialog, dùng BottomSheet mới
         CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
-            // Khi chọn ngày xong
+            // Cập nhật ngày
             Calendar temp = Calendar.getInstance();
             temp.setTimeInMillis(dateInMillis);
+            calendar.set(Calendar.YEAR, temp.get(Calendar.YEAR));
+            calendar.set(Calendar.MONTH, temp.get(Calendar.MONTH));
+            calendar.set(Calendar.DAY_OF_MONTH, temp.get(Calendar.DAY_OF_MONTH));
 
-            // Giữ nguyên logic chọn giờ cũ
-            new TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
-                calendar.set(Calendar.YEAR, temp.get(Calendar.YEAR));
-                calendar.set(Calendar.MONTH, temp.get(Calendar.MONTH));
-                calendar.set(Calendar.DAY_OF_MONTH, temp.get(Calendar.DAY_OF_MONTH));
+            // Mở Đồng hồ tròn
+            MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                    .setMinute(calendar.get(Calendar.MINUTE))
+                    .setTitleText("Chọn giờ")
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
+                    .setTheme(R.style.MyTimePickerTheme)
+                    .build();
 
-                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                calendar.set(Calendar.MINUTE, minute);
+            timePicker.addOnPositiveButtonClickListener(v -> {
+                calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+                calendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                updateChipTexts(); // Hoặc updateTimeText() tùy file
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                updateChipTexts(); // Cập nhật giao diện
+            });
+
+            timePicker.show(getSupportFragmentManager(), "TimePicker");
         });
 
         calendarSheet.show(getSupportFragmentManager(), "CalendarSheet");

@@ -15,7 +15,7 @@
 
         <!-- Header -->
         <TextView
-            android:text="Welcome Back"
+            android:text="Chào mừng trở lại"
             android:textSize="28sp"
             android:textStyle="bold"
             android:textColor="@color/black"
@@ -26,7 +26,7 @@
 
         <!-- Subtitle -->
         <TextView
-            android:text="Login"
+            android:text="Đăng nhập"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#246BFD"
@@ -37,7 +37,7 @@
 
         <!-- Email -->
         <TextView
-            android:text="Your Email"
+            android:text="Email"
             android:textColor="#757575"
             android:textSize="14sp"
             android:layout_gravity="start"
@@ -58,7 +58,7 @@
 
         <!-- Password -->
         <TextView
-            android:text="Password"
+            android:text="Mật khảu"
             android:textColor="#757575"
             android:textSize="14sp"
             android:layout_gravity="start"
@@ -88,7 +88,7 @@
 
         <TextView
             android:id="@+id/tv_forgot_pass"
-            android:text="Forgot Password?"
+            android:text="Quên mật khẩu?"
             android:textColor="#246BFD"
             android:textStyle="bold"
             android:layout_gravity="center"
@@ -114,13 +114,13 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp">
             <TextView
-                android:text="Are you a new User? "
+                android:text="Bạn là người mới? "
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/tv_register"
-                android:text="Sign up"
+                android:text="Đăng ký"
                 android:textStyle="bold"
                 android:textColor="#246BFD"
                 android:layout_width="wrap_content"

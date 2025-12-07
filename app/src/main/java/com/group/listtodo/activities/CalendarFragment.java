@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 public class CalendarFragment extends Fragment {
 
     private CalendarView calendarView;
-    private TextView tvCurrentMonth; // <--- Biến mới
+    private TextView tvCurrentMonth;
     private RecyclerView recyclerView;
     private TaskAdapter adapter;
     private AppDatabase db;
@@ -53,24 +53,23 @@ public class CalendarFragment extends Fragment {
 
         View includedLayout = view.findViewById(R.id.included_calendar);
         calendarView = includedLayout.findViewById(R.id.calendar_view_custom);
-        tvCurrentMonth = includedLayout.findViewById(R.id.tv_current_month); // <--- Ánh xạ
+        tvCurrentMonth = includedLayout.findViewById(R.id.tv_current_month); 
         ImageView btnPrev = includedLayout.findViewById(R.id.btn_prev_month);
         ImageView btnNext = includedLayout.findViewById(R.id.btn_next_month);
 
         recyclerView = view.findViewById(R.id.rv_calendar_tasks);
         setupRecyclerView();
 
-        // Mặc định chọn hôm nay
         long now = System.currentTimeMillis();
         updateSelectedDateRange(now);
-        updateMonthTitle(now); // <--- Cập nhật tiêu đề ban đầu
+        updateMonthTitle(now); 
         loadTasksForDate();
 
         calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             Calendar c = Calendar.getInstance();
             c.set(year, month, dayOfMonth);
             updateSelectedDateRange(c.getTimeInMillis());
-            updateMonthTitle(c.getTimeInMillis()); // <--- Cập nhật khi chọn ngày
+            updateMonthTitle(c.getTimeInMillis()); 
             loadTasksForDate();
         });
 
@@ -88,19 +87,16 @@ public class CalendarFragment extends Fragment {
         calendarView.setDate(newTime, true, true);
 
         updateSelectedDateRange(newTime);
-        updateMonthTitle(newTime); // <--- Cập nhật khi bấm nút
+        updateMonthTitle(newTime); 
         loadTasksForDate();
     }
 
-    // --- HÀM MỚI: CẬP NHẬT TIÊU ĐỀ THÁNG ---
     private void updateMonthTitle(long timeInMillis) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(timeInMillis);
-        // Format: "Tháng 12 2025"
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", new Locale("vi", "VN"));
         tvCurrentMonth.setText(sdf.format(c.getTime()));
     }
-    // ----------------------------------------
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

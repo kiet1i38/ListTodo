@@ -17,7 +17,6 @@ public class FirestoreHelper {
     private static final String COLLECTION_BACKUPS = "backups";
     private static final String TAG = "FirestoreHelper";
 
-    // 1. Gửi dữ liệu lên Firestore
     public static void backupToCloud(Context context) {
         SessionManager session = new SessionManager(context);
         String userId = session.getUserId();
@@ -26,15 +25,12 @@ public class FirestoreHelper {
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(context);
 
-            // Lấy data từ Room
             List<Task> tasks = db.taskDao().getAllTasks(userId);
             List<TimerPreset> timers = db.timerDao().getTimers(userId);
             List<CountdownEvent> countdowns = db.countdownDao().getAllEvents(userId);
 
-            // Gói lại
             BackupData data = new BackupData(userId, tasks, timers, countdowns);
 
-            // Đẩy lên Firestore (Ghi đè theo UserID)
             FirebaseFirestore.getInstance()
                     .collection(COLLECTION_BACKUPS)
                     .document(userId)
@@ -44,7 +40,6 @@ public class FirestoreHelper {
         });
     }
 
-    // 2. Khôi phục dữ liệu từ Firestore
     public static void restoreFromCloud(Context context, String userId, Runnable onSuccess) {
         if (userId == null) {
             if (onSuccess != null) onSuccess.run();
@@ -57,7 +52,6 @@ public class FirestoreHelper {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // Parse dữ liệu về object BackupData
                         BackupData data = documentSnapshot.toObject(BackupData.class);
 
                         if (data != null) {
@@ -81,12 +75,10 @@ public class FirestoreHelper {
             AppDatabase db = AppDatabase.getInstance(context);
             String uid = data.userId;
 
-            // Xóa cũ
             db.taskDao().deleteAllByUser(uid);
             db.timerDao().deleteAllByUser(uid);
             db.countdownDao().deleteAllByUser(uid);
 
-            // Thêm mới (Reset ID)
             if (data.tasks != null) {
                 for (Task t : data.tasks) { t.id = 0; t.userId = uid; db.taskDao().insertTask(t); }
             }

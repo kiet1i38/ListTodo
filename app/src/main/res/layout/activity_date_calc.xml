@@ -43,9 +43,6 @@
             android:orientation="vertical"
             android:paddingBottom="40dp">
 
-            <!-- ======================= -->
-            <!-- PHẦN 1: TÍNH NGÀY -->
-            <!-- ======================= -->
             <TextView
                 android:text="Tính Ngày"
                 android:textAllCaps="false"
@@ -176,9 +173,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- ======================= -->
-            <!-- PHẦN 2: TÍNH KHOẢNG CÁCH -->
-            <!-- ======================= -->
             <TextView
                 android:text="Tính Khoảng Cách Ngày"
                 android:textAllCaps="false"
@@ -251,7 +245,6 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
-                        <!-- ĐÃ SỬA: Thêm layout_width/height cho TextView này -->
                         <TextView
                             android:text="Tổng Cộng"
                             android:textSize="14sp"
@@ -269,7 +262,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                        <!-- ĐÃ SỬA: Thêm layout_width/height cho TextView này -->
                         <TextView
                             android:text=" Ngày"
                             android:textSize="14sp"

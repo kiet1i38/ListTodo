@@ -40,33 +40,24 @@ public class MoreFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1. Tiện ích Widget
-//        setupItem(view.findViewById(R.id.menu_widget), "Tiện Ích Máy Tính Để Bàn", R.drawable.ic_dashboard, v -> {
-//            Toast.makeText(getContext(), "Tính năng Widget đang phát triển", Toast.LENGTH_SHORT).show();
-//        });
 
-        // 2. Ngày Đếm Ngược
+
         setupItem(view.findViewById(R.id.menu_countdown), "Ngày Đếm Ngược", R.drawable.ic_calendar, v -> {
             startActivity(new Intent(getContext(), CountdownActivity.class));
         });
 
-        // 3. Đồng Hồ Hẹn Giờ
         setupItem(view.findViewById(R.id.menu_timer), "Đồng Hồ Hẹn Giờ", R.drawable.ic_clock, v -> {
             startActivity(new Intent(getContext(), TimerActivity.class));
         });
 
-        // 4. Máy Tính Ngày Tháng
         setupItem(view.findViewById(R.id.menu_date_calc), "Máy Tính Ngày Tháng", R.drawable.ic_calculate, v -> {
             startActivity(new Intent(getContext(), DateCalcActivity.class));
         });
 
-        // 5. Thống Kê
         setupItem(view.findViewById(R.id.menu_stats), "Thống Kê Todoits", R.drawable.ic_dashboard, v -> {
             startActivity(new Intent(getContext(), StatsActivity.class));
         });
 
-        // 6. Đồng Bộ Server (Upload)
-        // Tìm view theo ID trong fragment_more.xml
         View menuUpload = view.findViewById(R.id.menu_sync_upload);
         if (menuUpload != null) {
             setupItem(menuUpload, "Sao Lưu Lên Cloud (Upload)", R.drawable.ic_check_circle, v -> {
@@ -74,7 +65,6 @@ public class MoreFragment extends Fragment {
             });
         }
 
-        // 7. Khôi Phục Dữ Liệu (Download)
         View menuDownload = view.findViewById(R.id.menu_sync_download);
         if (menuDownload != null) {
             setupItem(menuDownload, "Khôi Phục Dữ Liệu (Download)", R.drawable.ic_menu, v -> {
@@ -82,16 +72,12 @@ public class MoreFragment extends Fragment {
             });
         }
 
-        // 8. Đăng Xuất
         View btnLogout = view.findViewById(R.id.menu_logout);
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> {
-                // Đăng xuất Firebase
                 FirebaseAuth.getInstance().signOut();
-                // Xóa Session
                 new SessionManager(getContext()).logout();
 
-                // Quay về màn hình Login
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
@@ -99,7 +85,6 @@ public class MoreFragment extends Fragment {
         }
     }
 
-    // --- LOGIC SAO LƯU (UPLOAD FULL) ---
     private void syncDataToServer() {
         Toast.makeText(getContext(), "Đang sao lưu...", Toast.LENGTH_SHORT).show();
         SessionManager session = new SessionManager(getContext());
@@ -113,15 +98,12 @@ public class MoreFragment extends Fragment {
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(getContext());
 
-            // 1. Lấy TOÀN BỘ dữ liệu của User này
             List<Task> tasks = db.taskDao().getAllTasks(userId);
             List<TimerPreset> timers = db.timerDao().getTimers(userId);
             List<CountdownEvent> countdowns = db.countdownDao().getAllEvents(userId);
 
-            // 2. Đóng gói vào BackupData
             BackupData data = new BackupData(userId, tasks, timers, countdowns);
 
-            // 3. Gửi lên Server thông qua API syncData
             RetrofitClient.getService().syncData(data).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
@@ -140,7 +122,6 @@ public class MoreFragment extends Fragment {
         });
     }
 
-    // --- LOGIC KHÔI PHỤC (DOWNLOAD FULL) ---
     private void showRestoreConfirmation() {
         new AlertDialog.Builder(getContext())
                 .setTitle("Khôi Phục Dữ Liệu")
@@ -157,7 +138,6 @@ public class MoreFragment extends Fragment {
 
         if (currentUserId == null) return;
 
-        // Gọi API lấy dữ liệu về
         RetrofitClient.getService().getData(currentUserId).enqueue(new Callback<BackupData>() {
             @Override
             public void onResponse(Call<BackupData> call, Response<BackupData> response) {
@@ -167,19 +147,17 @@ public class MoreFragment extends Fragment {
                     Executors.newSingleThreadExecutor().execute(() -> {
                         AppDatabase db = AppDatabase.getInstance(getContext());
 
-                        // 1. Xóa sạch dữ liệu cũ của user này trên máy
                         db.taskDao().deleteAllByUser(currentUserId);
                         db.timerDao().deleteAllByUser(currentUserId);
                         db.countdownDao().deleteAllByUser(currentUserId);
 
-                        // 2. Nạp dữ liệu mới từ Server vào
                         int countTask = 0;
                         int countTimer = 0;
                         int countEvent = 0;
 
                         if (data.tasks != null) {
                             for (Task t : data.tasks) {
-                                t.id = 0; // Reset ID để tạo mới
+                                t.id = 0; 
                                 db.taskDao().insertTask(t);
                                 countTask++;
                             }
@@ -218,7 +196,6 @@ public class MoreFragment extends Fragment {
         });
     }
 
-    // Helper setup item menu
     private void setupItem(View itemView, String title, int iconRes, View.OnClickListener listener) {
         if (itemView == null) return;
         ImageView imgIcon = itemView.findViewById(R.id.img_icon);

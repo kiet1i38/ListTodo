@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:background="@color/white">
-
+<<>>
         <ImageView
             android:id="@+id/btn_back"
             android:layout_width="24dp"

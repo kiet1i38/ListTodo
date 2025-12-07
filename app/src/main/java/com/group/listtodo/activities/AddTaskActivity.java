@@ -40,21 +40,19 @@ public class AddTaskActivity extends AppCompatActivity {
         Button btnDate = findViewById(R.id.btn_pick_date);
         Button btnSave = findViewById(R.id.btn_save);
 
-        // 1. Xử lý chọn ngày giờ (Advanced GUI: Dialogs)
+        // 1. Xử lý chọn ngày giờ 
         btnDate.setOnClickListener(v -> showDateTimePicker());
 
-        // 2. Xử lý lưu (Storage + Multi-threading)
+        // 2. Xử lý lưu 
         btnSave.setOnClickListener(v -> saveTask());
     }
 
     private void showDateTimePicker() {
-        // Chọn ngày
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-            // Chọn giờ sau khi chọn ngày
             new TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
@@ -80,15 +78,13 @@ public class AddTaskActivity extends AppCompatActivity {
         Task task = new Task(title, calendar.getTimeInMillis(), priority, "Personal");
         task.description = edtDesc.getText().toString();
 
-        // CHẠY TRÊN BACKGROUND THREAD (Requirement: Multi-threading)
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             db.taskDao().insertTask(task);
 
-            // Update UI trên Main Thread
             runOnUiThread(() -> {
                 Toast.makeText(this, "Đã thêm công việc!", Toast.LENGTH_SHORT).show();
-                finish(); // Đóng Activity quay về màn hình chính
+                finish(); 
             });
         });
     }

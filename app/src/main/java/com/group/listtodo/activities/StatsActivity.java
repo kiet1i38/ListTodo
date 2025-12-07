@@ -34,7 +34,7 @@ public class StatsActivity extends AppCompatActivity {
 
     private AppDatabase db;
     private String userId;
-    private int filterType = 1; // 1: Tuần, 2: Tháng, 3: Năm
+    private int filterType = 1; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,6 @@ public class StatsActivity extends AppCompatActivity {
         tvCountOverdue = findViewById(R.id.tv_count_overdue);
         tvDayName = findViewById(R.id.tv_day_name);
 
-        // Set ngày hiện tại
         tvDayName.setText(new SimpleDateFormat("EEEE", Locale.getDefault()).format(new Date()));
     }
 
@@ -85,7 +84,7 @@ public class StatsActivity extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 filterType = item.getItemId();
                 tvFilterLabel.setText(item.getTitle());
-                loadStatistics(); // Load lại dữ liệu theo filter
+                loadStatistics(); 
                 return true;
             });
             popup.show();

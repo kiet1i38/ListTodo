@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray">
 
-    <!-- 1. HEADER -->
     <RelativeLayout
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
@@ -32,7 +31,6 @@
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 
-    <!-- 2. NỘI DUNG SCROLL -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

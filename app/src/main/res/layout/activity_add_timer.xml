@@ -36,7 +36,7 @@
             app:tint="@color/black"/>
     </RelativeLayout>
 
-    <!-- Chọn giờ: Dùng 3 EditText đơn giản -->
+    <!-- Chọn giờ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

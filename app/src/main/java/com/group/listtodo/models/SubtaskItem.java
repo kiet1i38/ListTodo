@@ -10,10 +10,8 @@ public class SubtaskItem implements Serializable {
     public String note;
     public String location;
 
-    // --- THÊM MỚI ---
-    public int reminderMinutes; // 0 = Không nhắc
-    public String soundName;    // Tên file nhạc
-    // ----------------
+    public int reminderMinutes; 
+    public String soundName;   
 
     public SubtaskItem(String title, boolean isCompleted) {
         this.title = title;

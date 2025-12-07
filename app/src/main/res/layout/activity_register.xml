@@ -13,7 +13,6 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Header -->
         <TextView
             android:text="Tạo tài khoản"
             android:textSize="28sp"
@@ -34,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <!-- 1. Full Name -->
         <TextView
             android:text="Tên đầy đủ"
             android:textColor="#757575"
@@ -54,7 +52,6 @@
             android:inputType="textPersonName"
             android:layout_marginBottom="20dp"/>
 
-        <!-- 2. Email -->
         <TextView
             android:text="Email"
             android:textColor="#757575"
@@ -74,7 +71,6 @@
             android:inputType="textEmailAddress"
             android:layout_marginBottom="20dp"/>
 
-        <!-- 3. Password -->
         <TextView
             android:text="Mật khẩu"
             android:textColor="#757575"
@@ -102,7 +98,6 @@
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Button Register -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_register"
             android:layout_width="match_parent"
@@ -114,7 +109,6 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
 
-        <!-- Footer Link -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

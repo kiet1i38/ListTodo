@@ -23,7 +23,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         edtEmail = findViewById(R.id.edt_reset_email);
         btnSend = findViewById(R.id.btn_send_reset);
 
-        // Nút Back (nếu có icon back) hoặc xử lý nút back hệ thống
         if (findViewById(R.id.btn_back) != null) {
             findViewById(R.id.btn_back).setOnClickListener(v -> {
                 finish();
@@ -31,7 +30,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             });
         }
 
-        // Xử lý Gửi Email Reset
         btnSend.setOnClickListener(v -> {
             String email = edtEmail.getText().toString().trim();
 
@@ -40,13 +38,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 return;
             }
 
-            // Gửi yêu cầu reset pass lên Firebase
             mAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(this, "Đã gửi Email! Hãy kiểm tra hộp thư (cả mục Spam).", Toast.LENGTH_LONG).show();
-                            // Có thể đóng màn hình này luôn để về Login
-                            // finish();
                         } else {
                             Toast.makeText(this, "Lỗi: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }

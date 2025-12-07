@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <!-- 1. Full Name (Thêm vào cho đủ bộ) -->
+        <!-- 1. Full Name -->
         <TextView
             android:text="Tên đầy đủ"
             android:textColor="#757575"

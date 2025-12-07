@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <element id="1">This is junk line 1</element>
-    <element id="2">This is junk line 2</element>
 
-    <element id="630">This is junk line 630</element>
-    <element id="631">This is junk line 631</element>
-    <element id="632">This is junk line 632</element>
-fixing
-    <element id="654">This is junk line 654</element>
-    <element id="655">This is junk line 655</element>
-    <element id="656">This is junk line 656</element>
-    <element id="657">This is junk line 657</element>
-    <element id="658">This is junk line 658</element>
-    <element id="659">This is junk line 659</element>
     <element id="660">This is junk line 660</element>
     <element id="661">This is junk line 661</element>
     <element id="662">This is junk line 662</element>

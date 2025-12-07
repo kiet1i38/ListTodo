@@ -11,14 +11,13 @@ public class CountdownEvent implements Serializable {
     public String userId;
 
     public String title;
-    public long targetDate; // Ngày mục tiêu
-    public String category; // "Cuộc sống", "Công việc"...
-    public boolean isPinned; // Đính kèm lên trên
-    public boolean hasEndDate; // Có thời gian kết thúc không
+    public long targetDate; 
+    public String category; 
+    public boolean isPinned; 
+    public boolean hasEndDate; 
     public int reminderMinutes;
     public String soundName;
 
-    // Constructor
     public CountdownEvent() {}
 
     public CountdownEvent(String title, long targetDate) {

@@ -15,12 +15,10 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
 
-        // 1. Mặc định khi mở app sẽ load màn hình Todoits (Danh sách công việc)
         if (savedInstanceState == null) {
             loadFragment(new TodoitsFragment());
         }
 
-        // 2. Xử lý sự kiện bấm vào menu dưới đáy
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Hàm thay thế Fragment vào khung FrameLayout
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)

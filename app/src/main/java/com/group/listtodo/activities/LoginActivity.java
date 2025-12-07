@@ -12,13 +12,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.group.listtodo.R;
 import com.group.listtodo.utils.SessionManager;
-import com.group.listtodo.utils.SyncHelper; // <--- Import
+import com.group.listtodo.utils.SyncHelper; 
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText edtEmail, edtPass;
     private FirebaseAuth mAuth;
-    private ProgressDialog loadingDialog; // Thêm dialog xoay xoay
+    private ProgressDialog loadingDialog; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
-        // Setup Loading Dialog
         loadingDialog = new ProgressDialog(this);
         loadingDialog.setMessage("Đang đăng nhập và đồng bộ dữ liệu...");
         loadingDialog.setCancelable(false);
@@ -68,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        loadingDialog.show(); // Hiện loading
+        loadingDialog.show(); 
 
         mAuth.signInWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(this, task -> {
@@ -78,7 +77,6 @@ public class LoginActivity extends AppCompatActivity {
                             String uid = user.getUid();
                             new SessionManager(this).saveUser(uid);
 
-                            // --- TỰ ĐỘNG KHÔI PHỤC DỮ LIỆU ---
                             SyncHelper.restoreData(this, uid, () -> {
                                 runOnUiThread(() -> {
                                     loadingDialog.dismiss();
@@ -86,7 +84,6 @@ public class LoginActivity extends AppCompatActivity {
                                     goToMainActivity();
                                 });
                             });
-                            // ----------------------------------
                         }
                     } else {
                         loadingDialog.dismiss();

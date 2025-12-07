@@ -1,31 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Màu cơ bản -->
     <color name="black">#1D1D1D</color>
     <color name="white">#FFFFFF</color>
     <color name="blue_primary">#246BFD</color>
 
-    <!-- FIX LỖI CỦA BẠN Ở ĐÂY: Thêm gray_text -->
-    <color name="gray_text">#808080</color>       <!-- Màu xám cho code cũ -->
-    <color name="text_gray">#9E9E9E</color>       <!-- Màu xám cho code mới -->
+    <color name="gray_text">#808080</color>      
+    <color name="text_gray">#9E9E9E</color>      
 
-    <!-- Màu nền -->
-    <color name="background_light">#F5F7FA</color> <!-- Nền cũ -->
-    <color name="background_gray">#F5F5F5</color>  <!-- Nền mới -->
+    <color name="background_light">#F5F7FA</color> 
+    <color name="background_gray">#F5F5F5</color>  
 
-    <!-- Màu Priority (Dùng cho TaskAdapter cũ) -->
     <color name="prio_1_urgent_important">#FF3B30</color>
     <color name="prio_2_important">#FFCC00</color>
     <color name="prio_3_urgent">#007AFF</color>
     <color name="prio_4_none">#34C759</color>
 
-    <!-- Màu Quadrant (Dùng cho giao diện mới) -->
     <color name="quadrant_1_red">#FF3B30</color>
     <color name="quadrant_2_orange">#FF9500</color>
     <color name="quadrant_3_blue">#007AFF</color>
     <color name="quadrant_4_green">#34C759</color>
 
-    <!-- Màu mặc định hệ thống (Giữ lại để không lỗi Theme) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

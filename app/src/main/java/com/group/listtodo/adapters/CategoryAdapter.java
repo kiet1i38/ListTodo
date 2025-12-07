@@ -19,7 +19,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public interface OnCategoryClickListener {
         void onCategoryClick(String category);
         void onAddCategoryClick();
-        void onCategoryLongClick(String category); // <--- Thêm sự kiện Long Click
+        void onCategoryLongClick(String category);
     }
 
     public CategoryAdapter(List<String> categories, OnCategoryClickListener listener) {
@@ -39,7 +39,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         String cat = categories.get(position);
         holder.btn.setText(cat);
 
-        // Nút + không xử lý long click
         if (cat.equals("+")) {
             holder.btn.setTextColor(Color.parseColor("#246BFD"));
             holder.btn.setBackgroundColor(Color.TRANSPARENT);
@@ -48,7 +47,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             return;
         }
 
-        // Đổi màu khi chọn
         if (cat.equals(selectedCategory)) {
             holder.btn.setBackgroundColor(Color.parseColor("#246BFD"));
             holder.btn.setTextColor(Color.WHITE);
@@ -57,14 +55,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             holder.btn.setTextColor(Color.BLACK);
         }
 
-        // Click thường
         holder.btn.setOnClickListener(v -> {
             selectedCategory = cat;
             notifyDataSetChanged();
             listener.onCategoryClick(cat);
         });
 
-        // Click giữ 3s (Long Click) - Trừ mục "Tất Cả" không cho xóa
         if (!cat.equals("Tất Cả")) {
             holder.btn.setOnLongClickListener(v -> {
                 listener.onCategoryLongClick(cat);

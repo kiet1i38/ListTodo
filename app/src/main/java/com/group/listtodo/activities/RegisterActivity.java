@@ -26,13 +26,11 @@ public class RegisterActivity extends AppCompatActivity {
         Button btnReg = findViewById(R.id.btn_register);
         TextView tvLoginLink = findViewById(R.id.tv_login_link);
 
-        // Nút quay lại Login
         tvLoginLink.setOnClickListener(v -> {
             finish();
             overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         });
 
-        // Nút Đăng Ký
         btnReg.setOnClickListener(v -> {
             String email = edtEmail.getText().toString().trim();
             String pass = edtPass.getText().toString().trim();
@@ -52,7 +50,6 @@ public class RegisterActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
 
-                        // --- TÍNH NĂNG GỬI EMAIL XÁC THỰC ---
                         if (user != null) {
                             user.sendEmailVerification()
                                     .addOnCompleteListener(emailTask -> {
@@ -63,9 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                     });
                         }
-                        // -------------------------------------
-
-                        // Quay về màn hình Login
                         finish();
                         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                     } else {

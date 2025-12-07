@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#F5F7FA">
 
-    <!-- 1. HEADER -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,14 +42,12 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <!-- 2. KHỐI TRÊN: HÔM NAY & TỔNG QUAN -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:baselineAligned="false">
 
-                <!-- Cột Trái: Chart Hôm nay -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -75,7 +72,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
 
-                        <!-- Chart Tròn Nhỏ -->
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/pieChart_today"
                             android:layout_width="100dp"
@@ -93,14 +89,12 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Cột Phải: 3 Card nhỏ -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Card 1: Chờ -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
@@ -114,7 +108,6 @@
                         </RelativeLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Card 2: Đã xong -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
@@ -128,7 +121,6 @@
                         </RelativeLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Card 3: Hết hạn -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="66dp"
@@ -143,7 +135,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 3. KHỐI GIỮA: CHART LỚN (TUẦN) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -158,11 +149,9 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Header Khối Giữa -->
                     <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
                         <TextView android:text="Hoàn Thành Hàng Tuần" android:textStyle="bold" android:textSize="16sp" android:textColor="@color/black" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
 
-                        <!-- Nút chọn thời gian -->
                         <LinearLayout
                             android:id="@+id/btn_filter_time"
                             android:layout_width="wrap_content"
@@ -174,7 +163,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Chart Tròn Lớn -->
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/pieChart_main"
                         android:layout_width="match_parent"
@@ -193,7 +181,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 4. KHỐI DƯỚI: THỐNG KÊ CHI TIẾT -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -213,32 +200,27 @@
                         <TextView android:id="@+id/tv_day_name" android:text="Thursday" android:textStyle="bold" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
-                    <!-- 4 Ô thống kê -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="4">
 
-                        <!-- Ô 1 -->
                         <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp" android:layout_marginEnd="4dp">
                             <TextView android:id="@+id/tv_count_total" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                             <TextView android:text="Thiết lập" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         </LinearLayout>
 
-                        <!-- Ô 2 -->
                         <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp" android:layout_marginEnd="4dp">
                             <TextView android:id="@+id/tv_count_pending" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="#246BFD" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                             <TextView android:text="Danh\nSách Chờ" android:gravity="center" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         </LinearLayout>
 
-                        <!-- Ô 3 -->
                         <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp" android:layout_marginEnd="4dp">
                             <TextView android:id="@+id/tv_count_done" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="@color/black" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                             <TextView android:text="Đã Hoàn\nThành" android:gravity="center" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                         </LinearLayout>
 
-                        <!-- Ô 4 -->
                         <LinearLayout android:orientation="vertical" android:gravity="center" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content" android:background="#F5F5F5" android:padding="8dp">
                             <TextView android:id="@+id/tv_count_overdue" android:text="0" android:textStyle="bold" android:textSize="18sp" android:textColor="#FF3B30" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
                             <TextView android:text="Đã Hết Hạn" android:textSize="10sp" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
@@ -246,9 +228,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-            <!-- (ĐÃ XÓA MỤC XEM THÊM) -->
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

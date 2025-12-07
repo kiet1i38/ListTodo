@@ -6,7 +6,6 @@
     android:gravity="center_vertical"
     android:paddingVertical="4dp">
 
-    <!-- Checkbox hình tròn -->
     <CheckBox
         android:id="@+id/cb_quadrant_check"
         android:layout_width="32dp"
@@ -15,7 +14,6 @@
         android:background="@drawable/selector_checkbox_round"
         android:layout_marginEnd="8dp"/>
 
-    <!-- Tên công việc -->
     <TextView
         android:id="@+id/tv_quadrant_title"
         android:layout_width="match_parent"

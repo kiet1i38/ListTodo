@@ -24,7 +24,6 @@
         android:textSize="18sp"
         android:minHeight="48dp"/>
 
-    <!-- THANH CUỘN NGANG CÁC NÚT CHỌN -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +35,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- 1. Thời gian -->
             <Button
                 android:id="@+id/btn_time"
                 android:layout_width="wrap_content"
@@ -47,7 +45,6 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_marginEnd="8dp"/>
 
-            <!-- 2. Cấp bậc -->
             <Button
                 android:id="@+id/btn_priority"
                 android:layout_width="wrap_content"
@@ -58,7 +55,6 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_marginEnd="8dp"/>
 
-            <!-- 3. Danh mục (Mới) -->
             <Button
                 android:id="@+id/btn_category"
                 android:layout_width="wrap_content"
@@ -69,7 +65,6 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_marginEnd="8dp"/>
 
-            <!-- 4. Địa điểm (Mới) -->
             <Button
                 android:id="@+id/btn_location"
                 android:layout_width="wrap_content"

@@ -76,7 +76,6 @@ public class QuadrantFragment extends Fragment {
 
     private QuadrantAdapter createAdapter(List<Task> list) {
         QuadrantAdapter adapter = new QuadrantAdapter(task -> {
-            // Khi check -> Update DB nhưng KHÔNG reload lại list (để giữ task ở đó)
             ExecutorService ex = Executors.newSingleThreadExecutor();
             ex.execute(() -> db.taskDao().updateTask(task));
         });

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#F2F2F7"> 
 
-    <!-- 1. HEADER -->
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -44,7 +43,6 @@
             style="@style/Widget.MaterialComponents.Button"/>
     </RelativeLayout>
 
-    <!-- 2. NỘI DUNG CHÍNH -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,7 +56,6 @@
             android:orientation="vertical"
             android:paddingBottom="40dp">
 
-            <!-- KHỐI 1: NHẬP TIÊU ĐỀ -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -88,7 +85,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 2: THỜI GIAN & DANH MỤC -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,7 +97,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Dòng 1: Thời gian -->
                     <LinearLayout
                         android:id="@+id/row_date"
                         android:layout_width="match_parent"
@@ -135,7 +130,6 @@
 
                     <View android:background="#E0E0E0" android:layout_height="1dp" android:layout_width="match_parent" android:layout_marginVertical="8dp"/>
 
-                    <!-- Dòng 2: Danh mục -->
                     <LinearLayout
                         android:id="@+id/row_category"
                         android:layout_width="match_parent"
@@ -169,7 +163,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- KHỐI 3: CÀI ĐẶT KHÁC -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -182,7 +175,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Lặp lại -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -211,7 +203,6 @@
 
                     <View android:background="#E0E0E0" android:layout_height="1dp" android:layout_width="match_parent" android:layout_marginVertical="8dp"/>
 
-                    <!-- Nhắc Nhở -->
                     <LinearLayout
                         android:id="@+id/row_reminder"
                         android:layout_width="match_parent"
@@ -243,7 +234,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 3. NÚT BẤM DƯỚI CÙNG -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_save_bottom"
                 android:layout_width="match_parent"

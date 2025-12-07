@@ -86,14 +86,12 @@ public class TimerActivity extends AppCompatActivity {
         updateTimeText(tvDuration, timeToShow);
         btnPlay.setImageResource(isThisRunning ? R.drawable.ic_menu : R.drawable.ic_check_circle);
 
-        // Click Body -> Vào chi tiết
         view.setOnClickListener(v -> {
             Intent intent = new Intent(this, TimerRunningActivity.class);
             intent.putExtra("timer", timer);
             startActivity(intent);
         });
 
-        // Click Play -> Chạy ngay
         btnPlay.setOnClickListener(v -> handlePlayPause(timer, btnPlay, tvDuration));
 
         container.addView(view);
@@ -101,7 +99,6 @@ public class TimerActivity extends AppCompatActivity {
 
     private void handlePlayPause(TimerPreset timer, ImageView btnPlay, TextView tvDuration) {
         if (TimerService.isRunning && TimerService.currentTimerId == timer.id) {
-            // PAUSE
             Intent intent = new Intent(this, TimerService.class);
             intent.setAction("STOP");
             startService(intent);
@@ -112,7 +109,6 @@ public class TimerActivity extends AppCompatActivity {
             btnPlay.setImageResource(R.drawable.ic_check_circle);
             updateTimeText(tvDuration, TimerService.currentTimeLeft);
         } else {
-            // RESUME
             long timeToRun = (timer.remainingTime > 0) ? timer.remainingTime : timer.durationInMillis;
 
             Intent intent = new Intent(this, TimerService.class);
@@ -126,7 +122,6 @@ public class TimerActivity extends AppCompatActivity {
                 startService(intent);
             }
 
-            // Reload lại toàn bộ để các nút play khác (nếu có) chuyển về pause
             loadTimers();
         }
     }
@@ -148,7 +143,7 @@ public class TimerActivity extends AppCompatActivity {
                         btnPlay.setImageResource(R.drawable.ic_menu);
                     }
                 } else if (TimerService.ACTION_FINISH.equals(intent.getAction())) {
-                    loadTimers(); // Hết giờ thì load lại để hiện 00:00 hoặc reset
+                    loadTimers(); 
                 }
             }
         };

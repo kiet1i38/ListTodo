@@ -4,9 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/transparent"> <!-- Nền trong suốt để thấy khoảng hở -->
+    android:background="@android:color/transparent"> 
 
-    <!-- Nút Xóa -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_confirm_delete"
         android:layout_width="match_parent"
@@ -19,12 +18,10 @@
         android:background="@drawable/bg_white_rounded_16dp"
         android:stateListAnimator="@null"/>
 
-    <!-- Khoảng cách giữa 2 nút -->
     <Space
         android:layout_width="match_parent"
         android:layout_height="12dp"/>
 
-    <!-- Nút Hủy -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_cancel_delete"
         android:layout_width="match_parent"

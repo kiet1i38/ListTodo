@@ -19,7 +19,7 @@ public class CustomCalendarBottomSheet extends BottomSheetDialogFragment {
 
     private OnDateSelectedListener listener;
     private long initialDate;
-    private TextView tvCurrentMonth; // <--- Biến mới
+    private TextView tvCurrentMonth; 
 
     public interface OnDateSelectedListener {
         void onDateSelected(long dateInMillis);
@@ -41,13 +41,13 @@ public class CustomCalendarBottomSheet extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         CalendarView calendarView = view.findViewById(R.id.calendar_view_custom);
-        tvCurrentMonth = view.findViewById(R.id.tv_current_month); // <--- Ánh xạ
+        tvCurrentMonth = view.findViewById(R.id.tv_current_month);
         ImageView btnPrev = view.findViewById(R.id.btn_prev_month);
         ImageView btnNext = view.findViewById(R.id.btn_next_month);
 
         if (initialDate != 0) {
             calendarView.setDate(initialDate);
-            updateMonthTitle(initialDate); // <--- Cập nhật lúc mở
+            updateMonthTitle(initialDate); 
         } else {
             updateMonthTitle(System.currentTimeMillis());
         }
@@ -73,7 +73,7 @@ public class CustomCalendarBottomSheet extends BottomSheetDialogFragment {
 
         long newTime = c.getTimeInMillis();
         calendarView.setDate(newTime, true, true);
-        updateMonthTitle(newTime); // <--- Cập nhật khi bấm nút
+        updateMonthTitle(newTime); 
     }
 
     private void updateMonthTitle(long timeInMillis) {

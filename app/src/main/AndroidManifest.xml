@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- 1. CÁC QUYỀN (PERMISSIONS) -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
@@ -23,12 +22,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-        <!-- 2. CẤU HÌNH GOOGLE MAPS -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDLklT-3sObA8pGfU5Oy0409_iT6JaktDo" />
 
-        <!-- 3. MÀN HÌNH KHỞI ĐỘNG (LOGIN) -->
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true"
@@ -39,32 +36,26 @@
             </intent-filter>
         </activity>
 
-        <!-- 4. CÁC MÀN HÌNH KHÁC -->
         <activity android:name=".activities.MainActivity" android:exported="false"/>
         <activity android:name=".activities.RegisterActivity" android:exported="false"/>
         <activity android:name=".activities.ForgotPasswordActivity"/>
 
-        <!-- Các màn hình chức năng -->
         <activity android:name=".activities.AddTaskActivity" />
         <activity android:name=".activities.EditTaskActivity"/>
         <activity android:name=".activities.EditSubtaskActivity" />
 
-        <!-- NHÓM TIMER (Đã thêm đầy đủ để không bị lỗi) -->
         <activity android:name=".activities.TimerActivity"/>
-        <activity android:name=".activities.AddTimerActivity"/> <!-- Đây là cái em thiếu -->
+        <activity android:name=".activities.AddTimerActivity"/> 
         <activity android:name=".activities.TimerRunningActivity"/>
 
-        <!-- NHÓM COUNTDOWN -->
         <activity android:name=".activities.CountdownActivity"/>
         <activity android:name=".activities.AddCountdownActivity"/>
 
-        <!-- NHÓM KHÁC -->
         <activity android:name=".activities.LocationActivity"/>
         <activity android:name=".activities.StatsActivity"/>
         <activity android:name=".activities.DateCalcActivity"/>
         <service android:name=".services.AlarmSoundService" />
 
-        <!-- 5. SERVICES & RECEIVERS -->
         <service android:name=".services.TimerService" android:foregroundServiceType="shortService" />
         <receiver android:name=".receivers.AlarmReceiver"/>
 

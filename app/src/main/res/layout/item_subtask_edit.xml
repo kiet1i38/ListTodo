@@ -6,14 +6,12 @@
     android:gravity="center_vertical"
     android:paddingVertical="4dp">
 
-    <!-- Checkbox -->
     <CheckBox
         android:id="@+id/cb_subtask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:buttonTint="@color/blue_primary"/>
 
-    <!-- Nhập tên việc con -->
     <EditText
         android:id="@+id/edt_subtask_title"
         android:layout_width="0dp"
@@ -24,7 +22,6 @@
         android:textSize="16sp"
         android:paddingHorizontal="8dp"/>
 
-    <!-- Nút xóa dòng này -->
     <ImageView
         android:id="@+id/btn_remove_subtask"
         android:layout_width="24dp"
@@ -33,5 +30,4 @@
         android:rotation="45"
         app:tint="#FF3B30"
         xmlns:app="http://schemas.android.com/apk/res-auto"/>
-    <!-- Dùng tạm icon menu xoay 45 độ thành dấu X -->
 </LinearLayout>

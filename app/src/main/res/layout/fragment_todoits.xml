@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray">
 
-    <!-- 1. HEADER (Cố định ở trên) -->
     <RelativeLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
@@ -72,7 +71,6 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- 2. DANH MỤC (Cố định dưới Header) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_categories"
         android:layout_width="match_parent"
@@ -83,14 +81,11 @@
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-    <!-- 3. NỘI DUNG CHÍNH (List Task + Empty State) -->
-    <!-- Bọc trong FrameLayout để List và Empty State đè lên nhau -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/recycler_categories">
 
-        <!-- Danh sách công việc -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_tasks"
             android:layout_width="match_parent"
@@ -99,7 +94,6 @@
             android:clipToPadding="false"
             android:paddingBottom="80dp"/>
 
-        <!-- Trạng thái trống (Căn giữa màn hình) -->
         <LinearLayout
             android:id="@+id/layout_empty"
             android:layout_width="wrap_content"
@@ -124,7 +118,6 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- 4. FAB (Cố định góc dưới) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"

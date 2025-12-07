@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/bg_bottom_sheet_rounded"> <!-- Bo tròn góc trên -->
+    android:background="@drawable/bg_bottom_sheet_rounded"> 
 
     <EditText
         android:id="@+id/edt_quick_task"
@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <!-- Các nút chọn nhanh (Ngày, Cấp bậc, Danh mục) -->
     <HorizontalScrollView android:scrollbars="none" android:layout_width="match_parent" android:layout_height="wrap_content">
         <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
             <Button android:text="Thời gian" android:drawableStart="@drawable/ic_calendar" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_marginEnd="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
@@ -23,7 +22,6 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Nút Gửi (Mũi tên xanh) -->
     <ImageView
         android:src="@drawable/ic_check_circle"
         android:tint="@color/blue_primary"

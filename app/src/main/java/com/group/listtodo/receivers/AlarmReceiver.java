@@ -20,15 +20,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         int repeatCount = intent.getIntExtra("REPEAT", 0);
         int taskId = intent.getIntExtra("ID", 0);
 
-        // 1. Hiển thị thông báo
         showNotification(context, taskTitle);
 
-        // 2. Khởi động Service phát nhạc 10s
         Intent serviceIntent = new Intent(context, AlarmSoundService.class);
         serviceIntent.putExtra("SOUND_NAME", soundName);
         context.startService(serviceIntent);
 
-        // 3. Xử lý Lặp lại (Nếu còn số lần lặp > 0)
         if (repeatCount > 0) {
             scheduleNextAlarm(context, taskId, taskTitle, soundName, repeatCount - 1);
         }
@@ -63,7 +60,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         PendingIntent pi = PendingIntent.getBroadcast(context, id, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Lặp lại sau 5 phút (300,000 ms)
         long nextTime = System.currentTimeMillis() + (5 * 60 * 1000);
 
         if (am != null) {

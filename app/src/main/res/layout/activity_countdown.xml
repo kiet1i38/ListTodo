@@ -48,10 +48,6 @@
             android:paddingHorizontal="16dp"
             android:paddingTop="16dp">
 
-            <!-- (Các phần Banner cũ giữ nguyên ở đây hoặc xóa đi tùy em) -->
-            <!-- Code Java sẽ thêm item_countdown vào dưới cùng của cái LinearLayout này -->
-
-            <!-- BANNER LỚN (Năm Mới) -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
@@ -63,7 +59,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <!-- Hình nền -->
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -113,7 +108,6 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- ITEM 1: Thứ Bảy -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,7 +122,6 @@
                     android:padding="16dp"
                     android:orientation="horizontal">
 
-                    <!-- Icon Vuông màu xanh -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
@@ -145,7 +138,6 @@
                             android:gravity="center"/>
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Text giữa -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -167,7 +159,6 @@
                             android:textColor="@color/text_gray"/>
                     </LinearLayout>
 
-                    <!-- Số ngày bên phải -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -192,7 +183,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- ITEM 2: Giáng Sinh -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -268,7 +258,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- ITEM 3: Năm Đã Qua -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -347,7 +336,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- NÚT FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_event"
         android:layout_width="wrap_content"

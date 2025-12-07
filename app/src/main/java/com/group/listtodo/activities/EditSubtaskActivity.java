@@ -30,7 +30,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
     private Calendar calendar = Calendar.getInstance();
     private int selectedPriority = 4;
 
-    // Biến mới
     private int reminderMinutes = 0;
     private String selectedSound = "sound_alarm";
     private MediaPlayer previewPlayer;
@@ -56,7 +55,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
         btnChipDate = findViewById(R.id.btn_chip_date);
         btnChipPriority = findViewById(R.id.btn_chip_priority);
 
-        // Setup các dòng setting (Có thêm Nhắc nhở và Âm thanh)
         setupRow(R.id.row_time, R.drawable.ic_clock, "Thời Gian", "Chọn >");
         setupRow(R.id.row_reminder, R.drawable.ic_alarm, "Nhắc Nhở", "Không Nhắc >");
         setupRow(R.id.row_sound, R.drawable.ic_music, "Âm Thanh", "Mặc định >");
@@ -92,7 +90,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
             if (currentSubtask.dueDate != 0) calendar.setTimeInMillis(currentSubtask.dueDate);
             selectedPriority = currentSubtask.priority;
 
-            // Load dữ liệu mới
             reminderMinutes = currentSubtask.reminderMinutes;
             selectedSound = currentSubtask.soundName != null ? currentSubtask.soundName : "sound_alarm";
 
@@ -121,7 +118,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
             tvSoundValue.setText(selectedSound + " >");
     }
 
-    // --- DIALOGS ---
     private void showReminderDialog() {
         EditText edtMinutes = new EditText(this);
         edtMinutes.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
@@ -168,7 +164,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
             previewPlayer = null;
         }
     }
-    // --------------
 
     private void setupEvents() {
         btnChipPriority.setOnClickListener(v -> {
@@ -191,7 +186,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
             currentSubtask.dueDate = calendar.getTimeInMillis();
             currentSubtask.priority = selectedPriority;
 
-            // Lưu trường mới
             currentSubtask.reminderMinutes = reminderMinutes;
             currentSubtask.soundName = selectedSound;
 

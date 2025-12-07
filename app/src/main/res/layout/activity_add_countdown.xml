@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F2F2F7">
+    android:background="#F2F2F7"> <!-- Màu nền xám nhạt -->
 
-    <!-- HEADER -->
+    <!-- 1. HEADER -->
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <!-- Nút Lưu nhỏ ở trên -->
+        <!-- Nút Lưu nhỏ ở góc trên -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save_top"
             android:layout_width="wrap_content"
@@ -45,6 +45,7 @@
             style="@style/Widget.MaterialComponents.Button"/>
     </RelativeLayout>
 
+    <!-- 2. NỘI DUNG CHÍNH -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,7 +59,7 @@
             android:orientation="vertical"
             android:paddingBottom="40dp">
 
-            <!-- KHỐI 1: TIÊU ĐỀ -->
+            <!-- KHỐI 1: NHẬP TIÊU ĐỀ -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,7 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:hint="Nhập Tiêu Đề, ví dụ: Giáng Sinh"
+                        android:hint="Nhập Tiêu Đề (VD: Sinh Nhật)"
                         android:textSize="16sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -107,23 +108,64 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:paddingVertical="8dp">
-                        <ImageView android:src="@drawable/ic_clock" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp"/>
-                        <TextView android:text="Đặt Thời Gian" android:textSize="16sp" android:textColor="@color/black" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
-                        <TextView android:id="@+id/tv_date_value" android:text="2025.12.25 >" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        android:paddingVertical="8dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:src="@drawable/ic_clock"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="12dp"
+                            app:tint="@color/black"/>
+
+                        <TextView
+                            android:text="Đặt Thời Gian"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/tv_date_value"
+                            android:text="2025.12.25 >"
+                            android:textColor="@color/text_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <View android:background="#E0E0E0" android:layout_height="1dp" android:layout_width="match_parent" android:layout_marginVertical="8dp"/>
 
                     <!-- Dòng 2: Danh mục -->
                     <LinearLayout
+                        android:id="@+id/row_category"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:paddingVertical="8dp">
-                        <ImageView android:src="@drawable/ic_dashboard" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp"/>
-                        <TextView android:text="Danh Mục" android:textSize="16sp" android:textColor="@color/black" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
-                        <TextView android:text="Cuộc Sống >" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                        android:paddingVertical="8dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:src="@drawable/ic_dashboard"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="12dp"
+                            app:tint="@color/black"/>
+
+                        <TextView
+                            android:text="Danh Mục"
+                            android:textSize="16sp"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/tv_category_value"
+                            android:text="Cuộc Sống >"
+                            android:textColor="@color/text_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -141,25 +183,68 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="8dp">
-                        <ImageView android:src="@drawable/ic_repeat" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp"/>
-                        <TextView android:text="Lặp Lại" android:textColor="@color/black" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
-                        <TextView android:text="Không Lặp >" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <!-- Lặp lại -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="8dp">
+
+                        <ImageView
+                            android:src="@drawable/ic_repeat"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="12dp"
+                            app:tint="@color/black"/>
+
+                        <TextView
+                            android:text="Lặp Lại"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:text="Không Lặp >"
+                            android:textColor="@color/text_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
 
                     <View android:background="#E0E0E0" android:layout_height="1dp" android:layout_width="match_parent" android:layout_marginVertical="8dp"/>
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="8dp">
-                        <ImageView android:src="@drawable/ic_alarm" android:layout_width="20dp" android:layout_height="20dp" android:layout_marginEnd="12dp"/>
-                        <TextView android:text="Nhắc Nhở" android:textColor="@color/black" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
-                        <TextView android:text="Không Nhắc >" android:textColor="@color/text_gray" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <!-- Nhắc Nhở -->
+                    <LinearLayout
+                        android:id="@+id/row_reminder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="8dp"
+                        android:background="?attr/selectableItemBackground">
+
+                        <ImageView
+                            android:src="@drawable/ic_alarm"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="12dp"
+                            app:tint="@color/black"/>
+
+                        <TextView
+                            android:text="Nhắc Nhở"
+                            android:textColor="@color/black"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
+                            android:id="@+id/tv_reminder_value"
+                            android:text="Không Nhắc >"
+                            android:textColor="@color/text_gray"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- (ĐÃ XÓA KHỐI SWITCH ĐÍNH KÈM Ở ĐÂY) -->
-
-            <!-- BUTTONS -->
+            <!-- 3. NÚT BẤM DƯỚI CÙNG -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_save_bottom"
                 android:layout_width="match_parent"

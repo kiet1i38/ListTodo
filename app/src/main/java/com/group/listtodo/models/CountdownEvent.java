@@ -15,6 +15,8 @@ public class CountdownEvent implements Serializable {
     public String category; // "Cuộc sống", "Công việc"...
     public boolean isPinned; // Đính kèm lên trên
     public boolean hasEndDate; // Có thời gian kết thúc không
+    public int reminderMinutes;
+    public String soundName;
 
     // Constructor
     public CountdownEvent() {}
@@ -24,5 +26,7 @@ public class CountdownEvent implements Serializable {
         this.targetDate = targetDate;
         this.category = "Cuộc Sống";
         this.isPinned = false;
+        this.reminderMinutes = 0;
+        this.soundName = "sound_alarm";
     }
 }

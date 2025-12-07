@@ -1,8 +1,8 @@
 package com.group.listtodo.activities;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,30 +10,30 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.group.listtodo.R;
 import com.group.listtodo.models.SubtaskItem;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import com.google.android.material.timepicker.MaterialTimePicker;
-import com.google.android.material.timepicker.TimeFormat;
 
 public class EditSubtaskActivity extends AppCompatActivity {
 
     private EditText edtTitle, edtNote;
-    private Button btnSave, btnDelete, btnChipDate, btnChipPriority, btnChipLocation;
-    private TextView tvTimeValue;
+    private Button btnSave, btnDelete, btnChipDate, btnChipPriority;
+    private TextView tvTimeValue, tvReminderValue, tvSoundValue;
+
     private SubtaskItem currentSubtask;
     private int position;
     private Calendar calendar = Calendar.getInstance();
     private int selectedPriority = 4;
-    private String selectedLocation = "";
 
-    private ActivityResultLauncher<Intent> locationLauncher;
+    // Biến mới
+    private int reminderMinutes = 0;
+    private String selectedSound = "sound_alarm";
+    private MediaPlayer previewPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +42,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
 
         currentSubtask = (SubtaskItem) getIntent().getSerializableExtra("subtask");
         position = getIntent().getIntExtra("position", -1);
-
-        locationLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                selectedLocation = result.getData().getStringExtra("location_name");
-                btnChipLocation.setText(selectedLocation);
-            }
-        });
 
         initViews();
         setupData();
@@ -62,11 +55,11 @@ public class EditSubtaskActivity extends AppCompatActivity {
         btnDelete = findViewById(R.id.btn_delete);
         btnChipDate = findViewById(R.id.btn_chip_date);
         btnChipPriority = findViewById(R.id.btn_chip_priority);
-        btnChipLocation = findViewById(R.id.btn_chip_location); // Nút địa điểm
 
+        // Setup các dòng setting (Có thêm Nhắc nhở và Âm thanh)
         setupRow(R.id.row_time, R.drawable.ic_clock, "Thời Gian", "Chọn >");
         setupRow(R.id.row_reminder, R.drawable.ic_alarm, "Nhắc Nhở", "Không Nhắc >");
-        setupRow(R.id.row_sound, R.drawable.ic_music, "Âm Thanh", "Không >");
+        setupRow(R.id.row_sound, R.drawable.ic_music, "Âm Thanh", "Mặc định >");
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
     }
@@ -76,10 +69,18 @@ public class EditSubtaskActivity extends AppCompatActivity {
         if (view != null) {
             ((ImageView) view.findViewById(R.id.img_icon)).setImageResource(iconRes);
             ((TextView) view.findViewById(R.id.tv_label)).setText(label);
-            ((TextView) view.findViewById(R.id.tv_value)).setText(value);
+            TextView tvVal = view.findViewById(R.id.tv_value);
+            tvVal.setText(value);
+
             if (label.equals("Thời Gian")) {
-                tvTimeValue = view.findViewById(R.id.tv_value);
+                tvTimeValue = tvVal;
                 view.setOnClickListener(v -> showDateTimePicker());
+            } else if (label.equals("Nhắc Nhở")) {
+                tvReminderValue = tvVal;
+                view.setOnClickListener(v -> showReminderDialog());
+            } else if (label.equals("Âm Thanh")) {
+                tvSoundValue = tvVal;
+                view.setOnClickListener(v -> showSoundDialog());
             }
         }
     }
@@ -90,8 +91,13 @@ public class EditSubtaskActivity extends AppCompatActivity {
             edtNote.setText(currentSubtask.note);
             if (currentSubtask.dueDate != 0) calendar.setTimeInMillis(currentSubtask.dueDate);
             selectedPriority = currentSubtask.priority;
-            selectedLocation = currentSubtask.location != null ? currentSubtask.location : "";
+
+            // Load dữ liệu mới
+            reminderMinutes = currentSubtask.reminderMinutes;
+            selectedSound = currentSubtask.soundName != null ? currentSubtask.soundName : "sound_alarm";
+
             updateChipTexts();
+            updateSettingsUI();
         }
     }
 
@@ -106,13 +112,65 @@ public class EditSubtaskActivity extends AppCompatActivity {
         else if (selectedPriority == 2) prioText = "Quan trọng";
         else if (selectedPriority == 3) prioText = "Khẩn cấp";
         btnChipPriority.setText(prioText);
-
-        btnChipLocation.setText(selectedLocation.isEmpty() ? "Địa Điểm" : selectedLocation);
     }
 
-    private void setupEvents() {
-        btnChipDate.setOnClickListener(v -> showDateTimePicker());
+    private void updateSettingsUI() {
+        if (tvReminderValue != null)
+            tvReminderValue.setText(reminderMinutes == 0 ? "Không Nhắc >" : "Trước " + reminderMinutes + " phút >");
+        if (tvSoundValue != null)
+            tvSoundValue.setText(selectedSound + " >");
+    }
 
+    // --- DIALOGS ---
+    private void showReminderDialog() {
+        EditText edtMinutes = new EditText(this);
+        edtMinutes.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        edtMinutes.setHint("Nhập số phút (VD: 5)");
+        new AlertDialog.Builder(this)
+                .setTitle("Báo trước bao lâu?")
+                .setView(edtMinutes)
+                .setPositiveButton("Lưu", (dialog, which) -> {
+                    String s = edtMinutes.getText().toString();
+                    if (!s.isEmpty()) {
+                        reminderMinutes = Integer.parseInt(s);
+                        updateSettingsUI();
+                    }
+                })
+                .setNegativeButton("Hủy", null).show();
+    }
+
+    private void showSoundDialog() {
+        String[] sounds = {"sound_alarm", "sound_notification", "sound_bell"};
+        new AlertDialog.Builder(this)
+                .setTitle("Chọn Âm Thanh")
+                .setSingleChoiceItems(sounds, -1, (dialog, which) -> {
+                    selectedSound = sounds[which];
+                    playSoundPreview(selectedSound);
+                })
+                .setPositiveButton("Chọn", (dialog, which) -> {
+                    updateSettingsUI();
+                    stopSoundPreview();
+                })
+                .setNegativeButton("Hủy", (dialog, which) -> stopSoundPreview()).show();
+    }
+
+    private void playSoundPreview(String soundName) {
+        stopSoundPreview();
+        int resId = getResources().getIdentifier(soundName, "raw", getPackageName());
+        if (resId != 0) {
+            previewPlayer = MediaPlayer.create(this, resId);
+            previewPlayer.start();
+        }
+    }
+    private void stopSoundPreview() {
+        if (previewPlayer != null) {
+            previewPlayer.release();
+            previewPlayer = null;
+        }
+    }
+    // --------------
+
+    private void setupEvents() {
         btnChipPriority.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, btnChipPriority);
             popup.getMenu().add(0, 1, 0, "🔴 Khẩn cấp & Quan trọng");
@@ -127,17 +185,15 @@ public class EditSubtaskActivity extends AppCompatActivity {
             popup.show();
         });
 
-        btnChipLocation.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LocationActivity.class);
-            locationLauncher.launch(intent);
-        });
-
         btnSave.setOnClickListener(v -> {
             currentSubtask.title = edtTitle.getText().toString();
             currentSubtask.note = edtNote.getText().toString();
             currentSubtask.dueDate = calendar.getTimeInMillis();
             currentSubtask.priority = selectedPriority;
-            currentSubtask.location = selectedLocation;
+
+            // Lưu trường mới
+            currentSubtask.reminderMinutes = reminderMinutes;
+            currentSubtask.soundName = selectedSound;
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra("updated_subtask", currentSubtask);
@@ -152,9 +208,10 @@ public class EditSubtaskActivity extends AppCompatActivity {
             setResult(RESULT_FIRST_USER, resultIntent);
             finish();
         });
+
+        btnChipDate.setOnClickListener(v -> showDateTimePicker());
     }
 
-    // Thay thế hàm showDateTimePicker cũ
     private void showDateTimePicker() {
         CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
             Calendar temp = Calendar.getInstance();
@@ -163,7 +220,6 @@ public class EditSubtaskActivity extends AppCompatActivity {
             calendar.set(Calendar.MONTH, temp.get(Calendar.MONTH));
             calendar.set(Calendar.DAY_OF_MONTH, temp.get(Calendar.DAY_OF_MONTH));
 
-            // Mở Đồng hồ tròn
             MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                     .setTimeFormat(TimeFormat.CLOCK_24H)
                     .setHour(calendar.get(Calendar.HOUR_OF_DAY))
@@ -176,13 +232,17 @@ public class EditSubtaskActivity extends AppCompatActivity {
             timePicker.addOnPositiveButtonClickListener(v -> {
                 calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                 calendar.set(Calendar.MINUTE, timePicker.getMinute());
-
-                updateChipTexts(); // Cập nhật giao diện
+                updateChipTexts();
             });
 
             timePicker.show(getSupportFragmentManager(), "TimePicker");
         });
-
         calendarSheet.show(getSupportFragmentManager(), "CalendarSheet");
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopSoundPreview();
+        super.onDestroy();
     }
 }

@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- 1. Nội dung bên trái (Tiêu đề + Ngày) -->
         <LinearLayout
             android:id="@+id/layout_content"
             android:layout_width="0dp"
@@ -26,7 +25,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginEnd="16dp">
 
-            <!-- Tên công việc (Đậm, To) -->
             <TextView
                 android:id="@+id/tv_task_title"
                 android:layout_width="wrap_content"
@@ -38,7 +36,6 @@
                 android:maxLines="1"
                 android:ellipsize="end"/>
 
-            <!-- Icon đồng hồ + Ngày giờ (Màu xám, nhỏ hơn) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +60,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- 2. Checkbox Hình tròn (Bên phải) -->
         <CheckBox
             android:id="@+id/cb_completed"
             android:layout_width="32dp"
@@ -74,7 +70,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <!-- 3. Vạch màu Priority (Tùy chọn, thầy làm nhỏ lại cho tinh tế) -->
         <View
             android:id="@+id/view_priority_indicator"
             android:layout_width="4dp"
@@ -84,7 +79,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
-        <!-- Thầy tạm ẩn (gone) để giống screenshot của em, nếu thích hiện thì đổi thành visible -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

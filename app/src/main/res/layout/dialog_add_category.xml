@@ -6,7 +6,6 @@
     android:background="@drawable/bg_dialog_white_rounded"
     android:paddingTop="20dp">
 
-    <!-- Tiêu đề -->
     <TextView
         android:text="Danh Mục Tùy Chỉnh"
         android:textSize="18sp"
@@ -16,7 +15,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- Ô nhập liệu -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,9 +33,7 @@
             android:paddingEnd="40dp"
             android:inputType="textCapSentences"
             android:maxLines="1"/>
-        <!-- bg_input_gray_rounded là file đã tạo ở bài Máy tính ngày tháng -->
 
-        <!-- Nút xóa text (X) -->
         <ImageView
             android:id="@+id/btn_clear_text"
             android:layout_width="16dp"
@@ -48,13 +44,11 @@
             android:alpha="0.3"/>
     </FrameLayout>
 
-    <!-- Đường kẻ ngang -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#E0E0E0"/>
 
-    <!-- Nút bấm -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -71,7 +65,6 @@
             android:gravity="center"
             android:background="?attr/selectableItemBackground"/>
 
-        <!-- Đường kẻ dọc -->
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"

@@ -13,7 +13,6 @@
         android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Header -->
         <TextView
             android:text="Chào mừng trở lại"
             android:textSize="28sp"
@@ -24,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <!-- Subtitle -->
         <TextView
             android:text="Đăng nhập"
             android:textSize="20sp"
@@ -35,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <!-- Email -->
         <TextView
             android:text="Email"
             android:textColor="#757575"
@@ -56,7 +53,6 @@
             android:inputType="textEmailAddress"
             android:layout_marginBottom="20dp"/>
 
-        <!-- Password -->
         <TextView
             android:text="Mật khảu"
             android:textColor="#757575"

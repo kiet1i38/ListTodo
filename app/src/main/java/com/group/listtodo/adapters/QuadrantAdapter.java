@@ -19,7 +19,7 @@ public class QuadrantAdapter extends RecyclerView.Adapter<QuadrantAdapter.ViewHo
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onCheck(Task task); // Chỉ cần xử lý check
+        void onCheck(Task task);
     }
 
     public QuadrantAdapter(OnItemClickListener listener) {
@@ -44,26 +44,22 @@ public class QuadrantAdapter extends RecyclerView.Adapter<QuadrantAdapter.ViewHo
 
         holder.tvTitle.setText(task.title);
 
-        // Xử lý sự kiện check nhưng không trigger listener lặp lại
         holder.checkBox.setOnCheckedChangeListener(null);
         holder.checkBox.setChecked(task.isCompleted);
 
-        // UI: Nếu xong thì gạch ngang + màu xám, chưa xong thì bình thường
         if (task.isCompleted) {
             holder.tvTitle.setPaintFlags(holder.tvTitle.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tvTitle.setTextColor(0xFFAAAAAA); // Màu xám
+            holder.tvTitle.setTextColor(0xFFAAAAAA); 
             holder.tvTitle.setAlpha(0.5f);
         } else {
             holder.tvTitle.setPaintFlags(holder.tvTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.tvTitle.setTextColor(0xFF000000); // Màu đen
+            holder.tvTitle.setTextColor(0xFF000000); 
             holder.tvTitle.setAlpha(1.0f);
         }
 
         holder.checkBox.setOnClickListener(v -> {
             task.isCompleted = holder.checkBox.isChecked();
-            // Cập nhật UI ngay lập tức
             notifyItemChanged(holder.getAdapterPosition());
-            // Báo ra ngoài để lưu DB
             listener.onCheck(task);
         });
     }

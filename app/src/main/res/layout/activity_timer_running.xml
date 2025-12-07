@@ -78,7 +78,7 @@
             android:id="@+id/btn_pause_resume"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_check_circle"
+            android:src="@drawable/ic_play"
             android:backgroundTint="#8E24AA"
             app:tint="@color/white"
             app:fabCustomSize="70dp"
@@ -89,7 +89,7 @@
             android:id="@+id/btn_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu"
+            android:src="@drawable/ic_repeat"
             android:backgroundTint="#333333"
             app:tint="@color/white"
             app:fabCustomSize="70dp"/>

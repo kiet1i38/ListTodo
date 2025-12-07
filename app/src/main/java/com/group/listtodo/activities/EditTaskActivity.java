@@ -450,17 +450,26 @@ public class EditTaskActivity extends AppCompatActivity {
     }
 
     private void showDateTimePicker() {
-        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        // Thay vì DatePickerDialog, dùng BottomSheet mới
+        CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
+            // Khi chọn ngày xong
+            Calendar temp = Calendar.getInstance();
+            temp.setTimeInMillis(dateInMillis);
+
+            // Giữ nguyên logic chọn giờ cũ
             new TimePickerDialog(this, (timeView, hourOfDay, minute) -> {
+                calendar.set(Calendar.YEAR, temp.get(Calendar.YEAR));
+                calendar.set(Calendar.MONTH, temp.get(Calendar.MONTH));
+                calendar.set(Calendar.DAY_OF_MONTH, temp.get(Calendar.DAY_OF_MONTH));
+
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
-                updateChipTexts();
-                if (tvTimeValue != null) tvTimeValue.setText(new SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(calendar.getTime()));
+
+                updateChipTexts(); // Hoặc updateTimeText() tùy file
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        calendarSheet.show(getSupportFragmentManager(), "CalendarSheet");
     }
 
     private void scheduleAlarm(Task task) {

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp">
+
+        <!-- HEADER CHỨA NÚT VÀ TÊN THÁNG -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <!-- Nút Trái -->
+            <ImageView
+                android:id="@+id/btn_prev_month"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_back"
+                android:padding="8dp"
+                app:tint="@color/blue_primary"
+                android:layout_alignParentStart="true"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
+            <!-- TÊN THÁNG (THÊM MỚI) -->
+            <TextView
+                android:id="@+id/tv_current_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tháng 12 2025"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_centerInParent="true"/>
+
+            <!-- Nút Phải -->
+            <ImageView
+                android:id="@+id/btn_next_month"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_next"
+                android:padding="8dp"
+                app:tint="@color/blue_primary"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </RelativeLayout>
+
+        <CalendarView
+            android:id="@+id/calendar_view_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/CalenderViewCustom"
+            android:weekDayTextAppearance="@style/CalenderViewWeekCustom"
+            android:dateTextAppearance="@style/CalenderViewDateCustom"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

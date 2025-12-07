@@ -112,17 +112,23 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
     }
 
     private void showDateTimePicker() {
-        new DatePickerDialog(getContext(), (view, year, month, dayOfMonth) -> {
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
+            Calendar temp = Calendar.getInstance();
+            temp.setTimeInMillis(dateInMillis);
+
             new TimePickerDialog(getContext(), (timeView, hourOfDay, minute) -> {
+                calendar.set(Calendar.YEAR, temp.get(Calendar.YEAR));
+                calendar.set(Calendar.MONTH, temp.get(Calendar.MONTH));
+                calendar.set(Calendar.DAY_OF_MONTH, temp.get(Calendar.DAY_OF_MONTH));
+
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
-                calendar.set(Calendar.SECOND, 0);
+
                 updateTimeText();
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        calendarSheet.show(getParentFragmentManager(), "CalendarSheet");
     }
 
     private void showPriorityMenu() {

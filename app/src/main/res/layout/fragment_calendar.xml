@@ -3,58 +3,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_gray">
+    android:background="#F5F7FA">
 
-    <!-- Header -->
+    <!-- Header (Giữ nguyên) -->
     <RelativeLayout
         android:padding="16dp"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!-- LỖI CŨ Ở ĐÂY: Đã thêm layout_width và layout_height -->
+        android:layout_height="wrap_content"
+        android:elevation="4dp">
         <TextView
-            android:id="@+id/tv_header_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lịch Biểu"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_centerInParent="true"/>
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_search"
-            android:layout_alignParentEnd="true"
-            android:contentDescription="Search"/>
     </RelativeLayout>
 
-    <!-- Calendar View -->
-    <CalendarView
-        android:id="@+id/calendar_view"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Light"
-        android:weekDayTextAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:dateTextAppearance="@style/TextAppearance.AppCompat.Medium"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_selected_date_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Công việc ngày hôm nay"
-        android:padding="16dp"
-        android:textStyle="bold"
-        android:textColor="@color/text_gray"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <!-- List Task của ngày được chọn -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_calendar_tasks"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="16dp"/>
+            <!-- THAY THẾ ĐOẠN NÀY: Dùng chung layout -->
+            <include
+                android:id="@+id/included_calendar"
+                layout="@layout/layout_calendar_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"/>
 
+            <TextView
+                android:id="@+id/tv_selected_date_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Công việc ngày hôm nay"
+                android:textStyle="bold"
+                android:textColor="@color/text_gray"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_calendar_tasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

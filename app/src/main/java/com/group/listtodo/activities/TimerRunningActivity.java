@@ -139,9 +139,9 @@ public class TimerRunningActivity extends AppCompatActivity {
 
     private void updateUI(boolean isRunning) {
         if (isRunning) {
-            btnPause.setImageResource(R.drawable.ic_menu); // Pause (Icon 2 gạch)
+            btnPause.setImageResource(R.drawable.ic_pause); // Pause (Icon 2 gạch)
         } else {
-            btnPause.setImageResource(R.drawable.ic_check_circle); // Play (Icon tam giác)
+            btnPause.setImageResource(R.drawable.ic_play); // Play (Icon tam giác)
         }
     }
 

@@ -338,10 +338,32 @@ public class EditTaskActivity extends AppCompatActivity {
 
         btnChipPriority.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, btnChipPriority);
-            popup.getMenu().add(0, 1, 0, "🔴 Khẩn cấp & Quan trọng");
-            popup.getMenu().add(0, 2, 0, "🟠 Quan trọng");
-            popup.getMenu().add(0, 3, 0, "🔵 Khẩn cấp");
-            popup.getMenu().add(0, 4, 0, "🟢 Bình thường");
+
+            // --- THÊM ICON MÀU ---
+            // Cách 1: Dùng SpannableString (Đơn giản, hiệu quả)
+            // Nhưng cách tốt nhất là ép Popup hiện Icon bằng Reflection:
+            try {
+                java.lang.reflect.Field field = popup.getClass().getDeclaredField("mPopup");
+                field.setAccessible(true);
+                Object menuPopupHelper = field.get(popup);
+                Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                java.lang.reflect.Method setForceShowIcon = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                setForceShowIcon.invoke(menuPopupHelper, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // ---------------------
+
+            // Thêm item có icon
+            // Lưu ý: Em phải tạo các drawable hình tròn màu tương ứng trong res/drawable
+            // Ví dụ: ic_circle_red, ic_circle_orange...
+            // Nếu chưa có, em tạo nhanh các file xml shape oval màu (như bước 3 bên dưới)
+
+            popup.getMenu().add(0, 1, 0, "Khẩn cấp & Quan trọng").setIcon(R.drawable.ic_circle_red);
+            popup.getMenu().add(0, 2, 0, "Quan trọng").setIcon(R.drawable.ic_circle_orange);
+            popup.getMenu().add(0, 3, 0, "Khẩn cấp").setIcon(R.drawable.ic_circle_blue);
+            popup.getMenu().add(0, 4, 0, "Bình thường").setIcon(R.drawable.ic_circle_green);
+
             popup.setOnMenuItemClickListener(item -> {
                 selectedPriority = item.getItemId();
                 updateChipTexts();

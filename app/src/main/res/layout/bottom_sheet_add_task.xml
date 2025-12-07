@@ -21,30 +21,65 @@
         android:layout_height="wrap_content"
         android:hint="Nhập tên công việc (VD: Nộp bài Mobile)"
         android:background="@null"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:minHeight="48dp"/>
 
-    <LinearLayout
+    <!-- THANH CUỘN NGANG CÁC NÚT CHỌN -->
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:scrollbars="none"
         android:layout_marginTop="16dp">
 
-        <Button
-            android:id="@+id/btn_time"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hôm nay"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_marginEnd="8dp"/>
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_priority"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="P4: Bình thường"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
-    </LinearLayout>
+            <!-- 1. Thời gian -->
+            <Button
+                android:id="@+id/btn_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hôm nay"
+                android:textSize="12sp"
+                android:drawablePadding="4dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- 2. Cấp bậc -->
+            <Button
+                android:id="@+id/btn_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bình thường"
+                android:textSize="12sp"
+                android:drawablePadding="4dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- 3. Danh mục (Mới) -->
+            <Button
+                android:id="@+id/btn_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Công Việc"
+                android:textSize="12sp"
+                android:drawablePadding="4dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- 4. Địa điểm (Mới) -->
+            <Button
+                android:id="@+id/btn_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Địa điểm"
+                android:textSize="12sp"
+                android:drawablePadding="4dp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <Button
         android:id="@+id/btn_submit"

@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -22,25 +24,47 @@ import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.Task;
 import com.group.listtodo.receivers.AlarmReceiver;
 import com.group.listtodo.utils.SessionManager;
+import com.group.listtodo.utils.SyncHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.group.listtodo.utils.SyncHelper;
 
 public class AddNewTaskSheet extends BottomSheetDialogFragment {
 
     private EditText edtTaskName;
     private Button btnTime, btnPriority, btnSubmit;
+    private Button btnCategory, btnLocation; // Nút mới
+
     private Calendar calendar = Calendar.getInstance();
     private int selectedPriority = 4;
+    private String selectedCategory = "Công Việc"; // Mặc định
+    private String selectedLocation = "";
+    private double selectedLat = 0;
+    private double selectedLng = 0;
+
     private AppDatabase db;
     private Runnable onDismissListener;
+    private ActivityResultLauncher<Intent> locationLauncher;
 
     public AddNewTaskSheet(Runnable onDismissListener) {
         this.onDismissListener = onDismissListener;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Đăng ký nhận kết quả từ Map
+        locationLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == -1 && result.getData() != null) { // RESULT_OK = -1
+                selectedLocation = result.getData().getStringExtra("location_name");
+                selectedLat = result.getData().getDoubleExtra("lat", 0);
+                selectedLng = result.getData().getDoubleExtra("lng", 0);
+                btnLocation.setText(selectedLocation);
+            }
+        });
     }
 
     @Nullable
@@ -57,13 +81,28 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
         edtTaskName = view.findViewById(R.id.edt_task_name);
         btnTime = view.findViewById(R.id.btn_time);
         btnPriority = view.findViewById(R.id.btn_priority);
+        btnCategory = view.findViewById(R.id.btn_category); // Ánh xạ mới
+        btnLocation = view.findViewById(R.id.btn_location); // Ánh xạ mới
         btnSubmit = view.findViewById(R.id.btn_submit);
 
-        // Mặc định hiển thị giờ hiện tại
         updateTimeText();
 
+        // 1. Chọn Thời gian
         btnTime.setOnClickListener(v -> showDateTimePicker());
+
+        // 2. Chọn Cấp bậc
         btnPriority.setOnClickListener(v -> showPriorityMenu());
+
+        // 3. Chọn Danh mục (Mới)
+        btnCategory.setOnClickListener(v -> showCategoryMenu());
+
+        // 4. Chọn Địa điểm (Mới)
+        btnLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), LocationActivity.class);
+            locationLauncher.launch(intent);
+        });
+
+        // 5. Lưu
         btnSubmit.setOnClickListener(v -> saveTask());
     }
 
@@ -77,27 +116,57 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
             new TimePickerDialog(getContext(), (timeView, hourOfDay, minute) -> {
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
                 calendar.set(Calendar.SECOND, 0);
                 updateTimeText();
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     private void showPriorityMenu() {
         PopupMenu popup = new PopupMenu(getContext(), btnPriority);
-        popup.getMenu().add(0, 1, 0, "🔴 P1: Khẩn & Quan trọng");
-        popup.getMenu().add(0, 2, 0, "🟠 P2: Quan trọng");
-        popup.getMenu().add(0, 3, 0, "🔵 P3: Khẩn cấp");
-        popup.getMenu().add(0, 4, 0, "🟢 P4: Bình thường");
 
+        // 1. Thêm Item kèm Icon màu
+        // (Đảm bảo em đã tạo 4 file ic_circle_red.xml... trong drawable như bước trước)
+        popup.getMenu().add(0, 1, 0, "Khẩn cấp & Quan trọng").setIcon(R.drawable.ic_circle_red);
+        popup.getMenu().add(0, 2, 0, "Quan trọng").setIcon(R.drawable.ic_circle_orange);
+        popup.getMenu().add(0, 3, 0, "Khẩn cấp").setIcon(R.drawable.ic_circle_blue);
+        popup.getMenu().add(0, 4, 0, "Bình thường").setIcon(R.drawable.ic_circle_green);
+
+        // 2. Dùng Reflection để ÉP HIỂN THỊ ICON (Bắt buộc)
+        try {
+            java.lang.reflect.Field field = popup.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            Object menuPopupHelper = field.get(popup);
+            Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+            java.lang.reflect.Method setForceShowIcon = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+            setForceShowIcon.invoke(menuPopupHelper, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // 3. Xử lý sự kiện chọn
         popup.setOnMenuItemClickListener(item -> {
             selectedPriority = item.getItemId();
-            btnPriority.setText(item.getTitle());
+            btnPriority.setText(item.getTitle()); // Cập nhật chữ lên nút
+            return true;
+        });
+
+        popup.show();
+    }
+
+    // Menu Danh Mục
+    private void showCategoryMenu() {
+        PopupMenu popup = new PopupMenu(getContext(), btnCategory);
+        popup.getMenu().add("Công Việc");
+        popup.getMenu().add("Cá Nhân");
+        popup.getMenu().add("Học Tập");
+        popup.getMenu().add("Gia Đình");
+        popup.setOnMenuItemClickListener(item -> {
+            selectedCategory = item.getTitle().toString();
+            btnCategory.setText(selectedCategory);
             return true;
         });
         popup.show();
@@ -110,9 +179,13 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
             return;
         }
 
-        Task newTask = new Task(title, calendar.getTimeInMillis(), selectedPriority, "Work");
+        Task newTask = new Task(title, calendar.getTimeInMillis(), selectedPriority, selectedCategory);
 
-        // Gán User ID
+        // Gán thêm thông tin địa điểm
+        newTask.location = selectedLocation;
+        newTask.locationLat = selectedLat;
+        newTask.locationLng = selectedLng;
+
         SessionManager session = new SessionManager(getContext());
         String uid = session.getUserId();
         if (uid != null) {
@@ -124,19 +197,15 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // 1. Lưu vào DB
             db.taskDao().insertTask(newTask);
 
-            // 2. Đặt báo thức (QUAN TRỌNG)
-            // Vì ta chưa có ID của task (ID tự tăng), nên logic chuẩn là insert xong lấy ID ra
-            // Nhưng để đơn giản, ta có thể dùng HashCode của title + time làm ID tạm cho PendingIntent
-            // Hoặc tốt nhất là dùng ID thật. Ở đây thầy dùng ID giả lập từ time để ko bị trùng.
+            // Lấy ID giả lập để đặt báo thức (vì insert chưa trả về ID ngay trong luồng này nếu không dùng return long)
             newTask.id = (int) (System.currentTimeMillis() % Integer.MAX_VALUE);
             scheduleAlarm(newTask);
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    Toast.makeText(getContext(), "Đã thêm & Đặt nhắc nhở!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Đã thêm!", Toast.LENGTH_SHORT).show();
                     SyncHelper.autoBackup(getContext());
                     if (onDismissListener != null) onDismissListener.run();
                     dismiss();
@@ -145,23 +214,14 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
         });
     }
 
-    // --- HÀM ĐẶT BÁO THỨC ---
     private void scheduleAlarm(Task task) {
         if (task.dueDate > System.currentTimeMillis()) {
             AlarmManager am = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(getContext(), AlarmReceiver.class);
             i.putExtra("TITLE", task.title);
-
-            // Dùng ID của Task để làm RequestCode (để sau này có thể hủy/sửa đúng cái alarm đó)
             PendingIntent pi = PendingIntent.getBroadcast(getContext(), task.id, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-
             if (am != null) {
-                // Báo ĐÚNG GIỜ đã chọn
-//                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.dueDate, pi);
-
-                // MẸO: Nếu muốn báo trước 1 ngày thì dùng dòng dưới này (bỏ comment):
-                 long triggerTime = task.dueDate - (24 * 60 * 60 * 1000);
-                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pi);
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.dueDate, pi);
             }
         }
     }

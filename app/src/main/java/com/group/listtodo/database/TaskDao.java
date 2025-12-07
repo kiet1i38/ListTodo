@@ -19,15 +19,12 @@ public interface TaskDao {
     @Delete
     void deleteTask(Task task);
 
-    // Lấy tất cả task của User (Cho màn hình chính)
     @Query("SELECT * FROM tasks WHERE userId = :uid ORDER BY dueDate ASC")
     List<Task> getAllTasks(String uid);
 
-    // Lấy task theo Quadrant (SỬA LỖI: Bỏ điều kiện isCompleted = 0 để hiện cả việc đã xong)
     @Query("SELECT * FROM tasks WHERE userId = :uid AND priority = :prio ORDER BY dueDate ASC")
     List<Task> getTasksByPriority(String uid, int prio);
 
-    // Thêm vào interface
     @Query("DELETE FROM tasks WHERE userId = :uid")
     void deleteAllByUser(String uid);
 }

@@ -22,10 +22,9 @@ public class Task implements Serializable {
     public double locationLat;
     public double locationLng;
 
-    // --- CÁC TRƯỜNG MỚI CHO BÁO THỨC ---
-    public int reminderMinutes; // Báo trước bao nhiêu phút (0 = đúng giờ)
-    public int repeatCount;     // Số lần lặp lại
-    public String soundName;    // Tên file âm thanh (VD: "sound_alarm")
+    public int reminderMinutes; 
+    public int repeatCount;    
+    public String soundName;   
 
     public Task() {}
 
@@ -35,8 +34,8 @@ public class Task implements Serializable {
         this.priority = priority;
         this.category = category;
         this.isCompleted = false;
-        this.reminderMinutes = 0; // Mặc định đúng giờ
-        this.repeatCount = 0;     // Không lặp
-        this.soundName = "sound_alarm"; // Âm thanh mặc định
+        this.reminderMinutes = 0; 
+        this.repeatCount = 0;    
+        this.soundName = "sound_alarm"; 
     }
 }

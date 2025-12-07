@@ -42,8 +42,6 @@ public class TimerRunningActivity extends AppCompatActivity {
 
         tvTitle.setText(timer.title);
 
-        // --- CHECK LOGIC KHI VỪA MỞ ---
-        // Chỉ hiển thị đang chạy nếu ID trùng khớp
         if (TimerService.isRunning && TimerService.currentTimerId == timer.id) {
             updateUI(true);
             updateTimerText(TimerService.currentTimeLeft);
@@ -54,17 +52,14 @@ public class TimerRunningActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
-        // --- 1. SỬA LỖI NÚT XÓA ---
         findViewById(R.id.btn_delete_timer).setOnClickListener(v -> {
             Executors.newSingleThreadExecutor().execute(() -> {
-                // Nếu đang chạy đúng timer này -> Dừng Service ngay
                 if (TimerService.isRunning && TimerService.currentTimerId == timer.id) {
                     Intent intent = new Intent(this, TimerService.class);
                     intent.setAction("STOP");
                     startService(intent);
                 }
 
-                // Xóa trong DB
                 db.timerDao().delete(timer);
                 com.group.listtodo.utils.SyncHelper.autoBackup(this);
 
@@ -75,46 +70,37 @@ public class TimerRunningActivity extends AppCompatActivity {
             });
         });
 
-        // --- 2. SỬA LỖI NÚT PLAY/PAUSE ---
         btnPause.setOnClickListener(v -> {
             if (TimerService.isRunning && TimerService.currentTimerId == timer.id) {
-                // PAUSE
                 long currentLeft = TimerService.currentTimeLeft;
 
-                // Dừng Service
                 Intent intent = new Intent(this, TimerService.class);
                 intent.setAction("STOP");
                 startService(intent);
 
-                // Lưu DB
                 timer.remainingTime = currentLeft;
                 saveTimerToDb();
 
                 updateUI(false);
                 updateTimerText(currentLeft);
             } else {
-                // RESUME
                 long timeToRun = (timer.remainingTime > 0) ? timer.remainingTime : timer.durationInMillis;
                 startTimerService(timeToRun);
                 updateUI(true);
             }
         });
 
-        // --- 3. SỬA LỖI NÚT RESET ---
         btnReset.setOnClickListener(v -> {
-            // Dừng Service ngay lập tức nếu đang chạy
             if (TimerService.isRunning && TimerService.currentTimerId == timer.id) {
                 Intent intent = new Intent(this, TimerService.class);
                 intent.setAction("STOP");
                 startService(intent);
             }
 
-            // Reset thời gian về gốc
             timer.remainingTime = timer.durationInMillis;
             saveTimerToDb();
             com.group.listtodo.utils.SyncHelper.autoBackup(this);
 
-            // Cập nhật UI ngay
             updateUI(false);
             updateTimerText(timer.durationInMillis);
             Toast.makeText(this, "Đã đặt lại!", Toast.LENGTH_SHORT).show();
@@ -139,9 +125,9 @@ public class TimerRunningActivity extends AppCompatActivity {
 
     private void updateUI(boolean isRunning) {
         if (isRunning) {
-            btnPause.setImageResource(R.drawable.ic_pause); // Pause (Icon 2 gạch)
+            btnPause.setImageResource(R.drawable.ic_pause); 
         } else {
-            btnPause.setImageResource(R.drawable.ic_play); // Play (Icon tam giác)
+            btnPause.setImageResource(R.drawable.ic_play); 
         }
     }
 
@@ -160,7 +146,6 @@ public class TimerRunningActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 if (TimerService.ACTION_UPDATE.equals(intent.getAction())) {
                     int id = intent.getIntExtra("TIMER_ID", -1);
-                    // CHỈ UPDATE NẾU ID TRÙNG KHỚP
                     if (id == timer.id) {
                         long timeLeft = intent.getLongExtra("TIME_LEFT", 0);
                         updateTimerText(timeLeft);

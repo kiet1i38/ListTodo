@@ -8,9 +8,7 @@
 
     <TextView android:text="Độ quan trọng" android:textSize="24sp" android:textStyle="bold" android:layout_marginBottom="16dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 
-    <!-- Hàng 1 -->
     <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal" android:weightSum="2">
-        <!-- Ô 1: Đỏ -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
             android:layout_margin="4dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
@@ -21,7 +19,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Ô 2: Vàng -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
             android:layout_margin="4dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
@@ -33,10 +30,8 @@
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
-    <!-- Hàng 2: Xanh dương & Lục (Copy tương tự Hàng 1, đổi màu) -->
     <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal" android:weightSum="2" android:layout_marginTop="8dp">
-        <!-- Code tương tự trên, thay màu quadrant_3_blue và quadrant_4_green -->
-        <!-- Ô 3: Đỏ -->
+
         <androidx.cardview.widget.CardView
             android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
             android:layout_margin="4dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
@@ -47,7 +42,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Ô 4: Vàng -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
             android:layout_margin="4dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">

@@ -8,13 +8,9 @@ public class BackupData {
     public List<TimerPreset> timers;
     public List<CountdownEvent> countdowns;
 
-    // --- 1. CONSTRUCTOR RỖNG (BẮT BUỘC CHO FIREBASE) ---
-    // Nếu thiếu cái này, App sẽ crash khi restore
     public BackupData() {
     }
-    // ---------------------------------------------------
 
-    // 2. Constructor đầy đủ (Dùng khi upload)
     public BackupData(String userId, List<Task> tasks, List<TimerPreset> timers, List<CountdownEvent> countdowns) {
         this.userId = userId;
         this.tasks = tasks;

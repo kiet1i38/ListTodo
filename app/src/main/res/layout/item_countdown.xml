@@ -15,7 +15,6 @@
         android:padding="16dp"
         android:orientation="horizontal">
 
-        <!-- 1. ICON VUÔNG (Chứa chữ cái đầu) -->
         <androidx.cardview.widget.CardView
             android:id="@+id/card_icon_bg"
             android:layout_width="48dp"
@@ -35,7 +34,6 @@
                 android:gravity="center"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 2. NỘI DUNG GIỮA (Tiêu đề + Ngày mục tiêu) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -64,7 +62,6 @@
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- 3. SỐ NGÀY CÒN LẠI (Bên phải) -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

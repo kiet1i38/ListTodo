@@ -10,7 +10,7 @@ import androidx.cardview.widget.CardView;
 import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
 import com.group.listtodo.models.CountdownEvent;
-import com.group.listtodo.utils.SessionManager; // Import
+import com.group.listtodo.utils.SessionManager; 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +23,7 @@ public class CountdownActivity extends AppCompatActivity {
 
     private LinearLayout containerLayout;
     private AppDatabase db;
-    private String userId; // Biến UserID
+    private String userId; 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,6 @@ public class CountdownActivity extends AppCompatActivity {
 
         db = AppDatabase.getInstance(this);
 
-        // Lấy UserID
         SessionManager session = new SessionManager(this);
         userId = session.getUserId();
 
@@ -53,7 +52,6 @@ public class CountdownActivity extends AppCompatActivity {
     private void loadEvents() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // Lọc theo UserID
             List<CountdownEvent> events = db.countdownDao().getAllEvents(userId);
 
             runOnUiThread(() -> {

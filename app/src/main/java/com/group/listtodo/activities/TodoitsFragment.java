@@ -49,7 +49,6 @@ import android.graphics.drawable.ColorDrawable;
 
 public class TodoitsFragment extends Fragment {
 
-    // UI Components
     private RecyclerView rvTasks, rvCategories;
     private TaskAdapter taskAdapter;
     private CategoryAdapter categoryAdapter;
@@ -58,26 +57,21 @@ public class TodoitsFragment extends Fragment {
     private EditText edtSearch;
     private FloatingActionButton fab;
 
-    // Data
     private AppDatabase db;
     private String userId;
 
-    // Category Data
     private List<String> categoryList = new ArrayList<>(); // List tên để hiện lên Adapter
     private List<Category> categoryObjects = new ArrayList<>(); // List object để lấy ID khi xóa
     private String currentCategory = "Tất Cả";
 
-    // Search Data
     private String currentSearchKeyword = "";
     private Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
 
-    // Filter State (3 chấm)
     private boolean showCompleted = true;
     private boolean showFuture = true;
     private boolean showOverdue = true;
 
-    // Expand State (Đóng mở nhóm)
     private boolean isOverdueExpanded = true;
     private boolean isFutureExpanded = true;
     private boolean isCompletedExpanded = true;
@@ -96,7 +90,6 @@ public class TodoitsFragment extends Fragment {
         SessionManager session = new SessionManager(getContext());
         userId = session.getUserId();
 
-        // Ánh xạ View
         rvTasks = view.findViewById(R.id.recycler_tasks);
         rvCategories = view.findViewById(R.id.recycler_categories);
         layoutEmpty = view.findViewById(R.id.layout_empty);
@@ -104,13 +97,11 @@ public class TodoitsFragment extends Fragment {
         btnMoreOptions = view.findViewById(R.id.btn_more_options);
         edtSearch = view.findViewById(R.id.edt_search);
 
-        // Setup
         setupCategoryRecycler();
         setupTaskRecycler();
         setupSwipeToDelete();
         setupSearchLogic();
 
-        // Events
         fab.setOnClickListener(v -> {
             AddNewTaskSheet bottomSheet = new AddNewTaskSheet(() -> loadTasks());
             bottomSheet.show(getParentFragmentManager(), "AddTask");
@@ -118,7 +109,6 @@ public class TodoitsFragment extends Fragment {
 
         btnMoreOptions.setOnClickListener(v -> showFilterMenu());
 
-        // Load dữ liệu
         loadCategoriesFromDb();
         loadTasks();
     }
@@ -142,7 +132,6 @@ public class TodoitsFragment extends Fragment {
 
             @Override
             public void onCategoryLongClick(String category) {
-                // Nhấn giữ để xóa
                 new AlertDialog.Builder(getContext())
                         .setTitle("Xóa Danh Mục")
                         .setMessage("Bạn có chắc muốn xóa danh mục '" + category + "' không?")
@@ -160,13 +149,12 @@ public class TodoitsFragment extends Fragment {
         executor.execute(() -> {
             List<Category> dbCats = db.categoryDao().getCategories(userId);
 
-            // Nếu user mới chưa có danh mục, tạo mặc định
             if (dbCats.isEmpty()) {
                 db.categoryDao().insert(new Category("Công Việc", userId));
                 db.categoryDao().insert(new Category("Cá Nhân", userId));
                 db.categoryDao().insert(new Category("Học Tập", userId));
                 dbCats = db.categoryDao().getCategories(userId);
-                SyncHelper.autoBackup(getContext()); // Backup danh mục mặc định
+                SyncHelper.autoBackup(getContext()); 
             }
 
             categoryObjects.clear();
@@ -283,14 +271,12 @@ public class TodoitsFragment extends Fragment {
             List<Task> filteredList = new ArrayList<>();
             long now = System.currentTimeMillis();
 
-            // Lọc
             for (Task t : allTasks) {
                 boolean matchCat = currentCategory.equals("Tất Cả") || (t.category != null && t.category.equalsIgnoreCase(currentCategory));
                 boolean matchSearch = currentSearchKeyword.isEmpty() || t.title.toLowerCase().contains(currentSearchKeyword.toLowerCase());
                 if (matchCat && matchSearch) filteredList.add(t);
             }
 
-            // Phân nhóm
             List<Task> overdueList = new ArrayList<>();
             List<Task> futureList = new ArrayList<>();
             List<Task> completedList = new ArrayList<>();
@@ -305,7 +291,6 @@ public class TodoitsFragment extends Fragment {
                 }
             }
 
-            // Tạo Wrapper List
             List<TaskAdapter.TaskItemWrapper> displayList = new ArrayList<>();
 
             if (!overdueList.isEmpty()) {
@@ -347,9 +332,6 @@ public class TodoitsFragment extends Fragment {
         });
     }
 
-    // ========================================================================================
-    // 3. CÁC TÍNH NĂNG KHÁC (TÌM KIẾM, VUỐT XÓA, FILTER)
-    // ========================================================================================
 
     private void setupSearchLogic() {
         edtSearch.addTextChangedListener(new TextWatcher() {
@@ -440,7 +422,6 @@ public class TodoitsFragment extends Fragment {
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT)); // Để bo góc đẹp
         popupWindow.setElevation(10);
 
-        // 3. Ánh xạ View trong Popup
         View itemCompleted = popupView.findViewById(R.id.item_completed);
         View itemFuture = popupView.findViewById(R.id.item_future);
         View itemOverdue = popupView.findViewById(R.id.item_overdue);
@@ -449,12 +430,10 @@ public class TodoitsFragment extends Fragment {
         ImageView checkFuture = popupView.findViewById(R.id.check_future);
         ImageView checkOverdue = popupView.findViewById(R.id.check_overdue);
 
-        // 4. Set trạng thái hiện tại
         checkCompleted.setVisibility(showCompleted ? View.VISIBLE : View.INVISIBLE);
         checkFuture.setVisibility(showFuture ? View.VISIBLE : View.INVISIBLE);
         checkOverdue.setVisibility(showOverdue ? View.VISIBLE : View.INVISIBLE);
 
-        // 5. Xử lý Click
         itemCompleted.setOnClickListener(v -> {
             showCompleted = !showCompleted;
             checkCompleted.setVisibility(showCompleted ? View.VISIBLE : View.INVISIBLE);
@@ -473,15 +452,13 @@ public class TodoitsFragment extends Fragment {
             loadTasks();
         });
 
-        // 6. Hiển thị ngay dưới nút 3 chấm
         popupWindow.showAsDropDown(btnMoreOptions, -200, 0);
-        // -200 là offset X để menu dịch sang trái cho đẹp
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadCategoriesFromDb(); // Reload danh mục khi quay lại
+        loadCategoriesFromDb(); 
         loadTasks();
     }
 }

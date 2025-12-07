@@ -10,8 +10,8 @@ public class TimerPreset implements Serializable {
     public int id;
 
     public String title;
-    public long durationInMillis; // Tổng thời gian gốc (Ví dụ: 30 phút)
-    public long remainingTime;    // Thời gian còn lại (Ví dụ: còn 15 phút) -> THÊM MỚI
+    public long durationInMillis;
+    public long remainingTime;   
     public int iconResId;
     public int colorResId;
     public String userId;
@@ -21,7 +21,7 @@ public class TimerPreset implements Serializable {
     public TimerPreset(String title, long durationInMillis, int iconResId, int colorResId) {
         this.title = title;
         this.durationInMillis = durationInMillis;
-        this.remainingTime = durationInMillis; // Mặc định khi tạo mới thì còn lại = tổng
+        this.remainingTime = durationInMillis; 
         this.iconResId = iconResId;
         this.colorResId = colorResId;
     }

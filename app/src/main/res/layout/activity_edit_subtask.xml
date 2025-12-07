@@ -138,7 +138,6 @@
 
         </LinearLayout>
     </ScrollView>
-// this is bait
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"

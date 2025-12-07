@@ -45,38 +45,31 @@ import com.google.android.material.timepicker.TimeFormat;
 
 public class EditTaskActivity extends AppCompatActivity {
 
-    // UI Components
     private EditText edtTitle, edtNote;
     private TextView tvTimeValue, tvReminderValue, tvRepeatValue, tvSoundValue;
     private Button btnSave, btnDelete;
     private Button btnChipDate, btnChipPriority, btnChipCategory, btnChipLocation;
     private LinearLayout layoutSubtasksContainer;
 
-    // Data & State
     private Task currentTask;
     private AppDatabase db;
     private Calendar calendar = Calendar.getInstance();
 
-    // Biến tạm lưu dữ liệu
     private int selectedPriority = 4;
     private String selectedCategory = "Công Việc";
     private String selectedLocation = "";
     private double selectedLat = 0;
     private double selectedLng = 0;
 
-    // Biến cấu hình Báo thức
-    private int reminderMinutes = 0; // 0 = Đúng giờ
-    private int repeatCount = 0;     // 0 = Không lặp
-    private String selectedSound = "sound_alarm"; // Tên file nhạc mặc định
+    private int reminderMinutes = 0; 
+    private int repeatCount = 0;     
+    private String selectedSound = "sound_alarm";
 
-    // Subtasks
     private List<SubtaskItem> subtaskList = new ArrayList<>();
 
-    // Launchers
     private ActivityResultLauncher<Intent> subtaskLauncher;
     private ActivityResultLauncher<Intent> locationLauncher;
 
-    // Audio Player
     private MediaPlayer previewPlayer;
 
     @Override
@@ -87,7 +80,6 @@ public class EditTaskActivity extends AppCompatActivity {
         db = AppDatabase.getInstance(this);
         currentTask = (Task) getIntent().getSerializableExtra("task");
 
-        // 1. Launcher nhận kết quả từ Subtask
         subtaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 SubtaskItem updatedItem = (SubtaskItem) result.getData().getSerializableExtra("updated_subtask");
@@ -105,7 +97,6 @@ public class EditTaskActivity extends AppCompatActivity {
             }
         });
 
-        // 2. Launcher nhận kết quả từ Map
         locationLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 selectedLocation = result.getData().getStringExtra("location_name");
@@ -142,7 +133,6 @@ public class EditTaskActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
-        // --- SETUP CÁC DÒNG CÀI ĐẶT VỚI ICON ĐÚNG ---
         setupRow(R.id.row_time, R.drawable.ic_clock, "Thời Gian", "Chọn >");
         setupRow(R.id.row_reminder, R.drawable.ic_alarm, "Nhắc Nhở", "Không Nhắc >");
         setupRow(R.id.row_repeat, R.drawable.ic_repeat, "Lặp Lại", "Không >");
@@ -157,7 +147,6 @@ public class EditTaskActivity extends AppCompatActivity {
             TextView tvVal = view.findViewById(R.id.tv_value);
             tvVal.setText(value);
 
-            // Gán biến và sự kiện click
             if (label.equals("Thời Gian")) {
                 tvTimeValue = tvVal;
                 view.setOnClickListener(v -> showDateTimePicker());
@@ -185,7 +174,6 @@ public class EditTaskActivity extends AppCompatActivity {
             selectedLat = currentTask.locationLat;
             selectedLng = currentTask.locationLng;
 
-            // Load Alarm settings
             reminderMinutes = currentTask.reminderMinutes;
             repeatCount = currentTask.repeatCount;
             selectedSound = currentTask.soundName != null ? currentTask.soundName : "sound_alarm";
@@ -267,7 +255,6 @@ public class EditTaskActivity extends AppCompatActivity {
         subtaskLauncher.launch(intent);
     }
 
-    // --- CÁC HÀM DIALOG NHẬP LIỆU ---
 
     private void showReminderDialog() {
         EditText edtMinutes = new EditText(this);
@@ -342,9 +329,6 @@ public class EditTaskActivity extends AppCompatActivity {
         btnChipPriority.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, btnChipPriority);
 
-            // --- THÊM ICON MÀU ---
-            // Cách 1: Dùng SpannableString (Đơn giản, hiệu quả)
-            // Nhưng cách tốt nhất là ép Popup hiện Icon bằng Reflection:
             try {
                 java.lang.reflect.Field field = popup.getClass().getDeclaredField("mPopup");
                 field.setAccessible(true);
@@ -355,12 +339,6 @@ public class EditTaskActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            // ---------------------
-
-            // Thêm item có icon
-            // Lưu ý: Em phải tạo các drawable hình tròn màu tương ứng trong res/drawable
-            // Ví dụ: ic_circle_red, ic_circle_orange...
-            // Nếu chưa có, em tạo nhanh các file xml shape oval màu (như bước 3 bên dưới)
 
             popup.getMenu().add(0, 1, 0, "Khẩn cấp & Quan trọng").setIcon(R.drawable.ic_circle_red);
             popup.getMenu().add(0, 2, 0, "Quan trọng").setIcon(R.drawable.ic_circle_orange);
@@ -378,7 +356,6 @@ public class EditTaskActivity extends AppCompatActivity {
         btnChipCategory.setOnClickListener(v -> {
             PopupMenu popup = new PopupMenu(this, btnChipCategory);
 
-            // --- LOAD DANH MỤC TỪ DB ---
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
                 String uid = new SessionManager(this).getUserId();
@@ -427,7 +404,6 @@ public class EditTaskActivity extends AppCompatActivity {
             currentTask.locationLng = selectedLng;
             currentTask.subtasks = new Gson().toJson(subtaskList);
 
-            // Lưu Alarm Config
             currentTask.reminderMinutes = reminderMinutes;
             currentTask.repeatCount = repeatCount;
             currentTask.soundName = selectedSound;
@@ -440,10 +416,8 @@ public class EditTaskActivity extends AppCompatActivity {
             executor.execute(() -> {
                 db.taskDao().updateTask(currentTask);
 
-                // Đặt báo thức
                 scheduleAlarm(currentTask);
 
-                // Auto Backup
                 SyncHelper.autoBackup(this);
 
                 runOnUiThread(() -> {
@@ -453,7 +427,6 @@ public class EditTaskActivity extends AppCompatActivity {
             });
         });
 
-        // XÓA
         btnDelete.setOnClickListener(v -> {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
@@ -470,14 +443,12 @@ public class EditTaskActivity extends AppCompatActivity {
 
     private void showDateTimePicker() {
         CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
-            // Cập nhật ngày
             Calendar temp = Calendar.getInstance();
             temp.setTimeInMillis(dateInMillis);
             calendar.set(Calendar.YEAR, temp.get(Calendar.YEAR));
             calendar.set(Calendar.MONTH, temp.get(Calendar.MONTH));
             calendar.set(Calendar.DAY_OF_MONTH, temp.get(Calendar.DAY_OF_MONTH));
 
-            // Mở Đồng hồ tròn
             MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                     .setTimeFormat(TimeFormat.CLOCK_24H)
                     .setHour(calendar.get(Calendar.HOUR_OF_DAY))
@@ -491,7 +462,7 @@ public class EditTaskActivity extends AppCompatActivity {
                 calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                 calendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                updateChipTexts(); // Cập nhật giao diện
+                updateChipTexts();
             });
 
             timePicker.show(getSupportFragmentManager(), "TimePicker");
@@ -501,7 +472,6 @@ public class EditTaskActivity extends AppCompatActivity {
     }
 
     private void scheduleAlarm(Task task) {
-        // Tính thời gian kích hoạt = Hạn chót - số phút nhắc
         long triggerTime = task.dueDate - (task.reminderMinutes * 60 * 1000L);
 
         if (triggerTime > System.currentTimeMillis()) {

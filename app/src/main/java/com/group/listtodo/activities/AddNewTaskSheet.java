@@ -21,7 +21,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.group.listtodo.R;
 import com.group.listtodo.database.AppDatabase;
-import com.group.listtodo.models.Category; // <--- Đã thêm import
+import com.group.listtodo.models.Category; 
 import com.group.listtodo.models.Task;
 import com.group.listtodo.receivers.AlarmReceiver;
 import com.group.listtodo.utils.SessionManager;
@@ -29,7 +29,7 @@ import com.group.listtodo.utils.SyncHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List; // <--- Đã thêm import (Sửa lỗi của em)
+import java.util.List; 
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -61,9 +61,8 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Đăng ký nhận kết quả từ Map
         locationLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == -1 && result.getData() != null) { // RESULT_OK = -1
+            if (result.getResultCode() == -1 && result.getData() != null) {
                 selectedLocation = result.getData().getStringExtra("location_name");
                 selectedLat = result.getData().getDoubleExtra("lat", 0);
                 selectedLng = result.getData().getDoubleExtra("lng", 0);
@@ -92,13 +91,13 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
 
         updateTimeText();
 
-        // 1. Chọn Thời gian (Dùng Custom Calendar mới)
+        // 1. Chọn Thời gian 
         btnTime.setOnClickListener(v -> showDateTimePicker());
 
-        // 2. Chọn Cấp bậc (Có icon màu)
+        // 2. Chọn Cấp bậc 
         btnPriority.setOnClickListener(v -> showPriorityMenu());
 
-        // 3. Chọn Danh mục (Load từ DB)
+        // 3. Chọn Danh mục 
         btnCategory.setOnClickListener(v -> showCategoryMenu());
 
         // 4. Chọn Địa điểm
@@ -122,14 +121,14 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
         CustomCalendarBottomSheet calendarSheet = new CustomCalendarBottomSheet(calendar.getTimeInMillis(), dateInMillis -> {
             calendar.setTimeInMillis(dateInMillis);
 
-            // 2. Chọn Giờ (Dùng MaterialTimePicker MỚI)
+            // 2. Chọn Giờ 
             MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                     .setTimeFormat(TimeFormat.CLOCK_24H)
                     .setHour(calendar.get(Calendar.HOUR_OF_DAY))
                     .setMinute(calendar.get(Calendar.MINUTE))
                     .setTitleText("Chọn giờ")
-                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK) // Hiển thị đồng hồ tròn
-                    .setTheme(R.style.MyTimePickerTheme) // Áp dụng màu sắc
+                    .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK) 
+                    .setTheme(R.style.MyTimePickerTheme) 
                     .build();
 
             timePicker.addOnPositiveButtonClickListener(v -> {
@@ -137,7 +136,7 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
                 calendar.set(Calendar.MINUTE, timePicker.getMinute());
                 calendar.set(Calendar.SECOND, 0);
 
-                updateTimeText(); // Cập nhật giao diện
+                updateTimeText();
             });
 
             timePicker.show(getParentFragmentManager(), "TimePicker");
@@ -155,7 +154,6 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
         popup.getMenu().add(0, 3, 0, "Khẩn cấp").setIcon(R.drawable.ic_circle_blue);
         popup.getMenu().add(0, 4, 0, "Bình thường").setIcon(R.drawable.ic_circle_green);
 
-        // Reflection để hiện icon
         try {
             java.lang.reflect.Field field = popup.getClass().getDeclaredField("mPopup");
             field.setAccessible(true);
@@ -175,19 +173,17 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
         popup.show();
     }
 
-    // Menu Danh Mục (Load từ DB)
+    // Menu Danh Mục 
     private void showCategoryMenu() {
         PopupMenu popup = new PopupMenu(getContext(), btnCategory);
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
-            // Lấy danh sách category của user hiện tại
             List<Category> cats = db.categoryDao().getCategories(new SessionManager(getContext()).getUserId());
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     if (cats.isEmpty()) {
-                        // Nếu chưa có thì hiện mặc định
                         popup.getMenu().add("Công Việc");
                         popup.getMenu().add("Cá Nhân");
                     } else {
@@ -252,7 +248,7 @@ public class AddNewTaskSheet extends BottomSheetDialogFragment {
             AlarmManager am = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
             Intent i = new Intent(getContext(), AlarmReceiver.class);
             i.putExtra("TITLE", task.title);
-            i.putExtra("ID", task.id); // Truyền ID để quản lý
+            i.putExtra("ID", task.id); 
 
             PendingIntent pi = PendingIntent.getBroadcast(getContext(), task.id, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 

@@ -35,7 +35,6 @@
         android:padding="10dp"
         android:layout_marginTop="10dp"/>
 
-    <!-- Chọn ngày giờ -->
     <Button
         android:id="@+id/btn_pick_date"
         android:layout_width="match_parent"
@@ -51,7 +50,6 @@
         android:text="Chưa chọn ngày"
         android:layout_gravity="center"/>
 
-    <!-- Chọn độ ưu tiên (RadioGroup) -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

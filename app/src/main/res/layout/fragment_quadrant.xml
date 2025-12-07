@@ -27,7 +27,7 @@
             android:layout_margin="4dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
             <LinearLayout android:orientation="vertical" android:padding="8dp" android:layout_width="match_parent" android:layout_height="match_parent">
                 <View android:background="@color/quadrant_2_orange" android:layout_width="40dp" android:layout_height="4dp" android:layout_gravity="center_horizontal"/>
-                <TextView android:text="(Quan trọng không Khẩn)" android:textColor="@color/quadrant_2_orange" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <TextView android:text="(Quan trọng)" android:textColor="@color/quadrant_2_orange" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
                 <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_q2" android:layout_width="match_parent" android:layout_height="match_parent"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -41,8 +41,8 @@
             android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
             android:layout_margin="4dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
             <LinearLayout android:orientation="vertical" android:padding="8dp" android:layout_width="match_parent" android:layout_height="match_parent">
-                <View android:background="@color/quadrant_1_red" android:layout_width="40dp" android:layout_height="4dp" android:layout_gravity="center_horizontal"/>
-                <TextView android:text="(Quan trọng &amp; Khẩn)" android:textColor="@color/quadrant_3_blue" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <View android:background="@color/quadrant_3_blue" android:layout_width="40dp" android:layout_height="4dp" android:layout_gravity="center_horizontal"/>
+                <TextView android:text="(Khẩn cấp)" android:textColor="@color/quadrant_3_blue" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
                 <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_q3" android:layout_width="match_parent" android:layout_height="match_parent"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -52,8 +52,8 @@
             android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
             android:layout_margin="4dp" app:cardCornerRadius="12dp" app:cardElevation="2dp">
             <LinearLayout android:orientation="vertical" android:padding="8dp" android:layout_width="match_parent" android:layout_height="match_parent">
-                <View android:background="@color/quadrant_2_orange" android:layout_width="40dp" android:layout_height="4dp" android:layout_gravity="center_horizontal"/>
-                <TextView android:text="(Quan trọng không Khẩn)" android:textColor="@color/quadrant_4_green" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+                <View android:background="@color/quadrant_4_green" android:layout_width="40dp" android:layout_height="4dp" android:layout_gravity="center_horizontal"/>
+                <TextView android:text="(Bình thường)" android:textColor="@color/quadrant_4_green" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp" android:layout_width="match_parent" android:layout_height="wrap_content"/>
                 <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_q4" android:layout_width="match_parent" android:layout_height="match_parent"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>

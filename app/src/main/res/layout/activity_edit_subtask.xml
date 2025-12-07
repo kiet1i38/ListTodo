@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/background_gray">
 
-    <!-- HEADER -->
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         <TextView android:text="Chi Tiết Công Việc Con" android:textSize="18sp" android:textStyle="bold" android:textColor="@color/black" android:layout_centerInParent="true" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <!-- NỘI DUNG -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,7 +29,6 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <!-- TÊN & CHIP SCROLL -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,7 +83,6 @@
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                                 android:layout_marginEnd="8dp"/>
 
-                            <!-- Nút Địa Điểm -->
                             <Button
                                 android:id="@+id/btn_chip_location"
                                 android:layout_width="wrap_content"
@@ -101,7 +97,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- CÀI ĐẶT -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,7 +114,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- GHI CHÚ -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,7 +139,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- BUTTONS -->
     <LinearLayout
         android:id="@+id/layout_buttons"
         android:layout_width="match_parent"

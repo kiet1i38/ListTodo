@@ -66,10 +66,10 @@ public class TimerRunningActivity extends AppCompatActivity {
 
                 // Xóa trong DB
                 db.timerDao().delete(timer);
+                com.group.listtodo.utils.SyncHelper.autoBackup(this);
 
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Đã xóa!", Toast.LENGTH_SHORT).show();
-                    SyncHelper.autoBackup(this);
                     finish();
                 });
             });
@@ -112,12 +112,12 @@ public class TimerRunningActivity extends AppCompatActivity {
             // Reset thời gian về gốc
             timer.remainingTime = timer.durationInMillis;
             saveTimerToDb();
+            com.group.listtodo.utils.SyncHelper.autoBackup(this);
 
             // Cập nhật UI ngay
             updateUI(false);
             updateTimerText(timer.durationInMillis);
             Toast.makeText(this, "Đã đặt lại!", Toast.LENGTH_SHORT).show();
-            SyncHelper.autoBackup(this);
         });
     }
 

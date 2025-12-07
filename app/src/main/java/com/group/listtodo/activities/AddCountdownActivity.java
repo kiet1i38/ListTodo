@@ -117,6 +117,7 @@ public class AddCountdownActivity extends AppCompatActivity {
             } else {
                 db.countdownDao().update(currentEvent);
             }
+            com.group.listtodo.utils.SyncHelper.autoBackup(this);
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Đã lưu thành công!", Toast.LENGTH_SHORT).show();
@@ -132,6 +133,7 @@ public class AddCountdownActivity extends AppCompatActivity {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             db.countdownDao().delete(currentEvent);
+            com.group.listtodo.utils.SyncHelper.autoBackup(this);
             runOnUiThread(() -> {
                 Toast.makeText(this, "Đã xóa sự kiện!", Toast.LENGTH_SHORT).show();
                 SyncHelper.autoBackup(this);

@@ -47,9 +47,9 @@ public class AddTimerActivity extends AppCompatActivity {
 
             Executors.newSingleThreadExecutor().execute(() -> {
                 AppDatabase.getInstance(this).timerDao().insert(timer);
+                com.group.listtodo.utils.SyncHelper.autoBackup(this);
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Đã thêm!", Toast.LENGTH_SHORT).show();
-                    SyncHelper.autoBackup(this);
                     finish();
                 });
             });

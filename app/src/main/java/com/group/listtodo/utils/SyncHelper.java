@@ -1,56 +1,26 @@
 package com.group.listtodo.utils;
 
 import android.content.Context;
-import android.util.Log;
-import com.group.listtodo.api.RetrofitClient;
-import com.group.listtodo.database.AppDatabase;
-import com.group.listtodo.models.BackupData;
-import com.group.listtodo.models.CountdownEvent;
-import com.group.listtodo.models.Task;
-import com.group.listtodo.models.TimerPreset;
-import java.util.List;
-import java.util.concurrent.Executors;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SyncHelper {
 
+    /**
+     * HÀM 1: TỰ ĐỘNG SAO LƯU (AUTO BACKUP)
+     * Hàm này được gọi tự động ở khắp nơi trong App (khi Thêm/Sửa/Xóa Task, Timer, Countdown).
+     * Nó sẽ gọi FirestoreHelper để đẩy dữ liệu lên Firebase Cloud.
+     */
     public static void autoBackup(Context context) {
-        if (context == null) return;
+        // Chuyển việc sao lưu sang cho FirestoreHelper xử lý
+        FirestoreHelper.backupToCloud(context);
+    }
 
-        SessionManager session = new SessionManager(context);
-        String userId = session.getUserId();
-
-        if (userId == null) return;
-
-        Executors.newSingleThreadExecutor().execute(() -> {
-            AppDatabase db = AppDatabase.getInstance(context);
-
-            // 1. Lấy toàn bộ dữ liệu của User
-            List<Task> tasks = db.taskDao().getAllTasks(userId);
-            List<TimerPreset> timers = db.timerDao().getTimers(userId);
-            List<CountdownEvent> countdowns = db.countdownDao().getAllEvents(userId);
-
-            // 2. Gói lại
-            BackupData backupData = new BackupData(userId, tasks, timers, countdowns);
-
-            // 3. Gửi lên Server
-            RetrofitClient.getService().syncData(backupData).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    if (response.isSuccessful()) {
-                        Log.d("AutoSync", "Backup FULL thành công!");
-                    } else {
-                        Log.e("AutoSync", "Server lỗi: " + response.code());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.e("AutoSync", "Lỗi kết nối: " + t.getMessage());
-                }
-            });
-        });
+    /**
+     * HÀM 2: TỰ ĐỘNG KHÔI PHỤC (AUTO RESTORE)
+     * Hàm này được gọi duy nhất 1 lần ở màn hình LoginActivity sau khi đăng nhập thành công.
+     * Nó sẽ tải dữ liệu từ Firebase về và nạp vào máy.
+     */
+    public static void restoreData(Context context, String userId, Runnable onSuccess) {
+        // Chuyển việc khôi phục sang cho FirestoreHelper xử lý
+        FirestoreHelper.restoreFromCloud(context, userId, onSuccess);
     }
 }

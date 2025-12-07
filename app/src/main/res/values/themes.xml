@@ -1,13 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Base.Theme.ListTodo" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
     </style>
 
-    <!-- Style cho CalendarView -->
+
     <style name="CalenderViewCustom" parent="Theme.AppCompat">
-        <item name="colorAccent">#246BFD</item> <!-- Màu xanh mũi tên và ngày chọn -->
+        <item name="colorAccent">#246BFD</item> 
         <item name="colorPrimary">#246BFD</item>
     </style>
 
@@ -21,12 +20,10 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <!-- Style riêng cho TimePicker để giống hình -->
     <style name="MyTimePickerTheme" parent="ThemeOverlay.MaterialComponents.TimePicker">
-        <item name="colorPrimary">#246BFD</item> <!-- Màu xanh chủ đạo của App -->
-        <item name="colorOnPrimary">#FFFFFF</item> <!-- Màu chữ trên nền xanh -->
+        <item name="colorPrimary">#246BFD</item> 
+        <item name="colorOnPrimary">#FFFFFF</item> 
         <item name="materialTimePickerTitleStyle">@style/MyTimePickerTitle</item>
-        <!-- Chỉnh màu cái kim đồng hồ và số được chọn -->
         <item name="colorControlActivated">#246BFD</item>
     </style>
 

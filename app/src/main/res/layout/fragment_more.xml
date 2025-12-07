@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:paddingBottom="40dp">
 
-        <!-- Tiêu đề -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,17 +22,6 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"/>
 
-        <!-- 1. Tiện ích Máy Tính Để Bàn -->
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:cardCornerRadius="16dp"-->
-<!--            app:cardElevation="0dp"-->
-<!--            android:layout_marginBottom="12dp">-->
-<!--            <include layout="@layout/item_more_menu" android:id="@+id/menu_widget"/>-->
-<!--        </androidx.cardview.widget.CardView>-->
-
-        <!-- 2. Ngày Đếm Ngược -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +31,6 @@
             <include layout="@layout/item_more_menu" android:id="@+id/menu_countdown"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 3. Đồng Hồ Hẹn Giờ -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -53,7 +40,6 @@
             <include layout="@layout/item_more_menu" android:id="@+id/menu_timer"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 4. Máy Tính Ngày Tháng -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +49,6 @@
             <include layout="@layout/item_more_menu" android:id="@+id/menu_date_calc"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 5. Thống Kê Todoits -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +58,6 @@
             <include layout="@layout/item_more_menu" android:id="@+id/menu_stats"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 6. SAO LƯU (UPLOAD) -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,7 +67,6 @@
             <include layout="@layout/item_more_menu" android:id="@+id/menu_sync_upload"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 7. KHÔI PHỤC (DOWNLOAD) -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,7 +76,6 @@
             <include layout="@layout/item_more_menu" android:id="@+id/menu_sync_download"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- 8. ĐĂNG XUẤT -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

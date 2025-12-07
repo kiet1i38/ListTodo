@@ -14,7 +14,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <!-- Icon màu -->
         <androidx.cardview.widget.CardView
             android:id="@+id/card_icon"
             android:layout_width="48dp"
@@ -31,7 +30,6 @@
                 app:tint="@color/white"/>
         </androidx.cardview.widget.CardView>
 
-        <!-- Thông tin -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -54,13 +52,11 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-        <!-- Nút Play -->
         <ImageView
             android:id="@+id/btn_play_item"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_check_circle"
             app:tint="#E0E0E0"/>
-        <!-- Thay bằng icon play tam giác nếu có -->
     </LinearLayout>
 </androidx.cardview.widget.CardView>

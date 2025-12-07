@@ -20,28 +20,24 @@ public class AlarmSoundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String soundName = intent.getStringExtra("SOUND_NAME");
 
-        // 1. Lấy ID file nhạc từ tên
         int resId = getResources().getIdentifier(soundName, "raw", getPackageName());
-        if (resId == 0) resId = R.raw.sound_alarm; // Fallback nếu không tìm thấy
+        if (resId == 0) resId = R.raw.sound_alarm; 
 
-        // 2. Phát nhạc
         mediaPlayer = MediaPlayer.create(this, resId);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
-        // 3. Rung
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        long[] pattern = {0, 1000, 1000}; // Nghỉ 0s, Rung 1s, Nghỉ 1s...
+        long[] pattern = {0, 1000, 1000};
         if (vibrator != null) vibrator.vibrate(pattern, 0);
 
-        // 4. Hẹn giờ tắt sau 10 giây (Theo yêu cầu)
         autoStopTimer = new CountDownTimer(10000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) { }
 
             @Override
             public void onFinish() {
-                stopSelf(); // Tự sát sau 10s
+                stopSelf(); 
             }
         }.start();
 

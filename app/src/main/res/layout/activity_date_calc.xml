@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#F2F2F7">
 
-    <!-- Header -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -67,7 +66,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Dòng chọn ngày gốc -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -89,7 +87,6 @@
                         <TextView android:text="Bắt Đầu" android:textStyle="bold" android:textColor="@color/black" android:gravity="end" android:layout_width="60dp" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
-                    <!-- Dòng tính TRƯỚC (Before) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -130,7 +127,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                    <!-- Dòng tính SAU (After) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -196,7 +192,6 @@
                     android:orientation="vertical"
                     android:padding="16dp">
 
-                    <!-- Từ ngày -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -216,7 +211,6 @@
                         <TextView android:text="Bắt Đầu" android:textStyle="bold" android:textColor="@color/black" android:gravity="end" android:layout_width="60dp" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
-                    <!-- Đến ngày -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -236,7 +230,6 @@
                         <TextView android:text="Kết Thúc" android:textStyle="bold" android:textColor="@color/black" android:gravity="end" android:layout_width="60dp" android:layout_height="wrap_content"/>
                     </LinearLayout>
 
-                    <!-- Kết quả Tổng -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -271,7 +264,6 @@
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
 
-                    <!-- Chi tiết -->
                     <TextView
                         android:id="@+id/tv_diff_detail_1"
                         android:text="1 Tháng 1 Ngày"
@@ -294,7 +286,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
 
-                    <!-- Switch -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
